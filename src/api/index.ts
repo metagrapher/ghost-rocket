@@ -11,16 +11,14 @@ app.get('/hello', (c) =>
 )
 
 const ARCHIVE =
-    [{ id: 'cubik041604', title: 'Cübik - 04-16-04', url: 'http://ssbproductions.com/cubik041604/' }
-        , { id: 'transit031710', title: 'Mass Transit - 03-17-10', url: 'http://ssbproductions.com/transit031710/' }
-        , { id: 'zebabar090118', title: 'Pump Pump - 09-01-18', url: 'http://ssbproductions.com/zebabar090118/' }
-        , { id: 'transit033118', title: 'Mass Transit w/ JOHN B', url: 'http://ssbproductions.com/transit033118/' }
-    ]
-
-const PHOTOS =
-    [{ url: 'http://ssbproductions.com/cubik041604/SSB_0126.jpg', partyId: 'cubik041604' }
-        , { url: 'http://ssbproductions.com/cubik041604/SSB_0127.jpg', partyId: 'cubik041604' }
-        , { url: 'http://ssbproductions.com/zebabar090118/DSC_8884.JPG', partyId: 'zebabar090118' }
+    [{ id: 'cubik041604', title: 'Cübik - 04-16-04', url: 'http://ssbproductions.com/cubik041604/', series: 'Cübik (2004)' }
+        , { id: 'transit031710', title: 'Mass Transit - 03-17-10', url: 'http://ssbproductions.com/transit031710/', series: 'Mass Transit (2010)' }
+        , { id: 'zebabar090118', title: 'Pump Pump - 09-01-18', url: 'http://ssbproductions.com/zebabar090118/', series: 'Zeba Bar (2018)' }
+        , { id: 'transit033118', title: 'Mass Transit w/ JOHN B', url: 'http://ssbproductions.com/transit033118/', series: 'Mass Transit (2018)' }
+        , { id: 'wickerman062318', title: 'WickerMan Burn - Sat', url: 'http://ssbproductions.com/wickerman062318/', series: 'WickerMan Burn (2018)' }
+        , { id: 'wickerman062218', title: 'WickerMan Burn - Fri', url: 'http://ssbproductions.com/wickerman062218/', series: 'WickerMan Burn (2018)' }
+        , { id: 'wickerman062118', title: 'WickerMan Burn - Thu', url: 'http://ssbproductions.com/wickerman062118/', series: 'WickerMan Burn (2018)' }
+        , { id: 'farmshow03', title: 'Farm Show 2003', url: 'http://ssbproductions.com/farmshow03/', series: 'Farm Show (2003)' }
     ]
 
 app.get('/archive', (c) => c.json(ARCHIVE))
@@ -56,93 +54,191 @@ app.get('/image-proxy', async (c) => {
 })
 
 app.get('/admin/scrape', async (c) => {
-    // Basic security: Check for a secret header or just rely on obscurity for this mvp?
-    // For now, let's just do it.
-
-    // Bindings
+    // 1. Iterate over all defined Archives
+    const report: any[] = []
     const bucket = c.env.BUCKET
 
-    const results = []
-
-    for (const photo of PHOTOS) {
-        const filename = photo.url.split('/').pop()!
-        const r2Key = `${photo.partyId}/${filename}`
-
+    for (const party of ARCHIVE) {
         try {
-            // Check if exists
-            const existing = await bucket.head(r2Key)
-            if (existing) {
-                results.push({ url: photo.url, status: 'skipped', key: r2Key })
+            // Fetch the index page
+            const indexRes = await fetch(party.url, {
+                headers: { 'User-Agent': 'GhostRocket/1.0' }
+            })
+            if (!indexRes.ok) {
+                report.push({ id: party.id, status: 'failed_index', code: indexRes.status })
                 continue
             }
 
-            // Fetch from source
-            const res = await fetch(photo.url, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                    'Referer': new URL(photo.url).origin
-                }
+            const html = await indexRes.text()
+            // Naive regex to find links to jpgs. 
+            // Look for href="... .jpg" or .JPG, naive because HTML parsing is hard with regex but sufficient for this legacy site.
+            // Targeting: <a href="SSB_0001.jpg"> or <a href="tn/DSC_0001.JPG">
+            const combinedSource: string[] = []
+
+            // Regex 1: Capture hrefs (including hash prefix)
+            const hrefMatches = [...html.matchAll(/href=["']([^"']+\.(?:jpg|JPG))["']/gi)]
+            hrefMatches.forEach(m => combinedSource.push(m[1]))
+
+            // Regex 2: Capture window.open args
+            const scriptMatches = [...html.matchAll(/window\.open\(['"]([^"']+\.(?:jpg|JPG))['"]/gi)]
+            scriptMatches.forEach(m => combinedSource.push(m[1]))
+
+            const uniqueImages = new Set<string>()
+
+            combinedSource.forEach(raw => {
+                // Cleanup: remove starting #
+                let clean = raw.startsWith('#') ? raw.substring(1) : raw
+                uniqueImages.add(clean)
             })
 
-            if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
+            let saved = 0
+            const images = Array.from(uniqueImages)
 
-            // Save to R2
-            await bucket.put(r2Key, res.body, {
-                httpMetadata: {
-                    contentType: res.headers.get('content-type') || 'image/jpeg'
+            // Limit to 20 per party for now to avoid timeout/rate limits during first pass?
+            // Or just go for it? Let's cap at 50 for the "Kick off".
+            const LIMIT = 50
+            const toProcess = images.slice(0, LIMIT)
+
+            await Promise.all(toProcess.map(async (imgLink) => {
+                // Handle relative paths. Usually just filename.
+                // Sometimes might be 'tn/foo.jpg' -> skip thumbnails?
+                if (imgLink.includes('tn/') || imgLink.includes('TN/')) return // Skip thumbnails
+
+                const fullUrl = new URL(imgLink, party.url).toString()
+                const filename = imgLink.split('/').pop()!
+                const r2Key = `${party.id}/${filename}`
+
+                // Fetch & Store (Verify content-type)
+                const vidRes = await fetch(fullUrl)
+                if (vidRes.ok) {
+                    const contentType = vidRes.headers.get('content-type') || ''
+                    if (contentType.includes('image')) {
+                        const blob = await vidRes.arrayBuffer()
+                        await bucket.put(r2Key, blob, {
+                            httpMetadata: { contentType: contentType }
+                        })
+                        saved++
+                    }
                 }
-            })
+            }))
 
-            results.push({ url: photo.url, status: 'saved', key: r2Key })
+            report.push({ id: party.id, found: images.length, processing_limit: LIMIT, saved_new: saved })
 
         } catch (e: any) {
-            console.error(`Failed to scrape ${photo.url}`, e)
-            results.push({ url: photo.url, status: 'error', error: e.message })
+            report.push({ id: party.id, error: e.message })
         }
     }
 
-    return c.json({ results })
+    return c.json({ status: 'Batch Complete', report })
 })
 
 app.get('/quiz', async (c) => {
-    const photo = PHOTOS[Math.floor(Math.random() * PHOTOS.length)]
-    // Generate 3 wrong options + 1 correct
-    const correctArchive = ARCHIVE.find(a => a.id === photo.partyId)!
-    const otherArchives = ARCHIVE.filter(a => a.id !== photo.partyId)
-
-    // Shuffle and pick 3 wrong ones
-    const wrongOptions = otherArchives
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3)
-        .map(a => ({ id: a.id, label: a.title }))
-
-    const options = [...wrongOptions, { id: correctArchive.id, label: correctArchive.title }]
-        .sort(() => 0.5 - Math.random())
-
-    // Check R2 first
-    const bucket = c.env.BUCKET
-    const filename = photo.url.split('/').pop()!
-    const r2Key = `${photo.partyId}/${filename}`
-    let imageUrl = `/api/image-proxy?url=${encodeURIComponent(photo.url)}` // default fallback
-
     try {
-        // If we are on custom domain, we can serve directly if public access is enabled, 
-        // OR we can serve via a new endpoint /api/image/KEY. 
-        // For simplicity, let's verify existence. If it exists, we technically should serve it.
-        // Since we don't have public R2 URL set up yet, let's create a serving endpoint: /api/img/:key
-        const existing = await bucket.head(r2Key)
-        if (existing) {
-            imageUrl = `/api/img/${encodeURIComponent(r2Key)}`
-        }
-    } catch (e) {
-        // ignore error, use fallback
-    }
+        const bucket = c.env.BUCKET
+        const listed = await bucket.list()
 
-    return c.json({
-        imageUrl: imageUrl,
-        correctId: photo.partyId,
-        options
-    })
+        if (!listed.objects || listed.objects.length === 0) {
+            return c.json({ error: 'Archive Empty' }, 404)
+        }
+
+        // Pick a random photo from the entire archive
+        const randomObj = listed.objects[Math.floor(Math.random() * listed.objects.length)]
+        const key = randomObj.key // e.g. "partyId/filename.jpg"
+        const partyId = key.split('/')[0]
+
+        // Validate partyId against our metadata
+        const correctArchive = ARCHIVE.find(a => a.id === partyId)
+
+        // If we have a file for a party we don't know about (orphan), just recurse/retry? 
+        // For now, let's just error to be safe, or handle gracefully.
+        if (!correctArchive) {
+            return c.json({ error: 'Orphaned Photo Found', key }, 500)
+        }
+
+        // Generate options
+        // Generate options (Grouping by Series)
+
+        // 1. Get correct series
+        const correctSeries = correctArchive.series || correctArchive.title
+
+        // 2. Get all other VALID series (deduplicated)
+        const othersMap = new Map<string, string>() // series -> id
+        ARCHIVE.forEach(a => {
+            const series = a.series || a.title
+            if (series !== correctSeries) {
+                othersMap.set(series, a.id)
+            }
+        })
+
+        const distinctDistractors = Array.from(othersMap.keys())
+
+        // 3. Shuffle and pick 3 unique distractors
+        const selectedDistractors = distinctDistractors
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 3)
+            .map(series => ({
+                id: othersMap.get(series)!,
+                label: series
+            }))
+
+        const options = [...selectedDistractors, { id: correctArchive.id, label: correctSeries }]
+            .sort(() => 0.5 - Math.random())
+
+        // Parse date from ID (e.g., cubik041604 -> 04/16/04)
+        const dateMatch = correctArchive.id.match(/(\d{2})(\d{2})(\d{2})$/)
+        let photoDate = { month: '01', day: '01', year: '00' }
+
+        if (dateMatch) {
+            photoDate = { month: dateMatch[1], day: dateMatch[2], year: dateMatch[3] }
+        } else {
+            const yearOnly = correctArchive.id.match(/(\d{2})$/)
+            if (yearOnly) photoDate.year = yearOnly[1]
+        }
+
+        return c.json({
+            imageUrl: `/api/img/${encodeURIComponent(key)}`,
+            correctId: partyId,
+            options,
+            date: photoDate
+        })
+
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+// Social Tagging API
+app.get('/tags/:key', async (c) => {
+    const key = c.req.param('key')
+    const { results } = await c.env.DB.prepare('SELECT * FROM tags WHERE image_key = ?').bind(key).all()
+    return c.json(results)
+})
+
+app.post('/tags', async (c) => {
+    try {
+        const { image_key, x, y, w, h, name } = await c.req.json() as any
+
+        // Moderation Logic
+        const lowerName = (name || '').toLowerCase()
+        const blacklist = ['fuck', 'shit', 'cunt', 'nigger', 'faggot', 'asshole'] // Basic list
+
+        // Specific Exception for "Bitch Beth"
+        if (lowerName.includes('bitch') && lowerName !== 'bitch beth') {
+            return c.json({ error: 'Moderation: Name rejected.' }, 400)
+        }
+
+        if (blacklist.some(word => lowerName.includes(word))) {
+            return c.json({ error: 'Moderation: Name rejected.' }, 400)
+        }
+
+        await c.env.DB.prepare(
+            'INSERT INTO tags (image_key, x, y, w, h, name) VALUES (?, ?, ?, ?, ?, ?)'
+        ).bind(image_key, x, y, w, h, name).run()
+
+        return c.json({ success: true })
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
 })
 
 app.get('/img/:key', async (c) => {

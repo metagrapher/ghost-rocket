@@ -16,6 +16,13 @@
       "bucket_name": "rave-archive"
     }
   ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rave-data",
+      "database_id": "34fd284e-91b6-40f1-aa71-5f5bc38c3e8a"
+    }
+  ],
   "routes": [
     {
       "pattern": "rave.arca.de.com",

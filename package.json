@@ -16,5 +16,8 @@
     "hono": "^4.11.3",
     "lit": "^3.3.2",
     "unocss": "^66.5.12"
+  },
+  "devDependencies": {
+    "wrangler": "^4.58.0"
   }
 }

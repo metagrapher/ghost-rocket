@@ -1,4 +1,4 @@
-import { defineConfig, presetUno, presetAttributify, presetIcons } from 'unocss'
+import { defineConfig, presetUno, presetAttributify, presetIcons, presetWebFonts } from 'unocss'
 
 export default defineConfig(
     {
@@ -6,6 +6,14 @@ export default defineConfig(
             [presetUno()
                 , presetAttributify()
                 , presetIcons()
+                , presetWebFonts(
+                    {
+                        provider: 'google'
+                        , fonts:
+                        {
+                            hand: 'Permanent Marker'
+                        }
+                    })
             ]
         , shortcuts:
         {
