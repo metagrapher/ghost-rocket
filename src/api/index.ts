@@ -19,6 +19,13 @@ const ARCHIVE =
         , { id: 'wickerman062218', title: 'WickerMan Burn - Fri', url: 'http://ssbproductions.com/wickerman062218/', series: 'WickerMan Burn (2018)' }
         , { id: 'wickerman062118', title: 'WickerMan Burn - Thu', url: 'http://ssbproductions.com/wickerman062118/', series: 'WickerMan Burn (2018)' }
         , { id: 'farmshow03', title: 'Farm Show 2003', url: 'http://ssbproductions.com/farmshow03/', series: 'Farm Show (2003)' }
+        , { id: 'starscape060609', title: 'Starscape 2009', url: 'http://ssbproductions.com/starscape060609/', series: 'Starscape (2009)' }
+        , { id: 'paradox042509', title: 'Spring Massive - 04-25-09', url: 'http://ssbproductions.com/paradox042509/', series: 'Spring Massive (2009)' }
+        , { id: 'potd091808', title: 'Planet of the Drums', url: 'http://ssbproductions.com/potd091808/', series: 'Planet of the Drums (2008)' }
+        , { id: 'gothprom052409', title: 'Goth Prom at Town', url: 'http://ssbproductions.com/gothprom052409/', series: 'Goth Prom (2009)' }
+        , { id: 'ibiza120509', title: 'Ibiza - 12-05-09', url: 'http://ssbproductions.com/ibiza120509/', series: 'Ibiza (2009)' }
+        , { id: 'fallmassive112809', title: 'Fall Massive 2009', url: 'http://ssbproductions.com/fallmassive112809/', series: 'Fall Massive (2009)' }
+        , { id: 'buzzboat2009-7', title: 'Buzz Boat Closing', url: 'http://ssbproductions.com/buzzboat2009-7/', series: 'Buzz Boat (2009)' }
     ]
 
 app.get('/archive', (c) => c.json(ARCHIVE))
