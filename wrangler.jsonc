@@ -1,0 +1,28 @@
+{
+  "main": "dist/_worker.js/index.js",
+  "name": "ghost-rocket",
+  "compatibility_date": "2026-01-09",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "rave-archive"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "rave.arca.de.com",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
