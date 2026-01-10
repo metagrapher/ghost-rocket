@@ -301,6 +301,34 @@ export class RaveGame extends LitElement {
         .next-btn:active {
             transform: scale(0.95);
         }
+
+        .reveal-actions {
+            position: absolute;
+            top: 6.2%;
+            left: 7.8%;
+            width: 84.8%;
+            height: 72%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            z-index: 60;
+            transform: translateZ(20px);
+            pointer-events: none;
+        }
+        .reveal-actions .next-btn {
+            pointer-events: auto;
+            /* margin-top removed, handled by gap */
+        }
+        .reveal-actions .result-text {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            transform: rotate(-2deg);
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
         
     `;
 
@@ -339,7 +367,10 @@ export class RaveGame extends LitElement {
             const res = await fetch("/api/quiz");
             if (!res.ok) {
                 const errData = await res.json() as any;
-                throw new Error(errData.error || `Server responded with ${res.status}`);
+                console.error("💔 Quiz API Error:", errData.error);
+                this.caption = `Error: ${errData.error || res.status}. Retrying...`;
+                setTimeout(() => this.loadGame(), 2000);
+                return;
             }
 
             const data = await res.json();
@@ -361,18 +392,15 @@ export class RaveGame extends LitElement {
                 };
 
                 img.onerror = (err) => {
-                    console.error("❌ Image failed to load:", this.quiz?.imageUrl, err);
-                    // Force display even if failed, so we can see the broken image icon at least
-                    this.imageLoaded = true;
-                    this.loading = false;
+                    console.error("❌ Image failed to load, autoadvancing:", this.quiz?.imageUrl, err);
+                    this.loadGame();
                 };
 
                 // Safety timeout
                 setTimeout(() => {
                     if (this.loading) {
-                        console.warn("⏳ Image load timed out. Forcing UI update.");
-                        this.imageLoaded = true;
-                        this.loading = false;
+                        console.warn("⏳ Image load timed out. Autoadvancing.");
+                        this.loadGame();
                     }
                 }, 10000);
             } else {
@@ -488,12 +516,18 @@ export class RaveGame extends LitElement {
                     <!-- BACK FACE (The Reveal) -->
                     <div class="polaroid-face polaroid-back">
                         <div class="polaroid-overlay"></div>
-                        <div class="image-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #050505; color: white; gap: 1rem; z-index: 5;">
-                            <div style="font-size: 3.5rem; font-weight: 900; letter-spacing: -0.05em; transform: rotate(-2deg); z-index: 25; text-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                        <div class="image-container" style="background-color: #050505; z-index: 5;">
+                            <!-- Developer area background -->
+                        </div>
+
+                        <!-- Higher layer for actions to prevent occlusion by long party names -->
+                        <div class="reveal-actions">
+                            <div class="result-text">
                                 ${this.result === 'correct' ? html`<span style="color: #4ade80;">NAILED IT</span>` : this.result === 'wrong' ? html`<span style="color: #f87171;">NOPE.</span>` : ''}
                             </div>
-                            <button class="next-btn" @click=${this.loadGame} style="z-index: 30; margin-top: 1rem;">NEXT PHOTO →</button>
+                            <button class="next-btn" @click=${this.loadGame}>NEXT PHOTO →</button>
                         </div>
+
                         <div class="caption">
                            <div class="reveal-text ${this.result === 'wrong' ? 'reveal-wrong' : ''}">
                                 <div class="reveal-label">LOCATION REVEALED:</div>

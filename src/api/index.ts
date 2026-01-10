@@ -144,16 +144,29 @@ app.get('/quiz', async (c) => {
             return c.json({ error: 'Archive Empty' }, 404)
         }
 
-        // Pick a random photo from the entire archive
-        const randomObj = listed.objects[Math.floor(Math.random() * listed.objects.length)]
-        const key = randomObj.key // e.g. "partyId/filename.jpg"
-        const partyId = key.split('/')[0]
+        // Pick a random photo from the entire archive, retry if orphaned
+        let key = ''
+        let partyId = ''
+        let correctArchive = null
+        let attempts = 0
+        const MAX_ATTEMPTS = 5
 
-        // Validate partyId against our metadata in DB
-        const correctArchive = await db.prepare('SELECT * FROM parties WHERE id = ?').bind(partyId).first() as any
+        while (attempts < MAX_ATTEMPTS) {
+            const randomObj = listed.objects[Math.floor(Math.random() * listed.objects.length)]
+            key = randomObj.key // e.g. "partyId/filename.jpg"
+            partyId = key.split('/')[0]
+
+            // Validate partyId against our metadata in DB
+            correctArchive = await db.prepare('SELECT * FROM parties WHERE id = ?').bind(partyId).first() as any
+
+            if (correctArchive) break
+
+            console.warn(`⚠️ Orphaned Photo Found (Attempt ${attempts + 1}): ${key}`)
+            attempts++
+        }
 
         if (!correctArchive) {
-            return c.json({ error: 'Orphaned Photo Found', key }, 500)
+            return c.json({ error: 'Archive Consistency Error: Too many orphaned photos found.', lastKey: key }, 500)
         }
 
         // Helper to format label with year
@@ -245,7 +258,7 @@ app.post('/tags', async (c) => {
 
         return c.json({ success: true })
     } catch (e: any) {
-        return c.json({ error: e.message }, 500)
+        return c.text(`Error fetching archive: ${e.message}`, 500)
     }
 })
 
