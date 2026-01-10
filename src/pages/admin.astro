@@ -537,10 +537,25 @@
                         <tr
                             class="text-left bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest opacity-50"
                         >
-                            <th class="p-4 font-400">Party Details</th>
-                            <th class="p-4 font-400">Scrape Status</th>
-                            <th class="p-4 font-400">Enrichment</th>
-                            <th class="p-4 font-400">Coordinates</th>
+                            <th
+                                class="p-4 font-400 cursor-pointer hover:text-[#bc13fe] transition-colors select-none"
+                                onclick="window.sortBy('title')"
+                                >Party Details ↕</th
+                            >
+                            <th
+                                class="p-4 font-400 cursor-pointer hover:text-[#bc13fe] transition-colors select-none"
+                                onclick="window.sortBy('status')"
+                                >Scrape Status ↕</th
+                            >
+                            <th
+                                class="p-4 font-400 cursor-pointer hover:text-[#ff00ff] transition-colors select-none"
+                                onclick="window.sortBy('enrichment_level')"
+                                >Enrichment (Hex) ↕</th
+                            >
+                            <th
+                                class="p-4 font-400 cursor-pointer hover:text-[#bc13fe] transition-colors select-none"
+                                onclick="window.sortBy('date')">Date ↕</th
+                            >
                             <th class="p-4 font-400">Actions</th>
                         </tr>
                     </thead>
@@ -685,6 +700,24 @@
         <script>
             let partiesData = [];
             let trafficChart = null;
+
+            // Sorting State
+            let currentSort = { field: "last_scraped_at", dir: "desc" };
+
+            window.sortBy = (field) => {
+                if (currentSort.field === field) {
+                    currentSort.dir =
+                        currentSort.dir === "asc" ? "desc" : "asc";
+                } else {
+                    currentSort.field = field;
+                    currentSort.dir = "desc"; // Default to desc for most things
+                    if (field === "title") currentSort.dir = "asc";
+                }
+                showToast(
+                    `Sorting by ${field} ${currentSort.dir.toUpperCase()}`,
+                );
+                refresh();
+            };
 
             // Simple Cost Calc (duplicated from API to avoid import complexity in script tag for now)
             const PRICING = {
@@ -1025,7 +1058,10 @@
             async function refresh() {
                 try {
                     const [res, statsRes, usageRes] = await Promise.all([
-                        fetch("/api/admin/scrape-status"),
+                        fetch(
+                            `/api/admin/scrape-status?sort=${currentSort.field}&dir=${currentSort.dir}`,
+                        ),
+
                         fetch("/api/admin/stats"),
                         fetch("/api/admin/usage"),
                     ]);
@@ -1073,27 +1109,42 @@
                                 <span class="px-2 py-0.5 rounded text-[0.6rem] font-800 uppercase ${p.enriched_at ? "bg-purple-500/20 text-purple-300" : "bg-white/5 text-white/30"}">
                                     ${p.enriched_at ? "Enriched" : "Empty"}
                                 </span>
+                                ${
+                                    p.enrichment_level
+                                        ? `<div class="mt-1 font-mono text-lg font-900 text-[#ff00ff] tracking-widest" title="Gradient Score: 0x${p.enrichment_level.toString(16).toUpperCase()}">0x${p.enrichment_level.toString(16).toUpperCase()}</div>`
+                                        : ""
+                                }
                                 <div class="text-[0.65rem] font-600 truncate max-w-[150px] opacity-60 mt-1">${p.location_name || "???"}</div>
-                                <div class="text-[0.6rem] opacity-30">${p.party_date || ""}</div>
                             </td>
                             <td class="p-4">
                                 <div class="text-[0.65rem] font-mono opacity-40 leading-tight">
-                                    ${p.latitude ? p.latitude.toFixed(4) : "—"}<br/>
-                                    ${p.longitude ? p.longitude.toFixed(4) : "—"}
+                                    ${p.party_date || "No Date"}<br/>
+                                    ${p.latitude ? p.latitude.toFixed(4) : "—"}, ${p.longitude ? p.longitude.toFixed(4) : "—"}
                                 </div>
                             </td>
                             <td class="p-4">
                                 <div class="flex gap-2 items-center">
                                     ${(() => {
-                                        if (p.status === "success")
-                                            return `<button disabled class="text-xl grayscale opacity-50 cursor-not-allowed" title="Satisfied">😋</button>`;
+                                        // 1. Eating (Processing)
                                         if (p.status === "processing")
                                             return `<button disabled class="text-xl animate-pulse cursor-wait" title="Eating...">🍽️</button>`;
+
+                                        // 2. Angry (Error) - Needs attention/retry
+                                        if (p.status === "error")
+                                            return `<button onclick="window.scrape('${p.id}')" class="text-xl hover:scale-125 transition-transform" title="Carl is Angry! (Retry)">😡</button>`;
+
+                                        // 3. Satisfied (Finished) - Only if actually full
                                         if (
-                                            p.status === "error" ||
-                                            p.images_saved > 0
+                                            p.images_saved >= p.images_found &&
+                                            p.images_found > 0
                                         )
-                                            return `<button onclick="window.scrape('${p.id}')" class="text-xl hover:scale-125 transition-transform" title="Finish Eating (Retry)">🍗</button>`;
+                                            return `<button disabled class="text-xl grayscale opacity-50 cursor-not-allowed" title="Satisfied">😋</button>`;
+
+                                        // 4. Partial (Leftovers) - Started but not finished (even if last status was success)
+                                        if (p.images_saved > 0)
+                                            return `<button onclick="window.scrape('${p.id}')" class="text-xl hover:scale-125 transition-transform" title="Finish Eating (Resume)">🍗</button>`;
+
+                                        // 5. Hungry (Start)
                                         return `<button onclick="window.scrape('${p.id}')" class="text-xl hover:scale-125 transition-transform" title="Feed Carl">🤤</button>`;
                                     })()}
                                     <button class="bg-[#bc13fe]/10 hover:bg-[#bc13fe]/20 text-[#bc13fe] text-[0.6rem] px-2 py-1 rounded" onclick="window.enrich('${p.id}')">Enrich</button>
