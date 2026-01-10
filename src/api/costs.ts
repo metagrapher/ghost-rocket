@@ -56,7 +56,7 @@ export const UNIT_USAGE = {
     VISITOR: {
         WORKERS_REQ: 5, // page load + a few assets/api calls
         D1_READS: 10,
-        D1_WRITES: 1, // session/analytics
+        D1_WRITES: 5, // 1 per request (metrics)
         KV_READS: 2,
     },
     GAME_ROUND: {
@@ -121,6 +121,18 @@ export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown =>
     checkLimit('R2 Class A', r2A, PRICING.FREE.R2_CLASS_A, true)
     checkLimit('R2 Class B', r2B, PRICING.FREE.R2_CLASS_B, true)
 
+    // D1 Storage Estimation (Metrics)
+    const totalRequests = reqs // Approximation: every worker req is a metric row
+    const BYTES_PER_ROW = 200
+    const totalStorageBytes = totalRequests * BYTES_PER_ROW
+    const totalStorageGB = totalStorageBytes / (1024 * 1024 * 1024)
+
+    // Check D1 Storage Limit (Monthly)
+    if (totalStorageGB > PRICING.FREE.D1_STORAGE_GB) {
+        exceededLimits.push('D1 Storage')
+        rejectedUsage['D1 Storage (GB)'] = totalStorageGB - PRICING.FREE.D1_STORAGE_GB
+    }
+
     const isFreeTierExceeded = exceededLimits.length > 0
 
     // Paid Plan Calculation (always calculated regardless of selected plan for comparison)
@@ -138,6 +150,12 @@ export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown =>
     const d1WritesCost = d1WritesOver * PRICING.PAID.D1_OVERAGE_WRITES
     paidTotal += d1WritesCost
 
+    // D1 Storage Overage
+    const d1StorageOver = Math.max(0, totalStorageGB - PRICING.FREE.D1_STORAGE_GB) // Paid includes 5GB? Actually pricing says "per GB after 5 included" effectively same base.
+    // Wait, PRICING.PAID.D1_STORAGE_GB says 0.75.
+    const d1StorageCost = d1StorageOver * 0.75
+    paidTotal += d1StorageCost
+
     const r2AOver = Math.max(0, r2A - PRICING.FREE.R2_CLASS_A)
     const r2ACost = r2AOver * PRICING.PAID.R2_CLASS_A
     paidTotal += r2ACost
@@ -153,7 +171,7 @@ export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown =>
 
     return {
         workers: workersCost,
-        d1: d1ReadsCost + d1WritesCost,
+        d1: d1ReadsCost + d1WritesCost + d1StorageCost,
         r2: r2ACost + r2BCost,
         browsers: browserCost,
         kv: 0, // usually negligible

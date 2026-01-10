@@ -175,7 +175,7 @@ export class CostDashboard extends LitElement {
                     <div class="slider-group">
                         <label>Daily Visitors</label>
                         <div class="slider-row">
-                            <input type="range" min="100" max="1000000" step="100" 
+                            <input type="range" min="100" max="1000000" step="1" 
                                 .value=${this.dailyVisitors.toString()} 
                                 @input=${(e: any) => this.dailyVisitors = parseInt(e.target.value)}>
                             <span class="value">${this.formatNumber(this.dailyVisitors)}</span>

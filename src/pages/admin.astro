@@ -98,6 +98,107 @@
                 </div>
             </header>
 
+            <!-- Live Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div
+                    class="glass rounded-2xl p-4 flex items-center gap-6 border border-[#00f3ff]/30"
+                >
+                    <div
+                        class="w-12 h-12 rounded-xl bg-[#00f3ff]/20 flex items-center justify-center text-[#00f3ff]"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                            ></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-visitors"
+                            class="text-3xl font-900 text-[#00f3ff] mb-0.5"
+                            style="text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-60 font-800 text-[#00f3ff]"
+                        >
+                            Active Visitors (5m)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl p-4 flex items-center gap-6">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-white"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-requests"
+                            class="text-3xl font-900 text-white mb-0.5"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-40 font-800"
+                        >
+                            Requests (24h)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl p-4 flex items-center gap-6">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                            ></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-errors"
+                            class="text-3xl font-900 text-red-500 mb-0.5"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-40 font-800"
+                        >
+                            Errors (24h)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 <div class="glass rounded-2xl p-4 flex items-center gap-6">
                     <div
@@ -359,8 +460,24 @@
 
             async function refresh() {
                 try {
-                    const res = await fetch("/api/admin/scrape-status");
+                    const [res, statsRes] = await Promise.all([
+                        fetch("/api/admin/scrape-status"),
+                        fetch("/api/admin/stats"),
+                    ]);
+
                     const data = await res.json();
+                    const stats = await statsRes.json();
+
+                    // Update stats
+                    if (stats) {
+                        document.getElementById("stat-visitors").innerText =
+                            stats.activeVisitors || 0;
+                        document.getElementById("stat-requests").innerText =
+                            stats.requests24h || 0;
+                        document.getElementById("stat-errors").innerText =
+                            stats.errors24h || 0;
+                    }
+
                     partiesData = data;
 
                     const list = document.getElementById("party-list");
