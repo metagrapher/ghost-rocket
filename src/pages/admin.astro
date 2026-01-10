@@ -278,10 +278,13 @@
                         <div class="h-8 w-px bg-white/10"></div>
 
                         <button
+                            id="btn-carl-action"
                             onclick="window.wakeCarl()"
-                            class="group/btn relative overflow-hidden rounded-lg bg-white px-4 py-2 font-900 text-black uppercase text-xs tracking-widest hover:scale-105 active:scale-95 transition-all"
+                            class="group/btn relative overflow-hidden rounded-lg bg-white px-4 py-2 font-900 text-black uppercase text-xs tracking-widest hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed"
                         >
-                            <span class="relative z-10">Wake Carl</span>
+                            <span class="relative z-10" id="btn-carl-text"
+                                >Wake Carl</span
+                            >
                             <div
                                 class="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover/btn:opacity-100 transition-opacity"
                             >
@@ -868,6 +871,37 @@
                             "bg-green-500",
                             "animate-pulse",
                             "bg-yellow-500",
+                        );
+                    }
+
+                    // Button Logic
+                    const actionBtn =
+                        document.getElementById("btn-carl-action");
+                    const actionText = document.getElementById("btn-carl-text");
+
+                    if (data.isEating) {
+                        actionBtn.disabled = true;
+                        actionText.innerText = "Eating...";
+                        actionBtn.onclick = null;
+                        actionBtn.classList.remove("bg-white", "text-black");
+                        actionBtn.classList.add("bg-green-500", "text-white");
+                    } else if (data.config?.enabled) {
+                        actionBtn.disabled = false;
+                        actionText.innerText = "Feed Carl";
+                        actionBtn.onclick = window.wakeCarl; // Force Scrape
+                        actionBtn.classList.add("bg-white", "text-black");
+                        actionBtn.classList.remove(
+                            "bg-green-500",
+                            "text-white",
+                        );
+                    } else {
+                        actionBtn.disabled = false;
+                        actionText.innerText = "Wake Carl";
+                        actionBtn.onclick = window.toggleCarl; // Enable
+                        actionBtn.classList.add("bg-white", "text-black");
+                        actionBtn.classList.remove(
+                            "bg-green-500",
+                            "text-white",
                         );
                     }
 
