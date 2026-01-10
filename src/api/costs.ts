@@ -3,6 +3,7 @@ export interface UsageScenario {
     roundsPerVisitor: number
     partiesScrapedPerMonth: number
     avgPhotosPerParty: number
+    plan: 'FREE' | 'PAID'
 }
 
 export interface CostBreakdown {
@@ -14,6 +15,7 @@ export interface CostBreakdown {
     total: number
     isFreeTierExceeded: boolean
     exceededLimits: string[]
+    rejectedUsage: Record<string, number> // Usage that would be blocked on Free plan
 }
 
 export const PRICING = {
@@ -23,8 +25,8 @@ export const PRICING = {
         D1_ROWS_READ: 5_000_000, // per day
         D1_ROWS_WRITE: 100_000, // per day
         D1_STORAGE_GB: 5,
-        R2_CLASS_A: 1_000_000,
-        R2_CLASS_B: 10_000_000,
+        R2_CLASS_A: 1_000_000, // per month
+        R2_CLASS_B: 10_000_000, // per month
         R2_STORAGE_GB: 10,
         BROWSER_MIN_PER_DAY: 10,
         KV_READS: 100_000, // per day
@@ -43,7 +45,7 @@ export const PRICING = {
         R2_CLASS_B: 0.36 / 1_000_000,
         R2_STORAGE_GB: 0.015,
         BROWSER_INCLUDED_HOURS: 10,
-        BROWSER_OVERAGE_HOUR: 0.10, // approximate based on general lambda/compute pricing if not specified
+        BROWSER_OVERAGE_HOUR: 0.10, // approximate
         KV_READS_OVERAGE: 0.50 / 1_000_000,
         KV_WRITES_OVERAGE: 5.00 / 1_000_000,
     }
@@ -73,7 +75,8 @@ export const UNIT_USAGE = {
 }
 
 export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown => {
-    const { monthlyVisitors, roundsPerVisitor, partiesScrapedPerMonth, avgPhotosPerParty } = scenario
+    const { monthlyVisitors, roundsPerVisitor, partiesScrapedPerMonth, avgPhotosPerParty, plan } = scenario
+    const DAILY_TO_MONTHLY = 30
 
     // Total Monthly Metrics
     const totalRounds = monthlyVisitors * roundsPerVisitor
@@ -98,60 +101,65 @@ export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown =>
 
     const kvReads = monthlyVisitors * UNIT_USAGE.VISITOR.KV_READS
 
-    // Check Free Tier Breaches (Daily limits converted to monthly approx)
-    const DAILY_TO_MONTHLY = 30
+    // Breakdown and Breaches
     const exceededLimits: string[] = []
-    if (reqs / DAILY_TO_MONTHLY > PRICING.FREE.WORKERS_REQUESTS) exceededLimits.push('Workers Requests')
-    if (d1Reads / DAILY_TO_MONTHLY > PRICING.FREE.D1_ROWS_READ) exceededLimits.push('D1 Reads')
-    if (d1Writes / DAILY_TO_MONTHLY > PRICING.FREE.D1_ROWS_WRITE) exceededLimits.push('D1 Writes')
-    if (browserMin / DAILY_TO_MONTHLY > PRICING.FREE.BROWSER_MIN_PER_DAY) exceededLimits.push('Browser Rendering')
-    if (kvReads / DAILY_TO_MONTHLY > PRICING.FREE.KV_READS) exceededLimits.push('KV Reads')
+    const rejectedUsage: Record<string, number> = {}
 
-    if (r2A > PRICING.FREE.R2_CLASS_A) exceededLimits.push('R2 Class A')
-    if (r2B > PRICING.FREE.R2_CLASS_B) exceededLimits.push('R2 Class B')
+    const checkLimit = (name: string, current: number, limit: number, isMonthly = false) => {
+        const threshold = isMonthly ? limit : limit * DAILY_TO_MONTHLY
+        if (current > threshold) {
+            exceededLimits.push(name)
+            rejectedUsage[name] = current - threshold
+        }
+    }
+
+    checkLimit('Workers Requests', reqs, PRICING.FREE.WORKERS_REQUESTS)
+    checkLimit('D1 Reads', d1Reads, PRICING.FREE.D1_ROWS_READ)
+    checkLimit('D1 Writes', d1Writes, PRICING.FREE.D1_ROWS_WRITE)
+    checkLimit('Browser Rendering', browserMin, PRICING.FREE.BROWSER_MIN_PER_DAY)
+    checkLimit('KV Reads', kvReads, PRICING.FREE.KV_READS)
+    checkLimit('R2 Class A', r2A, PRICING.FREE.R2_CLASS_A, true)
+    checkLimit('R2 Class B', r2B, PRICING.FREE.R2_CLASS_B, true)
 
     const isFreeTierExceeded = exceededLimits.length > 0
 
-    // Paid Plan Calculation
+    // Paid Plan Calculation (always calculated regardless of selected plan for comparison)
     let paidTotal = PRICING.PAID.MONTHLY_FEE
 
-    // Workers overage
-    if (reqs > PRICING.PAID.WORKERS_INCLUDED_REQ) {
-        paidTotal += (reqs - PRICING.PAID.WORKERS_INCLUDED_REQ) * PRICING.PAID.WORKERS_OVERAGE_REQ
-    }
+    const workersOver = Math.max(0, reqs - PRICING.PAID.WORKERS_INCLUDED_REQ)
+    const workersCost = workersOver * PRICING.PAID.WORKERS_OVERAGE_REQ
+    paidTotal += workersCost
 
-    // D1 Read overage (Billions included, so likely few overages for small sites)
-    if (d1Reads > PRICING.PAID.D1_INCLUDED_READS) {
-        paidTotal += (d1Reads - PRICING.PAID.D1_INCLUDED_READS) * PRICING.PAID.D1_OVERAGE_READS
-    }
+    const d1ReadsOver = Math.max(0, d1Reads - PRICING.PAID.D1_INCLUDED_READS)
+    const d1ReadsCost = d1ReadsOver * PRICING.PAID.D1_OVERAGE_READS
+    paidTotal += d1ReadsCost
 
-    // D1 Write overage
-    if (d1Writes > PRICING.PAID.D1_INCLUDED_WRITES) {
-        paidTotal += (d1Writes - PRICING.PAID.D1_INCLUDED_WRITES) * PRICING.PAID.D1_OVERAGE_WRITES
-    }
+    const d1WritesOver = Math.max(0, d1Writes - PRICING.PAID.D1_INCLUDED_WRITES)
+    const d1WritesCost = d1WritesOver * PRICING.PAID.D1_OVERAGE_WRITES
+    paidTotal += d1WritesCost
 
-    // R2 Operations (1M included for A, 10M for B)
-    if (r2A > PRICING.FREE.R2_CLASS_A) {
-        paidTotal += (r2A - PRICING.FREE.R2_CLASS_A) * PRICING.PAID.R2_CLASS_A
-    }
-    if (r2B > PRICING.FREE.R2_CLASS_B) {
-        paidTotal += (r2B - PRICING.FREE.R2_CLASS_B) * PRICING.PAID.R2_CLASS_B
-    }
+    const r2AOver = Math.max(0, r2A - PRICING.FREE.R2_CLASS_A)
+    const r2ACost = r2AOver * PRICING.PAID.R2_CLASS_A
+    paidTotal += r2ACost
 
-    // Browser Overage
+    const r2BOver = Math.max(0, r2B - PRICING.FREE.R2_CLASS_B)
+    const r2BCost = r2BOver * PRICING.PAID.R2_CLASS_B
+    paidTotal += r2BCost
+
     const browserHours = browserMin / 60
-    if (browserHours > PRICING.PAID.BROWSER_INCLUDED_HOURS) {
-        paidTotal += (browserHours - PRICING.PAID.BROWSER_INCLUDED_HOURS) * PRICING.PAID.BROWSER_OVERAGE_HOUR
-    }
+    const browserOver = Math.max(0, browserHours - PRICING.PAID.BROWSER_INCLUDED_HOURS)
+    const browserCost = browserOver * PRICING.PAID.BROWSER_OVERAGE_HOUR
+    paidTotal += browserCost
 
     return {
-        workers: reqs > PRICING.PAID.WORKERS_INCLUDED_REQ ? (reqs - PRICING.PAID.WORKERS_INCLUDED_REQ) * PRICING.PAID.WORKERS_OVERAGE_REQ : 0,
-        d1: (d1Writes > PRICING.PAID.D1_INCLUDED_WRITES ? (d1Writes - PRICING.PAID.D1_INCLUDED_WRITES) * PRICING.PAID.D1_OVERAGE_WRITES : 0),
-        r2: ((r2A > PRICING.FREE.R2_CLASS_A ? (r2A - PRICING.FREE.R2_CLASS_A) * PRICING.PAID.R2_CLASS_A : 0) + (r2B > PRICING.FREE.R2_CLASS_B ? (r2B - PRICING.FREE.R2_CLASS_B) * PRICING.PAID.R2_CLASS_B : 0)),
-        browsers: browserHours > PRICING.PAID.BROWSER_INCLUDED_HOURS ? (browserHours - PRICING.PAID.BROWSER_INCLUDED_HOURS) * PRICING.PAID.BROWSER_OVERAGE_HOUR : 0,
+        workers: workersCost,
+        d1: d1ReadsCost + d1WritesCost,
+        r2: r2ACost + r2BCost,
+        browsers: browserCost,
         kv: 0, // usually negligible
-        total: paidTotal,
+        total: plan === 'FREE' ? 0 : paidTotal,
         isFreeTierExceeded,
-        exceededLimits
+        exceededLimits,
+        rejectedUsage
     }
 }

@@ -321,13 +321,15 @@ export class RaveGame extends LitElement {
             pointer-events: auto;
             /* margin-top removed, handled by gap */
         }
-        .reveal-actions .result-text {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: -0.05em;
-            transform: rotate(-2deg);
+        .result-text {
             text-shadow: 0 0 20px rgba(0,0,0,0.5);
             pointer-events: none;
+            width: 100%;
+            text-align: center;
+            font-weight: 900;
+        }
+        .result-text span {
+            display: block;
         }
         
     `;
@@ -523,7 +525,7 @@ export class RaveGame extends LitElement {
                         <!-- Higher layer for actions to prevent occlusion by long party names -->
                         <div class="reveal-actions">
                             <div class="result-text">
-                                ${this.result === 'correct' ? html`<span style="color: #4ade80;">NAILED IT</span>` : this.result === 'wrong' ? html`<span style="color: #f87171;">NOPE.</span>` : ''}
+                                 ${this.result === 'correct' ? html`<span style="color: #4ade80; font-size: 2.25rem;">THE VIBE IS RIGHT</span>` : this.result === 'wrong' ? html`<span style="color: #f87171; font-size: 3rem;">NOT THE VIBE</span>` : ''}
                             </div>
                             <button class="next-btn" @click=${this.loadGame}>NEXT PHOTO →</button>
                         </div>
