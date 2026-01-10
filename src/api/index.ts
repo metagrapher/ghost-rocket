@@ -6,29 +6,14 @@ app.get('/hello', (c) =>
     c.json(
         {
             message: 'Welcome to rave.arca.de.com'
-            , status: 'ravertastic'
+            , status: 'RAVEtastic'
         })
 )
 
-const ARCHIVE =
-    [{ id: 'cubik041604', title: 'Cübik - 04-16-04', url: 'http://ssbproductions.com/cubik041604/', series: 'Cübik (2004)' }
-        , { id: 'transit031710', title: 'Mass Transit - 03-17-10', url: 'http://ssbproductions.com/transit031710/', series: 'Mass Transit (2010)' }
-        , { id: 'zebabar090118', title: 'Pump Pump - 09-01-18', url: 'http://ssbproductions.com/zebabar090118/', series: 'Zeba Bar (2018)' }
-        , { id: 'transit033118', title: 'Mass Transit w/ JOHN B', url: 'http://ssbproductions.com/transit033118/', series: 'Mass Transit (2018)' }
-        , { id: 'wickerman062318', title: 'WickerMan Burn - Sat', url: 'http://ssbproductions.com/wickerman062318/', series: 'WickerMan Burn (2018)' }
-        , { id: 'wickerman062218', title: 'WickerMan Burn - Fri', url: 'http://ssbproductions.com/wickerman062218/', series: 'WickerMan Burn (2018)' }
-        , { id: 'wickerman062118', title: 'WickerMan Burn - Thu', url: 'http://ssbproductions.com/wickerman062118/', series: 'WickerMan Burn (2018)' }
-        , { id: 'farmshow03', title: 'Farm Show 2003', url: 'http://ssbproductions.com/farmshow03/', series: 'Farm Show (2003)' }
-        , { id: 'starscape060609', title: 'Starscape 2009', url: 'http://ssbproductions.com/starscape060609/', series: 'Starscape (2009)' }
-        , { id: 'paradox042509', title: 'Spring Massive - 04-25-09', url: 'http://ssbproductions.com/paradox042509/', series: 'Spring Massive (2009)' }
-        , { id: 'potd091808', title: 'Planet of the Drums', url: 'http://ssbproductions.com/potd091808/', series: 'Planet of the Drums (2008)' }
-        , { id: 'gothprom052409', title: 'Goth Prom at Town', url: 'http://ssbproductions.com/gothprom052409/', series: 'Goth Prom (2009)' }
-        , { id: 'ibiza120509', title: 'Ibiza - 12-05-09', url: 'http://ssbproductions.com/ibiza120509/', series: 'Ibiza (2009)' }
-        , { id: 'fallmassive112809', title: 'Fall Massive 2009', url: 'http://ssbproductions.com/fallmassive112809/', series: 'Fall Massive (2009)' }
-        , { id: 'buzzboat2009-7', title: 'Buzz Boat Closing', url: 'http://ssbproductions.com/buzzboat2009-7/', series: 'Buzz Boat (2009)' }
-    ]
-
-app.get('/archive', (c) => c.json(ARCHIVE))
+app.get('/archive', async (c) => {
+    const { results } = await c.env.DB.prepare('SELECT * FROM parties ORDER BY discovered_at DESC').all()
+    return c.json(results)
+})
 
 app.get('/image-proxy', async (c) => {
     const url = c.req.query('url')
@@ -60,88 +45,99 @@ app.get('/image-proxy', async (c) => {
     }
 })
 
+import { scrapeArchive } from './scraper'
+import { discoverParties } from './discover'
+import { enrichPartyWithAI } from './enrichment'
+
+app.get('/admin/discover', async (c) => {
+    const env = c.env
+    try {
+        const result = await discoverParties(env)
+        return c.json({ status: 'Discovery Complete', ...result })
+    } catch (e: any) {
+        return c.json({ status: 'Discovery Failed', error: e.message }, 500)
+    }
+})
+
 app.get('/admin/scrape', async (c) => {
-    // 1. Iterate over all defined Archives
-    const report: any[] = []
-    const bucket = c.env.BUCKET
+    const env = c.env
+    const targetId = c.req.query('id')
 
-    for (const party of ARCHIVE) {
-        try {
-            // Fetch the index page
-            const indexRes = await fetch(party.url, {
-                headers: { 'User-Agent': 'GhostRocket/1.0' }
-            })
-            if (!indexRes.ok) {
-                report.push({ id: party.id, status: 'failed_index', code: indexRes.status })
-                continue
-            }
-
-            const html = await indexRes.text()
-            // Naive regex to find links to jpgs. 
-            // Look for href="... .jpg" or .JPG, naive because HTML parsing is hard with regex but sufficient for this legacy site.
-            // Targeting: <a href="SSB_0001.jpg"> or <a href="tn/DSC_0001.JPG">
-            const combinedSource: string[] = []
-
-            // Regex 1: Capture hrefs (including hash prefix)
-            const hrefMatches = [...html.matchAll(/href=["']([^"']+\.(?:jpg|JPG))["']/gi)]
-            hrefMatches.forEach(m => combinedSource.push(m[1]))
-
-            // Regex 2: Capture window.open args
-            const scriptMatches = [...html.matchAll(/window\.open\(['"]([^"']+\.(?:jpg|JPG))['"]/gi)]
-            scriptMatches.forEach(m => combinedSource.push(m[1]))
-
-            const uniqueImages = new Set<string>()
-
-            combinedSource.forEach(raw => {
-                // Cleanup: remove starting #
-                let clean = raw.startsWith('#') ? raw.substring(1) : raw
-                uniqueImages.add(clean)
-            })
-
-            let saved = 0
-            const images = Array.from(uniqueImages)
-
-            // Limit to 20 per party for now to avoid timeout/rate limits during first pass?
-            // Or just go for it? Let's cap at 50 for the "Kick off".
-            const LIMIT = 50
-            const toProcess = images.slice(0, LIMIT)
-
-            await Promise.all(toProcess.map(async (imgLink) => {
-                // Handle relative paths. Usually just filename.
-                // Sometimes might be 'tn/foo.jpg' -> skip thumbnails?
-                if (imgLink.includes('tn/') || imgLink.includes('TN/')) return // Skip thumbnails
-
-                const fullUrl = new URL(imgLink, party.url).toString()
-                const filename = imgLink.split('/').pop()!
-                const r2Key = `${party.id}/${filename}`
-
-                // Fetch & Store (Verify content-type)
-                const vidRes = await fetch(fullUrl)
-                if (vidRes.ok) {
-                    const contentType = vidRes.headers.get('content-type') || ''
-                    if (contentType.includes('image')) {
-                        const blob = await vidRes.arrayBuffer()
-                        await bucket.put(r2Key, blob, {
-                            httpMetadata: { contentType: contentType }
-                        })
-                        saved++
-                    }
-                }
-            }))
-
-            report.push({ id: party.id, found: images.length, processing_limit: LIMIT, saved_new: saved })
-
-        } catch (e: any) {
-            report.push({ id: party.id, error: e.message })
-        }
+    let parties: any[] = []
+    if (targetId) {
+        const party = await env.DB.prepare('SELECT * FROM parties WHERE id = ?').bind(targetId).first()
+        if (party) parties = [party]
+    } else {
+        // Pick 2 random parties that haven't been scraped recently or at all
+        const { results } = await env.DB.prepare(`
+            SELECT p.* FROM parties p
+            LEFT JOIN scrape_status s ON p.id = s.party_id
+            ORDER BY s.last_scraped_at ASC NULLS FIRST
+            LIMIT 2
+        `).all()
+        parties = results
     }
 
-    return c.json({ status: 'Batch Complete', report })
+    if (parties.length === 0) {
+        return c.json({ status: 'No parties found to scrape' })
+    }
+
+    c.executionCtx.waitUntil((async () => {
+        for (const party of parties) {
+            await scrapeArchive(party, env)
+            // Trigger enrichment after scrape
+            await enrichPartyWithAI(party.id, env)
+        }
+    })())
+
+    return c.json({ status: 'Scrape and Enrichment started in background', batch: parties.map((b: any) => b.id) })
+})
+
+app.get('/admin/enrich', async (c) => {
+    const env = c.env
+    const partyId = c.req.query('id')
+
+    if (partyId) {
+        const result = await enrichPartyWithAI(partyId, env)
+        return c.json({ status: 'Enrichment Complete', id: partyId, result })
+    }
+
+    // Otherwise find a party that hasn't been enriched
+    const party = await env.DB.prepare('SELECT id FROM parties WHERE enriched_at IS NULL LIMIT 1').first()
+    if (!party) return c.json({ status: 'No parties need enrichment' })
+
+    const result = await enrichPartyWithAI(party.id, env)
+    return c.json({ status: 'Enrichment Complete', id: party.id, result })
+})
+
+app.get('/admin/scrape-status', async (c) => {
+    const { results } = await c.env.DB.prepare(`
+        SELECT p.id, p.title, p.series, p.location_name, p.latitude, p.longitude, p.party_date, p.enriched_at, s.last_scraped_at, s.images_found, s.images_saved, s.status
+        FROM parties p
+        LEFT JOIN scrape_status s ON p.id = s.party_id
+        ORDER BY s.last_scraped_at DESC NULLS FIRST, p.id ASC
+    `).all()
+    return c.json(results)
+})
+
+app.post('/admin/party/update', async (c) => {
+    const env = c.env
+    const body = await c.req.json()
+    const { id, title, series, location_name, latitude, longitude, party_date } = body
+
+    await env.DB.prepare(`
+        UPDATE parties 
+        SET title = ?, series = ?, location_name = ?, latitude = ?, longitude = ?, party_date = ?
+        WHERE id = ?
+    `).bind(title, series, location_name, latitude, longitude, party_date, id).run()
+
+    return c.json({ success: true })
 })
 
 app.get('/quiz', async (c) => {
     try {
         const bucket = c.env.BUCKET
+        const db = c.env.DB
         const listed = await bucket.list()
 
         if (!listed.objects || listed.objects.length === 0) {
@@ -153,42 +149,46 @@ app.get('/quiz', async (c) => {
         const key = randomObj.key // e.g. "partyId/filename.jpg"
         const partyId = key.split('/')[0]
 
-        // Validate partyId against our metadata
-        const correctArchive = ARCHIVE.find(a => a.id === partyId)
+        // Validate partyId against our metadata in DB
+        const correctArchive = await db.prepare('SELECT * FROM parties WHERE id = ?').bind(partyId).first() as any
 
-        // If we have a file for a party we don't know about (orphan), just recurse/retry? 
-        // For now, let's just error to be safe, or handle gracefully.
         if (!correctArchive) {
             return c.json({ error: 'Orphaned Photo Found', key }, 500)
         }
 
-        // Generate options
-        // Generate options (Grouping by Series)
-
-        // 1. Get correct series
-        const correctSeries = correctArchive.series || correctArchive.title
-
-        // 2. Get all other VALID series (deduplicated)
-        const othersMap = new Map<string, string>() // series -> id
-        ARCHIVE.forEach(a => {
-            const series = a.series || a.title
-            if (series !== correctSeries) {
-                othersMap.set(series, a.id)
+        // Helper to format label with year
+        const getYear = (p: any) => {
+            if (p.party_date) return p.party_date.split('-')[0]
+            const match = p.id.match(/(\d{2})(\d{2})(\d{2})$/)
+            if (match) {
+                const yy = match[3]
+                return parseInt(yy) > 80 ? `19${yy}` : `20${yy}`
             }
-        })
+            return ''
+        }
 
-        const distinctDistractors = Array.from(othersMap.keys())
+        const formatLabel = (p: any) => {
+            const base = p.title || p.series || 'Unknown Party'
+            const year = getYear(p)
+            return year ? `${base} (${year})` : base
+        }
 
-        // 3. Shuffle and pick 3 unique distractors
-        const selectedDistractors = distinctDistractors
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 3)
-            .map(series => ({
-                id: othersMap.get(series)!,
-                label: series
-            }))
+        // Generate options (Prioritize Title over Series, Add Year)
+        const correctLabel = formatLabel(correctArchive)
 
-        const options = [...selectedDistractors, { id: correctArchive.id, label: correctSeries }]
+        // Get distractors from DB (randomly pick 3 different titles)
+        const { results: distractors } = await db.prepare(`
+            SELECT id, title, series, party_date FROM parties 
+            WHERE title != ? AND id != ?
+            GROUP BY title
+            ORDER BY RANDOM()
+            LIMIT 3
+        `).bind(correctArchive.title || correctArchive.series, correctArchive.id).all()
+
+        const options = [...distractors.map((d: any) => ({
+            id: d.id,
+            label: formatLabel(d)
+        })), { id: correctArchive.id, label: correctLabel }]
             .sort(() => 0.5 - Math.random())
 
         // Parse date from ID (e.g., cubik041604 -> 04/16/04)
@@ -210,7 +210,8 @@ app.get('/quiz', async (c) => {
         })
 
     } catch (e: any) {
-        return c.json({ error: e.message }, 500)
+        console.error('Quiz Error:', e)
+        return c.json({ error: e.message || 'Failed to generate quiz' }, 500)
     }
 })
 
@@ -248,19 +249,46 @@ app.post('/tags', async (c) => {
     }
 })
 
-app.get('/img/:key', async (c) => {
-    const key = c.req.param('key')
-    const object = await c.env.BUCKET.get(decodeURIComponent(key))
+app.get('/img/*', async (c) => {
+    try {
+        const url = new URL(c.req.url)
+        const key = url.pathname.replace('/api/img/', '')
+        const decodedKey = decodeURIComponent(key)
 
-    if (!object) return c.text('Not found', 404)
+        console.log(`🖼️ Fetching Image: ${decodedKey}`)
+        const object = await c.env.BUCKET.get(decodedKey)
 
-    const headers = new Headers()
-    object.writeHttpMetadata(headers)
-    headers.set('etag', object.httpEtag)
+        if (!object) {
+            console.warn(`❌ Image Not Found: ${decodedKey}`)
+            return c.text('Not found', 404)
+        }
 
-    return new Response(object.body, {
-        headers
-    })
+        const headers = new Headers()
+        if (object.httpMetadata?.contentType) {
+            headers.set('content-type', object.httpMetadata.contentType)
+        }
+        if (object.httpMetadata?.contentLanguage) {
+            headers.set('content-language', object.httpMetadata.contentLanguage)
+        }
+        if (object.httpMetadata?.contentEncoding) {
+            headers.set('content-encoding', object.httpMetadata.contentEncoding)
+        }
+        if (object.httpMetadata?.contentDisposition) {
+            headers.set('content-disposition', object.httpMetadata.contentDisposition)
+        }
+        if (object.httpMetadata?.cacheControl) {
+            headers.set('cache-control', object.httpMetadata.cacheControl)
+        }
+
+        headers.set('etag', object.httpEtag)
+
+        return new Response(object.body, {
+            headers
+        })
+    } catch (e: any) {
+        console.error('Image Fetch Error:', e)
+        return c.text(`Image Error: ${e.message}`, 500)
+    }
 })
 
 export default app

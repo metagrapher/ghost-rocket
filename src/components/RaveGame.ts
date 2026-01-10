@@ -33,15 +33,26 @@ export class RaveGame extends LitElement {
             width: 100%;
             transition: transform 0.7s;
             transform: rotate(1deg);
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
         }
         .polaroid-container:hover {
             transform: rotate(0deg);
         }
 
-        /* The Flipping Box */
+        /* Shared Face Styles */
+        .polaroid-face {
+            width: 100%;
+            box-sizing: border-box;
+            background: #fdfaf7; /* Solid off-white polaroid paper */
+            position: relative;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
         .polaroid-inner {
             position: relative;
             width: 100%;
+            aspect-ratio: 448 / 546; /* Providing height for absolute children */
             transform-style: preserve-3d;
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -49,48 +60,58 @@ export class RaveGame extends LitElement {
             transform: rotateY(180deg);
         }
 
-        /* Shared Face Styles */
-        .polaroid-face {
+        .polaroid-front, .polaroid-back {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            box-sizing: border-box;
-            background: #fffafa;
-            padding: 1rem;
-            padding-bottom: 4.5rem;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
+            background: #fdfaf7 !important; /* Force solid paper color */
+            transform-style: preserve-3d;
         }
 
         .polaroid-front {
-            position: relative;
+            transform: rotateY(0deg) translateZ(1px);
             z-index: 2;
         }
 
         .polaroid-back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            transform: rotateY(180deg);
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            transition: opacity 0.1s;
-        }
-        .is-flipped .polaroid-back {
-            opacity: 1;
+            transform: rotateY(180deg) translateZ(1px);
+            z-index: 1;
         }
 
         .image-container {
-            aspect-ratio: 1 / 1;
+            position: absolute;
+            /* Precise positioning of the image within the frame's dark hole */
+            top: 6.2%;
+            left: 7.8%;
+            width: 84.8%;
+            height: 72%;
             background-color: #1a1a1a;
             overflow: hidden;
-            margin-bottom: 0.75rem;
-            position: relative;
-            display: grid;
-            place-items: center;
-            max-height: 50vh;
+            display: block;
+            z-index: 10;
+            transform-style: preserve-3d;
+            transform: translateZ(2px);
         }
+
+        .polaroid-overlay {
+            position: absolute;
+            /* Cropping 800x600 PNG to the 448x546 content area */
+            top: -4.58%;
+            left: -38.39%;
+            width: 178.57%;
+            height: 109.89%;
+            pointer-events: none;
+            z-index: 20; /* Frame stays below image if it lacks a cutout */
+            background: url('/polaroid-frame.png') no-repeat center;
+            background-size: 100% 100%;
+        }
+
         .polaroid-back .image-container {
             background-color: #050505; /* Deep black developer area */
             box-shadow: inset 0 0 20px rgba(0,0,0,1);
@@ -149,32 +170,40 @@ export class RaveGame extends LitElement {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.5s;
-            position: relative;
-            z-index: 10;
+            object-position: var(--image-pos, center);
+            opacity: 1 !important;
+            transition: opacity 0.5s, object-position 0.5s ease;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 20;
+            transform: translateZ(5px);
         }
-        img.loaded {
-            opacity: 1;
+        img.loading {
+            opacity: 1 !important; /* Even when loading, let's see the broken icon or empty space */
+            background: #222;
         }
         .caption {
             position: absolute;
-            bottom: 0.75rem;
-            left: 1rem;
-            right: 1rem;
+            /* Precise positioning in the bottom area of the polaroid */
+            bottom: 6%;
+            left: 8%;
+            right: 8%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
+            z-index: 40;
+            transform: translateZ(10px);
         }
         .handwriting {
             font-family: 'Permanent Marker', cursive;
-            color: #374151; /* Slightly darker for better marker feel */
-            font-size: 1.75rem; /* Significantly larger */
+            color: #1f2937; /* Dark Grey/Blue ink */
+            font-size: 1.75rem;
             transform: rotate(-3deg) translateY(-0.25rem);
             line-height: 1.2;
             width: 100%;
+            text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.1);
         }
         .meta {
             color: #9ca3af;
@@ -283,6 +312,7 @@ export class RaveGame extends LitElement {
     @state() flipped = false;
     @state() caption = "Guess the party...";
     @state() raverClicks = 0;
+    @state() imagePosition = '50% 50%';
 
 
     connectedCallback() {
@@ -301,27 +331,58 @@ export class RaveGame extends LitElement {
         this.imageLoaded = false;
         this.caption = "Guess the party...";
         this.raverClicks = 0; // Reset frustration meter
+        this.imagePosition = '50% 50%';
 
 
         try {
+            console.log("🎮 Loading next quiz question...");
             const res = await fetch("/api/quiz");
+            if (!res.ok) {
+                const errData = await res.json() as any;
+                throw new Error(errData.error || `Server responded with ${res.status}`);
+            }
+
             const data = await res.json();
+            console.log("📦 Quiz data received:", data);
 
             // Assigning the new quiz data only AFTER any flip-back is done
             this.quiz = data;
 
             // Preload image
             if (this.quiz?.imageUrl) {
+                console.log(`🖼️ Preloading image: ${this.quiz.imageUrl}`);
                 const img = new Image();
                 img.src = this.quiz.imageUrl;
+
                 img.onload = () => {
+                    console.log("✅ Image loaded successfully.");
                     this.imageLoaded = true;
                     this.loading = false;
                 };
+
+                img.onerror = (err) => {
+                    console.error("❌ Image failed to load:", this.quiz?.imageUrl, err);
+                    // Force display even if failed, so we can see the broken image icon at least
+                    this.imageLoaded = true;
+                    this.loading = false;
+                };
+
+                // Safety timeout
+                setTimeout(() => {
+                    if (this.loading) {
+                        console.warn("⏳ Image load timed out. Forcing UI update.");
+                        this.imageLoaded = true;
+                        this.loading = false;
+                    }
+                }, 10000);
+            } else {
+                console.warn("⚠️ No imageUrl in quiz data!");
+                this.loading = false;
             }
-        } catch (e) {
-            console.error("Rave API Error", e);
+        } catch (e: any) {
+            console.error("💔 Rave API Error:", e);
             this.loading = false;
+            this.caption = `Error: ${e.message}`;
         }
     }
 
@@ -360,6 +421,18 @@ export class RaveGame extends LitElement {
         }
     }
 
+    handleFacesDetected(e: any) {
+        // Center the image on the detected faces
+        const { x, y } = e.detail;
+        if (isNaN(x) || isNaN(y)) {
+            console.warn("⚠️ Face detection returned NaN coordinates.");
+            this.imagePosition = 'center';
+            return;
+        }
+        this.imagePosition = `${x}% ${y}%`;
+        console.log(`🎯 Centering image on faces: ${this.imagePosition}`);
+    }
+
     render() {
         if (!this.quiz) return html`<div>Loading...</div>`;
 
@@ -372,28 +445,39 @@ export class RaveGame extends LitElement {
                     <!-- FRONT FACE -->
                     <div class="polaroid-face polaroid-front">
                         <div class="image-container">
-                            <!-- Loader -->
-                            <div class="loading-spinner" ?hidden=${this.imageLoaded}>
-                                <div class="raver-loader" @click=${this.handleRaverClick}></div>
-                                <div style="margin-top: 1rem; font-family: monospace; font-size: 0.75rem; color: #2563eb; animation: pulse 2s infinite;">
-                                    LOADING...
-                                </div>
-                            </div>
-
                             <!-- Image -->
                             <img src="${this.quiz.imageUrl}" 
-                                 class="${this.imageLoaded ? 'loaded' : ''}" 
-                                 alt="Party moment" />
+                                 class="${!this.imageLoaded ? 'loading' : ''}" 
+                                 style="--image-pos: ${this.imagePosition}"
+                                 alt="Party moment"
+                                 @load=${() => { console.log("🔥 IMG tag load event fired"); this.imageLoaded = true; this.loading = false; }}
+                                 @error=${(e: any) => { console.error("🔥 IMG tag error event fired", e); this.imageLoaded = true; this.loading = false; }}
+                            >
 
                             <!-- Face Tagger (Only visible when image loaded) -->
                             ${this.imageLoaded ? html`
                                 <face-tagger 
                                     .src=${this.quiz.imageUrl} 
                                     image-key="${imageKey}"
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; transform: translateZ(3px);"
                                     @tags-loaded=${this.handleTagsLoaded}
+                                    @faces-detected=${this.handleFacesDetected}
                                 ></face-tagger>
                             ` : ''}
+
+                            <!-- Loader (Highest level inside container) -->
+                            ${!this.imageLoaded ? html`
+                                <div class="loading-spinner" style="z-index: 100; transform: translateZ(50px);">
+                                    <div class="raver-loader" @click=${this.handleRaverClick}></div>
+                                    <div style="margin-top: 1rem; font-family: monospace; font-size: 0.75rem; color: #2563eb; animation: pulse 2s infinite;">
+                                        LOADING...
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
+
+                        <!-- Overlay stays behind the container in this architecture to ensure visibility -->
+                        <div class="polaroid-overlay" style="z-index: 10;"></div>
                         
                         <div class="caption">
                             <div class="handwriting">${this.caption}</div>
@@ -403,11 +487,12 @@ export class RaveGame extends LitElement {
 
                     <!-- BACK FACE (The Reveal) -->
                     <div class="polaroid-face polaroid-back">
-                        <div class="image-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; gap: 1rem;">
-                            <div style="font-size: 2.5rem; font-weight: 900; letter-spacing: -0.05em; transform: rotate(-1deg);">
-                                ${this.result === 'correct' ? html`<span style="color: #4ade80;">NAILED IT</span>` : this.result === 'wrong' ? html`<span style="color: #f87171;">NOPE!</span>` : ''}
+                        <div class="polaroid-overlay"></div>
+                        <div class="image-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #050505; color: white; gap: 1rem; z-index: 5;">
+                            <div style="font-size: 3.5rem; font-weight: 900; letter-spacing: -0.05em; transform: rotate(-2deg); z-index: 25; text-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                                ${this.result === 'correct' ? html`<span style="color: #4ade80;">NAILED IT</span>` : this.result === 'wrong' ? html`<span style="color: #f87171;">NOPE.</span>` : ''}
                             </div>
-                            <button class="next-btn" @click=${this.loadGame} style="z-index: 20;">NEXT PHOTO →</button>
+                            <button class="next-btn" @click=${this.loadGame} style="z-index: 30; margin-top: 1rem;">NEXT PHOTO →</button>
                         </div>
                         <div class="caption">
                            <div class="reveal-text ${this.result === 'wrong' ? 'reveal-wrong' : ''}">
@@ -415,7 +500,7 @@ export class RaveGame extends LitElement {
                                 <h3 class="reveal-party">${this.result ? correctOption?.label : ''}</h3>
                            </div>
                            <div class="serial-number">
-                               ${(() => {
+                                ${(() => {
                 const d = this.quiz?.date || { month: '01', day: '01', year: '00' };
                 const machine = '43';
                 const film = '80';

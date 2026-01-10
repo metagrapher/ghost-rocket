@@ -29,6 +29,17 @@
       "custom_domain": true
     }
   ],
+  "browser": {
+    "binding": "BROWSER"
+  },
+  "ai": {
+    "binding": "AI"
+  },
+  "triggers": {
+    "crons": [
+      "0 3 * * *"
+    ]
+  },
   "observability": {
     "enabled": true
   }

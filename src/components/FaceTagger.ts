@@ -146,23 +146,32 @@ export class FaceTagger extends LitElement {
 
     async loadFaceAPI() {
         if ((window as any).faceapi) return;
-        // Dynamically load face-api.js from CDN
-        await new Promise((resolve) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js';
-            script.onload = resolve;
-            document.head.appendChild(script);
-        });
-        await (window as any).faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
+        try {
+            console.log("🧬 Loading Face API...");
+            // Dynamically load face-api.js from CDN
+            await new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js';
+                script.onload = resolve;
+                script.onerror = () => reject(new Error("Failed to load face-api.js from CDN"));
+                document.head.appendChild(script);
+            });
+            console.log("🧬 Loading TinyFaceDetector models...");
+            await (window as any).faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
+            console.log("🧬 Face API ready.");
+        } catch (e) {
+            console.error("🧬 Face API initialization failed:", e);
+        }
     }
 
     async fetchExistingTags() {
         if (!this.imageKey) return;
         try {
-            // Correct API path
+            console.log(`🏷️ Fetching tags for: ${this.imageKey}`);
             const res = await fetch(`/api/tags/${encodeURIComponent(this.imageKey)}`);
             if (res.ok) {
                 this.tags = await res.json();
+                console.log(`🏷️ Found ${this.tags.length} tags.`);
             } else {
                 console.warn('Failed to fetch tags:', await res.text());
             }
@@ -172,14 +181,28 @@ export class FaceTagger extends LitElement {
     }
 
     async detectFaces() {
-        const img = document.querySelector('img#game-image') as HTMLImageElement;
-        if (!img || !(window as any).faceapi) return;
+        // Try to find image in same shadow root or parent
+        const root = (this.getRootNode() as ShadowRoot | Document);
+        const img = root.querySelector('img') as HTMLImageElement;
 
-        console.log("Detecting faces on", img.src, img.width, img.height); // DEBUG
+        if (!img || !(window as any).faceapi || !(window as any).faceapi.nets.tinyFaceDetector.params) {
+            console.warn("🧬 Face detection skipped: image not found or faceapi not ready.");
+            return;
+        }
 
-        // Wait for image to load
+        console.log(`🧬 Detecting faces on ${img.src} (${img.width}x${img.height})`);
+
+        // Wait for image to load if not already complete
         if (!img.complete) {
-            await new Promise(r => img.onload = r);
+            await new Promise((resolve) => {
+                const onLoaded = () => {
+                    img.removeEventListener('load', onLoaded);
+                    img.removeEventListener('error', onLoaded);
+                    resolve(true);
+                };
+                img.addEventListener('load', onLoaded);
+                img.addEventListener('error', onLoaded);
+            });
         }
 
         const detections = await (window as any).faceapi.detectAllFaces(
@@ -231,6 +254,20 @@ export class FaceTagger extends LitElement {
         });
 
         console.log("Processed faces:", this.faces); // DEBUG
+
+        if (detections.length > 0) {
+            const avgX = detections.reduce((acc: number, d: any) => acc + (d.box.x + d.box.width / 2), 0) / detections.length;
+            const avgY = detections.reduce((acc: number, d: any) => acc + (d.box.y + d.box.height / 2), 0) / detections.length;
+
+            const percentX = (avgX / natW) * 100;
+            const percentY = (avgY / natH) * 100;
+
+            this.dispatchEvent(new CustomEvent('faces-detected', {
+                detail: { x: percentX, y: percentY },
+                bubbles: true,
+                composed: true
+            }));
+        }
     }
 
     handleCanvasClick(e: MouseEvent) {
