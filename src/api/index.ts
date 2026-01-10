@@ -1,6 +1,12 @@
 import { Hono } from 'hono'
+import { trackRequest, getStats } from './metrics'
 
 export const app = new Hono().basePath('/api')
+
+app.use('*', async (c, next) => {
+    trackRequest(c)
+    return next()
+})
 
 app.get('/hello', (c) =>
     c.json(
@@ -110,6 +116,15 @@ app.get('/admin/enrich', async (c) => {
     return c.json({ status: 'Enrichment Complete', id: party.id, result })
 })
 
+app.get('/admin/stats', async (c) => {
+    try {
+        const stats = await getStats(c.env)
+        return c.json(stats)
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
 app.get('/admin/scrape-status', async (c) => {
     const { results } = await c.env.DB.prepare(`
         SELECT p.id, p.title, p.series, p.location_name, p.latitude, p.longitude, p.party_date, p.enriched_at, s.last_scraped_at, s.images_found, s.images_saved, s.status
@@ -134,39 +149,74 @@ app.post('/admin/party/update', async (c) => {
     return c.json({ success: true })
 })
 
+app.get('/admin/backfill-public-ids', async (c) => {
+    const db = c.env.DB
+    const { results } = await db.prepare('SELECT image_key FROM photos WHERE public_id IS NULL').all()
+
+    let updated = 0
+    for (const photo of results) {
+        const newId = crypto.randomUUID()
+        await db.prepare('UPDATE photos SET public_id = ? WHERE image_key = ?').bind(newId, photo.image_key).run()
+        updated++
+    }
+
+    return c.json({ status: 'Backfill Complete', updated, total: results.length })
+})
+
 app.get('/quiz', async (c) => {
     try {
-        const bucket = c.env.BUCKET
         const db = c.env.DB
-        const listed = await bucket.list()
 
-        if (!listed.objects || listed.objects.length === 0) {
-            return c.json({ error: 'Archive Empty' }, 404)
+        // Deep Linking Support
+        const photoId = c.req.query('photoId')
+        let selectedPhoto: any = null
+
+        if (photoId) {
+            // URL Decoding happens here to handle both clear keys and opaque IDs safely
+            const keyOrId = decodeURIComponent(photoId)
+
+            // 1. Try lookup by public_id (Opaque)
+            selectedPhoto = await db.prepare('SELECT * FROM photos WHERE public_id = ?').bind(keyOrId).first()
+
+            // 2. Fallback: Try lookup by image_key (Legacy/Clear)
+            if (!selectedPhoto) {
+                selectedPhoto = await db.prepare('SELECT * FROM photos WHERE image_key = ?').bind(keyOrId).first()
+            }
+
+            if (!selectedPhoto) {
+                console.warn(`⚠️ Deep Link: Photo not found via public_id or key: ${keyOrId}`)
+            }
         }
 
-        // Pick a random photo from the entire archive, retry if orphaned
-        let key = ''
-        let partyId = ''
-        let correctArchive = null
-        let attempts = 0
-        const MAX_ATTEMPTS = 5
+        // Random Fallback (if no photoId or valid photo found)
+        if (!selectedPhoto) {
+            // Pick a random photo from the DB
+            selectedPhoto = await db.prepare('SELECT * FROM photos ORDER BY RANDOM() LIMIT 1').first()
 
-        while (attempts < MAX_ATTEMPTS) {
-            const randomObj = listed.objects[Math.floor(Math.random() * listed.objects.length)]
-            key = randomObj.key // e.g. "partyId/filename.jpg"
-            partyId = key.split('/')[0]
-
-            // Validate partyId against our metadata in DB
-            correctArchive = await db.prepare('SELECT * FROM parties WHERE id = ?').bind(partyId).first() as any
-
-            if (correctArchive) break
-
-            console.warn(`⚠️ Orphaned Photo Found (Attempt ${attempts + 1}): ${key}`)
-            attempts++
+            if (!selectedPhoto) {
+                // TEMPORARY FALLBACK FOR ORPHANED R2 FILES (Pre-migration safety)
+                const bucket = c.env.BUCKET
+                const listed = await bucket.list()
+                if (listed.objects.length > 0) {
+                    const randomObj = listed.objects[Math.floor(Math.random() * listed.objects.length)]
+                    selectedPhoto = { image_key: randomObj.key } // No public_id available
+                } else {
+                    return c.json({ error: 'Archive Empty' }, 404)
+                }
+            }
         }
+
+        const key = selectedPhoto.image_key
+        const publicIdOutput = selectedPhoto.public_id || key // Prefer public_id, fallback to key if missing
+
+        const partyId = selectedPhoto.party_id || key.split('/')[0]
+
+        // Fetch Party Metadata
+        const correctArchive = await db.prepare('SELECT * FROM parties WHERE id = ?').bind(partyId).first() as any
 
         if (!correctArchive) {
-            return c.json({ error: 'Archive Consistency Error: Too many orphaned photos found.', lastKey: key }, 500)
+            console.warn(`⚠️ Party metadata missing for photo: ${key}`)
+            return c.json({ error: 'Archive Consistency Error: Party metadata missing.', key }, 500)
         }
 
         // Helper to format label with year
@@ -215,8 +265,11 @@ app.get('/quiz', async (c) => {
             if (yearOnly) photoDate.year = yearOnly[1]
         }
 
+        // Return URL with publicId if possible, else key.
+        // And ensure photoId returns the opaque ID.
         return c.json({
-            imageUrl: `/api/img/${encodeURIComponent(key)}`,
+            imageUrl: `/api/img/${encodeURIComponent(publicIdOutput)}`,
+            photoId: encodeURIComponent(publicIdOutput),
             correctId: partyId,
             options,
             date: photoDate
@@ -265,14 +318,28 @@ app.post('/tags', async (c) => {
 app.get('/img/*', async (c) => {
     try {
         const url = new URL(c.req.url)
-        const key = url.pathname.replace('/api/img/', '')
-        const decodedKey = decodeURIComponent(key)
+        const pathSuffix = url.pathname.replace('/api/img/', '')
+        const decodedInput = decodeURIComponent(pathSuffix)
 
-        console.log(`🖼️ Fetching Image: ${decodedKey}`)
-        const object = await c.env.BUCKET.get(decodedKey)
+        console.log(`🖼️ Fetching Image Request: ${decodedInput}`)
+
+        // 1. Resolve potential public_id to real R2 key
+        let r2Key = decodedInput
+        const db = c.env.DB
+
+        // Try to find by public_id first
+        const photo = await db.prepare('SELECT image_key FROM photos WHERE public_id = ?').bind(decodedInput).first()
+        if (photo) {
+            r2Key = photo.image_key
+            console.log(`🔓 Resolved public_id ${decodedInput} to ${r2Key}`)
+        } else {
+            console.log(`ℹ️ Assuming direct key or legacy access: ${decodedInput}`)
+        }
+
+        const object = await c.env.BUCKET.get(r2Key)
 
         if (!object) {
-            console.warn(`❌ Image Not Found: ${decodedKey}`)
+            console.warn(`❌ Image Not Found: ${r2Key} (requested as ${decodedInput})`)
             return c.text('Not found', 404)
         }
 

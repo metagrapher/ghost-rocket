@@ -17,6 +17,9 @@ interface QuizData {
 
 @customElement('rave-game')
 export class RaveGame extends LitElement {
+    @state()
+    private showToast = false;
+
     static styles = css`
         :host {
             display: block;
@@ -34,6 +37,9 @@ export class RaveGame extends LitElement {
             transition: transform 0.7s;
             transform: rotate(1deg);
             filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
+            /* Add padding to prevent clipping of sticking-out elements like the pin button */
+            padding: 20px; 
+            box-sizing: border-box;
         }
         .polaroid-container:hover {
             transform: rotate(0deg);
@@ -225,6 +231,78 @@ export class RaveGame extends LitElement {
             font-weight: bold;
             letter-spacing: 0.15em;
         }
+
+        .share-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 40; /* Needs to be above face-tagger (30) */
+            transition: all 0.2s ease;
+            color: white;
+            padding: 0;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        .share-btn svg {
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        .share-btn-top {
+            bottom: auto;
+            top: -15px;
+            right: -15px;
+            background: rgba(255, 255, 255, 0.9); /* More visible on dark background */
+            color: #111827;
+            border: 2px solid #1f2937;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            z-index: 50;
+        }
+        .share-btn-top:hover {
+             background: #ffffff;
+             transform: scale(1.1) rotate(5deg);
+        }
+
+        .toast {
+            position: absolute;
+            bottom: 65px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #4ade80;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInOut 2s ease forwards;
+            z-index: 50;
+            white-space: nowrap;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(10px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
         .reveal-text {
             color: #111827;
             text-align: center;
@@ -366,11 +444,30 @@ export class RaveGame extends LitElement {
 
         try {
             console.log("🎮 Loading next quiz question...");
-            const res = await fetch("/api/quiz");
+
+            // Check for deep link param
+            const urlParams = new URLSearchParams(window.location.search);
+            const photoId = urlParams.get('photo');
+            let apiUrl = "/api/quiz";
+
+            if (photoId) {
+                console.log(`🔗 Deep Link Detected: ${photoId}`);
+                apiUrl += `?photoId=${encodeURIComponent(photoId)}`;
+            }
+
+            const res = await fetch(apiUrl);
             if (!res.ok) {
                 const errData = await res.json() as any;
                 console.error("💔 Quiz API Error:", errData.error);
                 this.caption = `Error: ${errData.error || res.status}. Retrying...`;
+
+                // If deep link failed (e.g. 404), clear param and retry standard load
+                if (photoId) {
+                    window.history.pushState({}, '', '/');
+                    setTimeout(() => this.loadGame(), 1000);
+                    return;
+                }
+
                 setTimeout(() => this.loadGame(), 2000);
                 return;
             }
@@ -426,6 +523,11 @@ export class RaveGame extends LitElement {
 
         if (this.raverClicks > 2) {
             console.log("User frustrated, skipping...");
+            // Clear deep link if present when skipping
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('photo')) {
+                window.history.pushState({}, '', '/');
+            }
             this.loadGame();
         }
     }
@@ -463,6 +565,22 @@ export class RaveGame extends LitElement {
         console.log(`🎯 Centering image on faces: ${this.imagePosition}`);
     }
 
+    async copyShareLink() {
+        if (!this.quiz?.photoId) return;
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('photo', decodeURIComponent(this.quiz.photoId));
+
+        try {
+            await navigator.clipboard.writeText(url.toString());
+            this.showToast = true;
+            setTimeout(() => this.showToast = false, 2500);
+        } catch (err) {
+            console.error('Failed to copy using API', err);
+            // Fallback?
+        }
+    }
+
     render() {
         if (!this.quiz) return html`<div>Loading...</div>`;
 
@@ -493,6 +611,14 @@ export class RaveGame extends LitElement {
                                     @tags-loaded=${this.handleTagsLoaded}
                                     @faces-detected=${this.handleFacesDetected}
                                 ></face-tagger>
+
+                                <button class="share-btn" @click=${this.copyShareLink} title="Copy Link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                    </svg>
+                                </button>
+                                ${this.showToast ? html`<div class="toast">LINK COPIED!</div>` : ''}
                             ` : ''}
 
                             <!-- Loader (Highest level inside container) -->
@@ -505,6 +631,14 @@ export class RaveGame extends LitElement {
                                 </div>
                             ` : ''}
                         </div>
+
+                        <!-- Top Right Duplicate Share Button -->
+                        <button class="share-btn share-btn-top" @click=${this.copyShareLink} title="Copy Link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                            </svg>
+                        </button>
 
                         <!-- Overlay stays behind the container in this architecture to ensure visibility -->
                         <div class="polaroid-overlay" style="z-index: 10;"></div>
@@ -527,7 +661,14 @@ export class RaveGame extends LitElement {
                             <div class="result-text">
                                  ${this.result === 'correct' ? html`<span style="color: #4ade80; font-size: 2.25rem;">THE VIBE IS RIGHT</span>` : this.result === 'wrong' ? html`<span style="color: #f87171; font-size: 3rem;">NOT THE VIBE</span>` : ''}
                             </div>
-                            <button class="next-btn" @click=${this.loadGame}>NEXT PHOTO →</button>
+                            <button class="next-btn" @click=${() => {
+                // Clear deep link for next photo
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('photo')) {
+                    window.history.pushState({}, '', '/');
+                }
+                this.loadGame();
+            }}>NEXT PHOTO →</button>
                         </div>
 
                         <div class="caption">
