@@ -1,0 +1,3373 @@
+
+> ghost-rocket@0.0.1 dev
+> astro dev
+
+11:31:35 [@astrojs/cloudflare] Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+11:31:35 [@astrojs/cloudflare] If you see the error "Invalid binding `SESSION`" in your build output, you need to add the binding to your wrangler config file.
+11:31:35 [WARN] [adapter] Cloudflare does not support sharp at runtime. However, you can configure `imageService: "compile"` to optimize images with sharp on prerendered pages during build time.
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mAI bindings always access remote resources, and so may incur usage charges even in local dev. To suppress this warning, set `remote: true` for the binding definition in your configuration file.[0m
+
+
+11:31:36 [types] Generated 0ms
+11:31:36 [content] Syncing content
+11:31:36 [content] Synced content
+
+ astro  v5.16.7 ready in 791 ms
+
+┃ Local    http://localhost:6543/
+┃ Network  use --host to expose
+
+11:31:36 watching for file changes...
+11:31:37 [200] /api/carl/status 100ms
+[unocss] Fetching web fonts: https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap
+[unocss] Web fonts fetched.
+11:31:37 [200] /api/carl/status 11ms
+11:31:39 [200] /api/admin/scrape-status 31ms
+11:31:39 [200] /api/admin/stats 28ms
+11:31:39 [200] /api/carl/status 45ms
+11:31:39 [200] /api/admin/usage 18ms
+11:31:39 [200] /api/carl/status 9ms
+11:31:39 [200] /api/carl/status 10ms
+11:31:40 [200] /api/carl/status 9ms
+11:31:41 [200] /api/carl/status 9ms
+11:31:42 [200] /api/carl/status 10ms
+11:31:43 [200] /api/carl/status 20ms
+11:31:44 [200] /api/carl/status 11ms
+11:31:46 [200] /api/carl/status 23ms
+🍽️ Carl is starting to eat: Buzz at Geisha: Lee Burridge VS. Scott Henry (buzz062708) with batch size 50
+🕵️ Carl visiting: http://ssbproductions.com/buzz062708/
+11:31:47 [200] /api/carl/status 9ms
+11:31:47 [200] /api/carl/status 9ms
+11:31:49 [200] /api/admin/scrape-status 26ms
+11:31:49 [200] /api/admin/stats 22ms
+11:31:49 [200] /api/admin/usage 13ms
+11:31:49 [200] /api/carl/status 37ms
+11:31:49 [200] /api/carl/status 9ms
+11:31:49 [200] /api/carl/status 9ms
+11:31:50 [200] /api/carl/status 9ms
+📸 Found 0 raw links for buzz062708
+✨ Filtering to 0 actual images for buzz062708
+📂 Found 0 objects for buzz062708
+⚠️ No images found in R2 for party buzz062708. Cannot enrich.
+11:31:50 [200] /api/admin/scrape 4650ms
+11:32:00 [200] / 6ms
+PostHog Proxy Error: TypeError: RequestInit: duplex option is required when sending a body.
+    at node:internal/deps/undici/undici:15845:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async eval (/Users/metagrapher/.gemini/antigravity/playground/ghost-rocket/src/api/index.ts:33:17)
+    at async dispatch (file:///Users/metagrapher/.gemini/antigravity/playground/ghost-rocket/node_modules/hono/dist/compose.js:22:17)
+11:32:00 [502] POST /api/ingest/flags/ 5ms
+11:32:00 [200] /api/quiz 36ms
+🖼️ Fetching Image Request: 595624d6-bb9c-4831-8f1a-87e7ff2d0531
+🔓 Resolved public_id 595624d6-bb9c-4831-8f1a-87e7ff2d0531 to buzz1214/P0007773.JPG
+11:32:00 [200] /api/img/595624d6-bb9c-4831-8f1a-87e7ff2d0531 19ms
+11:32:01 [200] /api/ingest/array/phc_WOIYBNhgqVLYtm6IEg81iDKUWU6hDZNJ289FMPMs72Y/config.js 1726ms
+11:32:02 [200] /api/ingest/array/phc_WOIYBNhgqVLYtm6IEg81iDKUWU6hDZNJ289FMPMs72Y/config 668ms
+11:32:06 [200] /api/carl/status 17ms
+11:32:06 [200] /api/admin/scrape-status 27ms
+11:32:06 [200] /api/admin/stats 29ms
+11:32:06 [200] /api/admin/usage 13ms
+11:32:06 [200] /api/carl/status 11ms
+11:32:15 [200] / 8ms
+PostHog Proxy Error: TypeError: RequestInit: duplex option is required when sending a body.
+    at node:internal/deps/undici/undici:15845:13
+    at async eval (/Users/metagrapher/.gemini/antigravity/playground/ghost-rocket/src/api/index.ts:33:17)
+    at async dispatch (file:///Users/metagrapher/.gemini/antigravity/playground/ghost-rocket/node_modules/hono/dist/compose.js:22:17)
+11:32:15 [502] POST /api/ingest/flags/ 15ms
+11:32:15 [200] /api/quiz 24ms
+🖼️ Fetching Image Request: a90cd340-3a6d-495d-93bb-9c54e750f156
+🔓 Resolved public_id a90cd340-3a6d-495d-93bb-9c54e750f156 to w0316/P0011557.JPG
+11:32:15 [200] /api/img/a90cd340-3a6d-495d-93bb-9c54e750f156 12ms
+11:32:17 [200] /api/ingest/array/phc_WOIYBNhgqVLYtm6IEg81iDKUWU6hDZNJ289FMPMs72Y/config.js 1511ms
+11:32:17 [200] /api/ingest/array/phc_WOIYBNhgqVLYtm6IEg81iDKUWU6hDZNJ289FMPMs72Y/config 312ms
+11:32:17 [200] / 2ms
+PostHog Proxy Error: TypeError: RequestInit: duplex option is required when sending a body.
+    at node:internal/deps/undici/undici:15845:13
+    at async eval (/Users/metagrapher/.gemini/antigravity/playground/ghost-rocket/src/api/index.ts:33:17)
+    at async dispatch (file:///Users/metagrapher/.gemini/antigravity/playground/ghost-rocket/node_modules/hono/dist/compose.js:22:17)
+11:32:17 [502] POST /api/ingest/flags/ 13ms
+11:32:17 [200] /api/quiz 22ms
+🖼️ Fetching Image Request: 00bc7e93-cdb9-4fdc-9841-803fb4925a49
+🔓 Resolved public_id 00bc7e93-cdb9-4fdc-9841-803fb4925a49 to w0316/P0011532.JPG
+11:32:17 [200] /api/img/00bc7e93-cdb9-4fdc-9841-803fb4925a49 8ms
+11:32:17 [200] /api/ingest/array/phc_WOIYBNhgqVLYtm6IEg81iDKUWU6hDZNJ289FMPMs72Y/config.js 320ms
+11:32:18 [200] /api/ingest/array/phc_WOIYBNhgqVLYtm6IEg81iDKUWU6hDZNJ289FMPMs72Y/config 311ms
+11:32:34 [200] /api/admin/scrape-status 150ms
+11:32:34 [200] /api/admin/stats 135ms
+11:32:34 [200] /api/admin/usage 52ms
+11:32:34 [200] /api/carl/status 202ms
+11:32:34 [200] /api/carl/status 27ms
+11:32:34 [200] /admin 15ms
+11:32:34 [200] /admin 2ms
+11:32:34 [200] /api/carl/status 119ms
+11:32:34 [200] /api/admin/scrape-status 74ms
+11:32:34 [200] /api/admin/stats 63ms
+11:32:34 [200] /api/admin/usage 125ms
+11:32:34 [200] /api/admin/scrape-status 88ms
+11:32:34 [200] /api/admin/stats 71ms
+11:32:34 [200] /api/admin/usage 41ms
+11:32:34 [200] /api/carl/status 39ms
+11:32:34 [200] /api/carl/status 24ms
+11:32:42 [200] /api/carl/status 16ms
+11:32:43 [200] /api/carl/status 12ms
+11:32:44 [200] /api/admin/scrape-status 26ms
+11:32:44 [200] /api/admin/stats 30ms
+11:32:44 [200] /api/admin/usage 13ms
+11:32:44 [200] /api/carl/status 12ms
+11:32:44 [200] /api/admin/scrape-status 35ms
+11:32:44 [200] /api/admin/stats 29ms
+11:32:44 [200] /api/admin/usage 14ms
+11:32:44 [200] /api/carl/status 19ms
+11:32:44 [200] /api/carl/status 20ms
+11:32:45 [200] /api/carl/status 12ms
+11:32:46 [200] /api/carl/status 13ms
+11:32:47 [200] /api/carl/status 11ms
+11:32:48 [200] /api/carl/status 12ms
+11:32:49 [200] /api/carl/status 12ms
+11:32:50 [200] /api/carl/status 14ms
+🍽️ Carl is starting to eat: Starscape 2004: Bad Boy Bill, DJ Rap, everyone and everything else (starscape2004) with batch size 50
+11:32:51 [200] /api/carl/status 39ms
+🕵️ Carl visiting: http://ssbproductions.com/starscape2004/
+11:32:52 [200] /api/carl/status 12ms
+11:32:53 [200] /api/carl/status 12ms
+11:32:54 [200] /api/admin/scrape-status 28ms
+11:32:54 [200] /api/admin/stats 28ms
+11:32:54 [200] /api/admin/usage 9ms
+11:32:54 [200] /api/carl/status 14ms
+11:32:54 [200] /api/admin/scrape-status 32ms
+11:32:54 [200] /api/admin/stats 27ms
+11:32:54 [200] /api/admin/usage 14ms
+11:32:54 [200] /api/carl/status 15ms
+11:32:54 [200] /api/carl/status 16ms
+11:32:55 [200] /api/carl/status 12ms
+11:32:56 [200] /api/carl/status 13ms
+11:32:57 [200] /api/carl/status 11ms
+11:32:58 [200] /api/carl/status 13ms
+11:32:59 [200] /api/carl/status 16ms
+📸 Found 158 raw links for starscape2004
+✨ Filtering to 158 actual images for starscape2004
+11:33:00 [200] /api/carl/status 10ms
+✅ Saved: starscape2004/IMG_1021.jpg
+11:33:01 [200] /api/carl/status 12ms
+✅ Saved: starscape2004/IMG_1022.jpg
+✅ Saved: starscape2004/IMG_1023.jpg
+11:33:02 [200] /api/carl/status 11ms
+✅ Saved: starscape2004/IMG_1024.jpg
+✅ Saved: starscape2004/IMG_1025.jpg
+11:33:03 [200] /api/carl/status 12ms
+✅ Saved: starscape2004/IMG_1026.jpg
+✅ Saved: starscape2004/IMG_1027.jpg
+11:33:04 [200] /api/admin/scrape-status 24ms
+11:33:04 [200] /api/admin/stats 28ms
+11:33:04 [200] /api/admin/usage 10ms
+11:33:04 [200] /api/carl/status 11ms
+11:33:04 [200] /api/admin/scrape-status 34ms
+11:33:04 [200] /api/admin/stats 30ms
+11:33:04 [200] /api/admin/usage 18ms
+11:33:04 [200] /api/carl/status 17ms
+✅ Saved: starscape2004/IMG_1028.jpg
+11:33:04 [200] /api/carl/status 13ms
+✅ Saved: starscape2004/IMG_1029.jpg
+✅ Saved: starscape2004/IMG_1030.jpg
+11:33:05 [200] /api/carl/status 11ms
+✅ Saved: starscape2004/IMG_1031.jpg
+✅ Saved: starscape2004/IMG_1032.jpg
+✅ Saved: starscape2004/IMG_1033.jpg
+11:33:06 [200] /api/carl/status 13ms
+✅ Saved: starscape2004/IMG_1035.jpg
+✅ Saved: starscape2004/IMG_1036.jpg
+11:33:07 [200] /api/carl/status 10ms
+✅ Saved: starscape2004/IMG_1037.jpg
+✅ Saved: starscape2004/IMG_1038.jpg
+✅ Saved: starscape2004/IMG_1039.jpg
+11:33:08 [200] /api/carl/status 14ms
+✅ Saved: starscape2004/IMG_1040.jpg
+✅ Saved: starscape2004/IMG_1041.jpg
+✅ Saved: starscape2004/IMG_1042.jpg
+11:33:09 [200] /api/carl/status 11ms
+✅ Saved: starscape2004/IMG_1043.jpg
+✅ Saved: starscape2004/IMG_1044.jpg
+✅ Saved: starscape2004/IMG_1045.jpg
+11:33:10 [200] /api/carl/status 10ms
+✅ Saved: starscape2004/IMG_1046.jpg
+📂 Found 3 objects for starscape2004
+🤖 AI Enrichment: Analyzing starscape2004/IMG_1021.jpg for party starscape2004 (Image size: 60991 bytes)
+11:33:11 [200] /api/carl/status 10ms
+11:33:12 [200] /api/carl/status 13ms
+11:33:13 [200] /api/carl/status 10ms
+11:33:14 [200] /api/admin/scrape-status 23ms
+11:33:14 [200] /api/admin/stats 26ms
+11:33:14 [200] /api/admin/usage 10ms
+11:33:14 [200] /api/carl/status 11ms
+11:33:14 [200] /api/admin/scrape-status 28ms
+11:33:14 [200] /api/admin/stats 25ms
+11:33:14 [200] /api/admin/usage 13ms
+11:33:14 [200] /api/carl/status 10ms
+11:33:14 [200] /api/carl/status 11ms
+11:33:15 [200] /api/carl/status 10ms
+⚠️ AI response did not contain JSON: I can't provide the exact geolocation, venue name, date, and lineup of DJs for this specific party as that information is not visually present in the image and I don't have access to external information. However, based on the image, I can provide some general observations:
+
+* The image appears to be taken at night, with a crowd of people gathered outside a fenced area.
+* There is a bright light shining from the top of the fence, which could be a spotlight or a floodlight.
+* The atmosphere seems lively, with people standing and socializing near the fence.
+
+If you're looking for more information about the party, you may want to try searching online for images or videos from the same event, or reaching out to the photographer or organizers of the party.
+11:33:16 [200] /api/admin/scrape 25594ms
+11:33:16 [200] /api/carl/status 11ms
+11:33:17 [200] /api/carl/status 14ms
+11:33:17 [200] /api/carl/status 11ms
+11:33:18 [200] /api/carl/status 8ms
+11:33:19 [200] /api/carl/status 10ms
+11:33:20 [200] /api/carl/status 9ms
+11:33:21 [200] /api/carl/status 9ms
+11:33:22 [200] /api/carl/status 12ms
+11:33:23 [200] /api/carl/status 8ms
+11:33:24 [200] /api/admin/scrape-status 21ms
+11:33:24 [200] /api/admin/stats 23ms
+11:33:24 [200] /api/admin/usage 8ms
+11:33:24 [200] /api/carl/status 9ms
+11:33:24 [200] /api/admin/scrape-status 24ms
+11:33:24 [200] /api/admin/stats 23ms
+11:33:24 [200] /api/admin/usage 12ms
+11:33:24 [200] /api/carl/status 9ms
+11:33:24 [200] /api/carl/status 10ms
+11:33:25 [200] /api/carl/status 9ms
+11:33:26 [200] /api/carl/status 8ms
+11:33:27 [200] /api/carl/status 8ms
+11:33:28 [200] /api/carl/status 15ms
+11:33:29 [200] /api/carl/status 9ms
+11:33:30 [200] /api/carl/status 20ms
+11:33:31 [200] /api/carl/status 24ms
+11:33:32 [200] /api/carl/status 23ms
+11:33:33 [200] /api/carl/status 23ms
+11:33:34 [200] /api/admin/scrape-status 35ms
+11:33:34 [200] /api/admin/stats 32ms
+11:33:34 [200] /api/admin/usage 11ms
+11:33:34 [200] /api/carl/status 15ms
+11:33:34 [200] /api/admin/scrape-status 24ms
+11:33:34 [200] /api/admin/stats 26ms
+11:33:34 [200] /api/admin/usage 12ms
+11:33:34 [200] /api/carl/status 20ms
+11:33:34 [200] /api/carl/status 11ms
+11:33:35 [200] /api/carl/status 14ms
+11:33:36 [200] /api/carl/status 24ms
+11:33:37 [200] /api/carl/status 29ms
+11:33:38 [200] /api/carl/status 23ms
+11:33:39 [200] /api/carl/status 20ms
+11:33:40 [200] /api/carl/status 22ms
+11:33:41 [200] /api/carl/status 23ms
+11:33:42 [200] /api/carl/status 17ms
+11:33:43 [200] /api/carl/status 24ms
+11:33:44 [200] /api/admin/scrape-status 40ms
+11:33:44 [200] /api/admin/stats 27ms
+11:33:44 [200] /api/admin/usage 11ms
+11:33:44 [200] /api/carl/status 8ms
+11:33:44 [200] /api/admin/scrape-status 28ms
+11:33:44 [200] /api/admin/stats 25ms
+11:33:44 [200] /api/admin/usage 10ms
+11:33:44 [200] /api/carl/status 7ms
+11:33:44 [200] /api/carl/status 12ms
+11:33:45 [200] /api/carl/status 16ms
+11:33:46 [200] /api/carl/status 13ms
+11:33:47 [200] /api/carl/status 23ms
+11:33:48 [200] /api/carl/status 22ms
+11:33:49 [200] /api/carl/status 24ms
+11:33:50 [200] /api/carl/status 25ms
+11:33:51 [200] /api/carl/status 23ms
+11:33:52 [200] /api/carl/status 25ms
+11:33:53 [200] /api/carl/status 23ms
+11:33:54 [200] /api/admin/scrape-status 34ms
+11:33:54 [200] /api/admin/stats 26ms
+11:33:54 [200] /api/admin/usage 10ms
+11:33:54 [200] /api/carl/status 8ms
+11:33:54 [200] /api/admin/scrape-status 27ms
+11:33:54 [200] /api/admin/stats 24ms
+11:33:54 [200] /api/admin/usage 12ms
+11:33:54 [200] /api/carl/status 7ms
+11:33:54 [200] /api/carl/status 13ms
+11:33:55 [200] /api/carl/status 17ms
+11:33:56 [200] /api/carl/status 26ms
+11:33:57 [200] /api/carl/status 21ms
+11:33:58 [200] /api/carl/status 18ms
+11:33:59 [200] /api/carl/status 25ms
+11:34:00 [200] /api/carl/status 24ms
+11:34:01 [200] /api/carl/status 22ms
+11:34:02 [200] /api/carl/status 23ms
+11:34:03 [200] /api/carl/status 24ms
+11:34:04 [200] /api/admin/scrape-status 35ms
+11:34:04 [200] /api/admin/stats 26ms
+11:34:04 [200] /api/admin/usage 8ms
+11:34:04 [200] /api/carl/status 10ms
+11:34:04 [200] /api/admin/scrape-status 23ms
+11:34:04 [200] /api/admin/stats 20ms
+11:34:04 [200] /api/admin/usage 10ms
+11:34:04 [200] /api/carl/status 10ms
+11:34:04 [200] /api/carl/status 11ms
+11:34:05 [200] /api/carl/status 16ms
+11:34:06 [200] /api/carl/status 22ms
+11:34:07 [200] /api/carl/status 23ms
+11:34:08 [200] /api/carl/status 16ms
+11:34:09 [200] /api/carl/status 21ms
+11:34:10 [200] /api/carl/status 23ms
+11:34:11 [200] /api/carl/status 26ms
+11:34:12 [200] /api/carl/status 24ms
+11:34:13 [200] /api/carl/status 24ms
+11:34:14 [200] /api/admin/scrape-status 34ms
+11:34:14 [200] /api/admin/stats 29ms
+11:34:14 [200] /api/admin/usage 11ms
+11:34:14 [200] /api/carl/status 8ms
+11:34:14 [200] /api/admin/scrape-status 22ms
+11:34:14 [200] /api/admin/stats 19ms
+11:34:14 [200] /api/admin/usage 8ms
+11:34:14 [200] /api/carl/status 17ms
+11:34:14 [200] /api/carl/status 11ms
+11:34:15 [200] /api/carl/status 18ms
+11:34:16 [200] /api/carl/status 25ms
+11:34:17 [200] /api/carl/status 24ms
+11:34:18 [200] /api/carl/status 24ms
+11:34:19 [200] /api/carl/status 22ms
+11:34:20 [200] /api/carl/status 21ms
+11:34:21 [200] /api/carl/status 21ms
+11:34:22 [200] /api/carl/status 22ms
+11:34:23 [200] /api/carl/status 23ms
+11:34:24 [200] /api/admin/scrape-status 30ms
+11:34:24 [200] /api/admin/stats 27ms
+11:34:24 [200] /api/admin/usage 10ms
+11:34:24 [200] /api/carl/status 9ms
+11:34:24 [200] /api/admin/scrape-status 25ms
+11:34:24 [200] /api/admin/stats 21ms
+11:34:24 [200] /api/admin/usage 8ms
+11:34:24 [200] /api/carl/status 11ms
+11:34:24 [200] /api/carl/status 12ms
+11:34:25 [200] /api/carl/status 19ms
+11:34:26 [200] /api/carl/status 21ms
+11:34:27 [200] /api/carl/status 22ms
+11:34:28 [200] /api/carl/status 22ms
+11:34:29 [200] /api/carl/status 23ms
+11:34:30 [200] /api/carl/status 21ms
+11:34:31 [200] /api/carl/status 24ms
+11:34:32 [200] /api/carl/status 22ms
+11:34:33 [200] /api/carl/status 23ms
+11:34:34 [200] /api/admin/scrape-status 33ms
+11:34:34 [200] /api/admin/stats 23ms
+11:34:34 [200] /api/admin/usage 10ms
+11:34:34 [200] /api/carl/status 7ms
+11:34:34 [200] /api/admin/scrape-status 22ms
+11:34:34 [200] /api/admin/stats 18ms
+11:34:34 [200] /api/admin/usage 8ms
+11:34:34 [200] /api/carl/status 10ms
+11:34:34 [200] /api/carl/status 12ms
+11:34:35 [200] /api/carl/status 22ms
+11:34:36 [200] /api/carl/status 22ms
+11:34:37 [200] /api/carl/status 22ms
+11:34:38 [200] /api/carl/status 22ms
+11:34:39 [200] /api/carl/status 24ms
+11:34:40 [200] /api/carl/status 20ms
+11:34:41 [200] /api/carl/status 23ms
+11:34:42 [200] /api/carl/status 21ms
+11:34:43 [200] /api/carl/status 19ms
+11:34:44 [200] /api/admin/scrape-status 34ms
+11:34:44 [200] /api/admin/stats 30ms
+11:34:44 [200] /api/admin/usage 9ms
+11:34:44 [200] /api/carl/status 9ms
+11:34:44 [200] /api/admin/scrape-status 29ms
+11:34:44 [200] /api/admin/stats 24ms
+11:34:44 [200] /api/admin/usage 8ms
+11:34:44 [200] /api/carl/status 7ms
+11:34:44 [200] /api/carl/status 11ms
+11:34:45 [200] /api/carl/status 16ms
+11:34:46 [200] /api/carl/status 21ms
+11:34:47 [200] /api/carl/status 23ms
+11:34:48 [200] /api/carl/status 22ms
+11:34:49 [200] /api/carl/status 22ms
+11:34:50 [200] /api/carl/status 22ms
+11:34:51 [200] /api/carl/status 23ms
+11:34:52 [200] /api/carl/status 20ms
+11:34:53 [200] /api/carl/status 20ms
+11:34:54 [200] /api/admin/scrape-status 40ms
+11:34:54 [200] /api/admin/stats 31ms
+11:34:54 [200] /api/admin/usage 11ms
+11:34:54 [200] /api/carl/status 10ms
+11:34:54 [200] /api/admin/scrape-status 23ms
+11:34:54 [200] /api/admin/stats 19ms
+11:34:54 [200] /api/admin/usage 9ms
+11:34:54 [200] /api/carl/status 6ms
+11:34:54 [200] /api/carl/status 12ms
+11:34:55 [200] /api/carl/status 21ms
+11:34:56 [200] /api/carl/status 23ms
+11:34:57 [200] /api/carl/status 23ms
+11:34:58 [200] /api/carl/status 21ms
+11:34:59 [200] /api/carl/status 23ms
+11:35:00 [200] /api/carl/status 25ms
+11:35:01 [200] /api/carl/status 18ms
+11:35:02 [200] /api/carl/status 26ms
+11:35:03 [200] /api/carl/status 30ms
+11:35:04 [200] /api/admin/scrape-status 36ms
+11:35:04 [200] /api/admin/stats 29ms
+11:35:04 [200] /api/admin/usage 9ms
+11:35:04 [200] /api/carl/status 10ms
+11:35:04 [200] /api/admin/scrape-status 26ms
+11:35:04 [200] /api/admin/stats 24ms
+11:35:04 [200] /api/admin/usage 13ms
+11:35:04 [200] /api/carl/status 12ms
+11:35:04 [200] /api/carl/status 12ms
+11:35:05 [200] /api/carl/status 18ms
+11:35:06 [200] /api/carl/status 12ms
+11:35:07 [200] /api/carl/status 21ms
+11:35:08 [200] /api/carl/status 19ms
+11:35:09 [200] /api/carl/status 23ms
+11:35:10 [200] /api/carl/status 16ms
+11:35:11 [200] /api/carl/status 22ms
+11:35:12 [200] /api/carl/status 21ms
+11:35:13 [200] /api/carl/status 21ms
+11:35:14 [200] /api/admin/scrape-status 34ms
+11:35:14 [200] /api/admin/stats 28ms
+11:35:14 [200] /api/admin/usage 10ms
+11:35:14 [200] /api/carl/status 9ms
+11:35:14 [200] /api/admin/scrape-status 22ms
+11:35:14 [200] /api/admin/stats 18ms
+11:35:14 [200] /api/admin/usage 8ms
+11:35:14 [200] /api/carl/status 8ms
+11:35:14 [200] /api/carl/status 12ms
+11:35:15 [200] /api/carl/status 19ms
+11:35:16 [200] /api/carl/status 23ms
+11:35:17 [200] /api/carl/status 21ms
+11:35:18 [200] /api/carl/status 20ms
+11:35:19 [200] /api/carl/status 21ms
+11:35:20 [200] /api/carl/status 23ms
+11:35:21 [200] /api/carl/status 23ms
+11:35:22 [200] /api/carl/status 23ms
+11:35:23 [200] /api/carl/status 21ms
+11:35:24 [200] /api/admin/scrape-status 33ms
+11:35:24 [200] /api/admin/stats 30ms
+11:35:24 [200] /api/admin/usage 11ms
+11:35:24 [200] /api/carl/status 12ms
+11:35:24 [200] /api/admin/scrape-status 27ms
+11:35:24 [200] /api/admin/stats 22ms
+11:35:24 [200] /api/admin/usage 11ms
+11:35:24 [200] /api/carl/status 11ms
+11:35:24 [200] /api/carl/status 11ms
+11:35:25 [200] /api/carl/status 20ms
+11:35:26 [200] /api/carl/status 20ms
+11:35:27 [200] /api/carl/status 12ms
+11:35:28 [200] /api/carl/status 21ms
+11:35:29 [200] /api/carl/status 20ms
+11:35:30 [200] /api/carl/status 26ms
+11:35:31 [200] /api/carl/status 23ms
+11:35:32 [200] /api/carl/status 21ms
+11:35:33 [200] /api/carl/status 24ms
+11:35:34 [200] /api/admin/scrape-status 41ms
+11:35:34 [200] /api/admin/stats 24ms
+11:35:34 [200] /api/admin/usage 8ms
+11:35:34 [200] /api/carl/status 9ms
+11:35:34 [200] /api/admin/scrape-status 24ms
+11:35:34 [200] /api/admin/stats 19ms
+11:35:34 [200] /api/admin/usage 8ms
+11:35:34 [200] /api/carl/status 7ms
+11:35:34 [200] /api/carl/status 12ms
+11:35:35 [200] /api/carl/status 18ms
+11:35:36 [200] /api/carl/status 19ms
+11:35:37 [200] /api/carl/status 22ms
+11:35:38 [200] /api/carl/status 20ms
+11:35:39 [200] /api/carl/status 21ms
+11:35:40 [200] /api/carl/status 21ms
+11:35:41 [200] /api/carl/status 19ms
+11:35:42 [200] /api/carl/status 21ms
+11:35:43 [200] /api/carl/status 20ms
+11:35:44 [200] /api/admin/scrape-status 33ms
+11:35:44 [200] /api/admin/stats 28ms
+11:35:44 [200] /api/admin/usage 9ms
+11:35:44 [200] /api/carl/status 7ms
+11:35:44 [200] /api/admin/scrape-status 21ms
+11:35:44 [200] /api/admin/stats 17ms
+11:35:44 [200] /api/admin/usage 9ms
+11:35:44 [200] /api/carl/status 17ms
+11:35:44 [200] /api/carl/status 8ms
+11:35:45 [200] /api/carl/status 18ms
+11:35:46 [200] /api/carl/status 21ms
+11:35:47 [200] /api/carl/status 20ms
+11:35:48 [200] /api/carl/status 21ms
+11:35:49 [200] /api/carl/status 19ms
+11:35:50 [200] /api/carl/status 23ms
+11:35:51 [200] /api/carl/status 20ms
+11:35:52 [200] /api/carl/status 21ms
+11:35:53 [200] /api/carl/status 14ms
+11:35:54 [200] /api/admin/scrape-status 40ms
+11:35:54 [200] /api/admin/stats 31ms
+11:35:54 [200] /api/admin/usage 12ms
+11:35:54 [200] /api/carl/status 8ms
+11:35:54 [200] /api/admin/scrape-status 24ms
+11:35:54 [200] /api/admin/stats 21ms
+11:35:54 [200] /api/admin/usage 9ms
+11:35:54 [200] /api/carl/status 7ms
+11:35:54 [200] /api/carl/status 9ms
+11:35:55 [200] /api/carl/status 19ms
+11:35:56 [200] /api/carl/status 20ms
+11:35:57 [200] /api/carl/status 21ms
+11:35:58 [200] /api/carl/status 26ms
+11:35:59 [200] /api/carl/status 22ms
+11:36:00 [200] /api/carl/status 21ms
+11:36:01 [200] /api/carl/status 23ms
+11:36:02 [200] /api/carl/status 21ms
+11:36:03 [200] /api/carl/status 21ms
+11:36:04 [200] /api/admin/scrape-status 35ms
+11:36:04 [200] /api/admin/stats 29ms
+11:36:04 [200] /api/admin/usage 10ms
+11:36:04 [200] /api/carl/status 8ms
+11:36:04 [200] /api/admin/scrape-status 23ms
+11:36:04 [200] /api/admin/stats 21ms
+11:36:04 [200] /api/admin/usage 9ms
+11:36:04 [200] /api/carl/status 7ms
+11:36:04 [200] /api/carl/status 10ms
+11:36:05 [200] /api/carl/status 16ms
+11:36:06 [200] /api/carl/status 21ms
+11:36:07 [200] /api/carl/status 22ms
+11:36:08 [200] /api/carl/status 22ms
+11:36:09 [200] /api/carl/status 20ms
+11:36:10 [200] /api/carl/status 19ms
+11:36:11 [200] /api/carl/status 20ms
+11:36:12 [200] /api/carl/status 21ms
+11:36:13 [200] /api/carl/status 20ms
+11:36:14 [200] /api/admin/scrape-status 33ms
+11:36:14 [200] /api/admin/stats 27ms
+11:36:14 [200] /api/admin/usage 11ms
+11:36:14 [200] /api/carl/status 7ms
+11:36:14 [200] /api/admin/scrape-status 22ms
+11:36:14 [200] /api/admin/stats 19ms
+11:36:14 [200] /api/admin/usage 9ms
+11:36:14 [200] /api/carl/status 6ms
+11:36:14 [200] /api/carl/status 8ms
+11:36:15 [200] /api/carl/status 19ms
+11:36:16 [200] /api/carl/status 19ms
+11:36:17 [200] /api/carl/status 20ms
+11:36:18 [200] /api/carl/status 20ms
+11:36:19 [200] /api/carl/status 20ms
+11:36:20 [200] /api/carl/status 24ms
+11:36:21 [200] /api/carl/status 23ms
+11:36:22 [200] /api/carl/status 20ms
+11:36:23 [200] /api/carl/status 20ms
+11:36:24 [200] /api/admin/scrape-status 34ms
+11:36:24 [200] /api/admin/stats 27ms
+11:36:24 [200] /api/admin/usage 9ms
+11:36:24 [200] /api/carl/status 7ms
+11:36:24 [200] /api/admin/scrape-status 29ms
+11:36:24 [200] /api/admin/stats 26ms
+11:36:24 [200] /api/admin/usage 9ms
+11:36:24 [200] /api/carl/status 8ms
+11:36:24 [200] /api/carl/status 11ms
+11:36:25 [200] /api/carl/status 19ms
+11:36:26 [200] /api/carl/status 20ms
+11:36:27 [200] /api/carl/status 19ms
+11:36:28 [200] /api/carl/status 23ms
+11:36:29 [200] /api/carl/status 20ms
+11:36:30 [200] /api/carl/status 21ms
+11:36:31 [200] /api/carl/status 20ms
+11:36:32 [200] /api/carl/status 21ms
+11:36:33 [200] /api/carl/status 20ms
+11:36:34 [200] /api/admin/scrape-status 34ms
+11:36:34 [200] /api/admin/stats 28ms
+11:36:34 [200] /api/admin/usage 10ms
+11:36:34 [200] /api/carl/status 7ms
+11:36:34 [200] /api/admin/scrape-status 21ms
+11:36:34 [200] /api/admin/stats 18ms
+11:36:34 [200] /api/admin/usage 8ms
+11:36:34 [200] /api/carl/status 6ms
+11:36:34 [200] /api/carl/status 9ms
+11:36:35 [200] /api/carl/status 20ms
+11:36:36 [200] /api/carl/status 21ms
+11:36:37 [200] /api/carl/status 21ms
+11:36:38 [200] /api/carl/status 13ms
+11:36:39 [200] /api/carl/status 21ms
+11:36:40 [200] /api/carl/status 21ms
+11:36:41 [200] /api/carl/status 23ms
+11:36:42 [200] /api/carl/status 22ms
+11:36:43 [200] /api/carl/status 20ms
+11:36:44 [200] /api/admin/scrape-status 34ms
+11:36:44 [200] /api/admin/stats 24ms
+11:36:44 [200] /api/admin/usage 9ms
+11:36:44 [200] /api/carl/status 9ms
+11:36:44 [200] /api/admin/scrape-status 21ms
+11:36:44 [200] /api/admin/stats 19ms
+11:36:44 [200] /api/admin/usage 9ms
+11:36:44 [200] /api/carl/status 7ms
+11:36:44 [200] /api/carl/status 11ms
+11:36:45 [200] /api/carl/status 17ms
+11:36:46 [200] /api/carl/status 22ms
+11:36:47 [200] /api/carl/status 21ms
+11:36:48 [200] /api/carl/status 22ms
+11:36:49 [200] /api/carl/status 21ms
+11:36:50 [200] /api/carl/status 23ms
+11:36:51 [200] /api/carl/status 18ms
+11:36:52 [200] /api/carl/status 22ms
+11:36:53 [200] /api/carl/status 22ms
+11:36:54 [200] /api/admin/scrape-status 30ms
+11:36:54 [200] /api/admin/stats 29ms
+11:36:54 [200] /api/admin/usage 10ms
+11:36:54 [200] /api/carl/status 7ms
+11:36:54 [200] /api/admin/scrape-status 28ms
+11:36:54 [200] /api/admin/stats 25ms
+11:36:54 [200] /api/admin/usage 9ms
+11:36:54 [200] /api/carl/status 7ms
+11:36:54 [200] /api/carl/status 9ms
+11:36:55 [200] /api/carl/status 21ms
+11:36:56 [200] /api/carl/status 22ms
+11:36:57 [200] /api/carl/status 21ms
+11:36:58 [200] /api/carl/status 20ms
+11:36:59 [200] /api/carl/status 23ms
+11:37:00 [200] /api/carl/status 22ms
+11:37:01 [200] /api/carl/status 24ms
+11:37:02 [200] /api/carl/status 22ms
+11:37:03 [200] /api/carl/status 20ms
+11:37:04 [200] /api/admin/scrape-status 31ms
+11:37:04 [200] /api/admin/stats 33ms
+11:37:04 [200] /api/admin/usage 14ms
+11:37:04 [200] /api/carl/status 6ms
+11:37:04 [200] /api/admin/scrape-status 21ms
+11:37:04 [200] /api/admin/stats 20ms
+11:37:04 [200] /api/admin/usage 8ms
+11:37:04 [200] /api/carl/status 8ms
+11:37:04 [200] /api/carl/status 8ms
+11:37:05 [200] /api/carl/status 22ms
+11:37:06 [200] /api/carl/status 20ms
+11:37:07 [200] /api/carl/status 20ms
+11:37:08 [200] /api/carl/status 26ms
+11:37:09 [200] /api/carl/status 21ms
+11:37:10 [200] /api/carl/status 20ms
+11:37:11 [200] /api/carl/status 24ms
+11:37:12 [200] /api/carl/status 23ms
+11:37:13 [200] /api/carl/status 23ms
+11:37:14 [200] /api/admin/scrape-status 36ms
+11:37:14 [200] /api/admin/stats 26ms
+11:37:14 [200] /api/admin/usage 9ms
+11:37:14 [200] /api/carl/status 8ms
+11:37:14 [200] /api/admin/scrape-status 21ms
+11:37:14 [200] /api/admin/stats 18ms
+11:37:14 [200] /api/admin/usage 8ms
+11:37:14 [200] /api/carl/status 10ms
+11:37:14 [200] /api/carl/status 12ms
+11:37:15 [200] /api/carl/status 20ms
+11:37:16 [200] /api/carl/status 22ms
+11:37:17 [200] /api/carl/status 22ms
+11:37:18 [200] /api/carl/status 22ms
+11:37:19 [200] /api/carl/status 21ms
+11:37:20 [200] /api/carl/status 20ms
+11:37:21 [200] /api/carl/status 24ms
+11:37:22 [200] /api/carl/status 23ms
+11:37:23 [200] /api/carl/status 21ms
+11:37:24 [200] /api/admin/scrape-status 32ms
+11:37:24 [200] /api/admin/stats 27ms
+11:37:24 [200] /api/admin/usage 10ms
+11:37:24 [200] /api/carl/status 6ms
+11:37:24 [200] /api/admin/scrape-status 21ms
+11:37:24 [200] /api/admin/stats 19ms
+11:37:24 [200] /api/admin/usage 8ms
+11:37:24 [200] /api/carl/status 11ms
+11:37:24 [200] /api/carl/status 11ms
+11:37:25 [200] /api/carl/status 19ms
+11:37:26 [200] /api/carl/status 21ms
+11:37:27 [200] /api/carl/status 10ms
+11:37:28 [200] /api/carl/status 22ms
+11:37:29 [200] /api/carl/status 22ms
+11:37:30 [200] /api/carl/status 22ms
+11:37:31 [200] /api/carl/status 24ms
+11:37:32 [200] /api/carl/status 22ms
+11:37:33 [200] /api/carl/status 22ms
+11:37:34 [200] /api/admin/scrape-status 80ms
+11:37:34 [200] /api/admin/stats 75ms
+11:37:34 [200] /api/admin/scrape-status 28ms
+11:37:34 [200] /api/admin/usage 46ms
+11:37:34 [200] /api/admin/stats 12ms
+11:37:34 [200] /api/admin/usage 9ms
+11:37:34 [200] /api/carl/status 8ms
+11:37:34 [200] /api/carl/status 9ms
+11:37:34 [200] /api/carl/status 22ms
+11:37:35 [200] /api/carl/status 24ms
+11:37:36 [200] /api/carl/status 24ms
+11:37:37 [200] /api/carl/status 23ms
+11:37:38 [200] /api/carl/status 23ms
+11:37:39 [200] /api/carl/status 21ms
+11:37:40 [200] /api/carl/status 22ms
+11:37:41 [200] /api/carl/status 22ms
+11:37:42 [200] /api/carl/status 23ms
+11:37:43 [200] /api/carl/status 23ms
+11:37:44 [200] /api/admin/scrape-status 36ms
+11:37:44 [200] /api/admin/stats 27ms
+11:37:44 [200] /api/admin/usage 10ms
+11:37:44 [200] /api/carl/status 11ms
+11:37:44 [200] /api/admin/scrape-status 23ms
+11:37:44 [200] /api/admin/stats 20ms
+11:37:44 [200] /api/admin/usage 10ms
+11:37:44 [200] /api/carl/status 7ms
+11:37:44 [200] /api/carl/status 11ms
+11:37:45 [200] /api/carl/status 18ms
+11:37:46 [200] /api/carl/status 23ms
+11:37:47 [200] /api/carl/status 23ms
+11:37:48 [200] /api/carl/status 24ms
+11:37:49 [200] /api/carl/status 22ms
+11:37:50 [200] /api/carl/status 25ms
+11:37:51 [200] /api/carl/status 24ms
+11:37:52 [200] /api/carl/status 22ms
+11:37:53 [200] /api/carl/status 24ms
+11:37:54 [200] /api/admin/scrape-status 35ms
+11:37:54 [200] /api/admin/stats 30ms
+11:37:54 [200] /api/admin/usage 10ms
+11:37:54 [200] /api/carl/status 8ms
+11:37:54 [200] /api/admin/scrape-status 21ms
+11:37:54 [200] /api/admin/stats 19ms
+11:37:54 [200] /api/admin/usage 8ms
+11:37:54 [200] /api/carl/status 10ms
+11:37:54 [200] /api/carl/status 8ms
+11:37:55 [200] /api/carl/status 23ms
+11:37:56 [200] /api/carl/status 24ms
+11:37:57 [200] /api/carl/status 25ms
+11:37:58 [200] /api/carl/status 25ms
+11:37:59 [200] /api/carl/status 23ms
+11:38:00 [200] /api/carl/status 24ms
+11:38:01 [200] /api/carl/status 26ms
+11:38:02 [200] /api/carl/status 23ms
+11:38:03 [200] /api/carl/status 21ms
+11:38:04 [200] /api/admin/scrape-status 35ms
+11:38:04 [200] /api/admin/stats 28ms
+11:38:04 [200] /api/admin/usage 9ms
+11:38:04 [200] /api/carl/status 12ms
+11:38:04 [200] /api/admin/scrape-status 20ms
+11:38:04 [200] /api/admin/stats 18ms
+11:38:04 [200] /api/admin/usage 7ms
+11:38:04 [200] /api/carl/status 10ms
+11:38:04 [200] /api/carl/status 9ms
+11:38:05 [200] /api/carl/status 22ms
+11:38:06 [200] /api/carl/status 22ms
+11:38:07 [200] /api/carl/status 21ms
+11:38:08 [200] /api/carl/status 21ms
+11:38:09 [200] /api/carl/status 22ms
+11:38:10 [200] /api/carl/status 22ms
+11:38:11 [200] /api/carl/status 21ms
+11:38:12 [200] /api/carl/status 21ms
+11:38:13 [200] /api/carl/status 22ms
+11:38:14 [200] /api/admin/scrape-status 32ms
+11:38:14 [200] /api/admin/stats 30ms
+11:38:14 [200] /api/admin/usage 7ms
+11:38:14 [200] /api/carl/status 14ms
+11:38:14 [200] /api/admin/scrape-status 20ms
+11:38:14 [200] /api/admin/stats 17ms
+11:38:14 [200] /api/admin/usage 10ms
+11:38:14 [200] /api/carl/status 10ms
+11:38:14 [200] /api/carl/status 8ms
+11:38:15 [200] /api/carl/status 18ms
+11:38:16 [200] /api/carl/status 19ms
+11:38:17 [200] /api/carl/status 20ms
+11:38:18 [200] /api/carl/status 29ms
+11:38:19 [200] /api/carl/status 22ms
+11:38:20 [200] /api/carl/status 20ms
+11:38:21 [200] /api/carl/status 22ms
+11:38:22 [200] /api/carl/status 23ms
+11:38:23 [200] /api/carl/status 21ms
+11:38:24 [200] /api/admin/scrape-status 32ms
+11:38:24 [200] /api/admin/stats 29ms
+11:38:24 [200] /api/admin/usage 8ms
+11:38:24 [200] /api/carl/status 8ms
+11:38:24 [200] /api/admin/scrape-status 20ms
+11:38:24 [200] /api/admin/stats 18ms
+11:38:24 [200] /api/admin/usage 7ms
+11:38:24 [200] /api/carl/status 8ms
+11:38:24 [200] /api/carl/status 10ms
+11:38:25 [200] /api/carl/status 19ms
+11:38:26 [200] /api/carl/status 21ms
+11:38:27 [200] /api/carl/status 24ms
+11:38:28 [200] /api/carl/status 21ms
+11:38:29 [200] /api/carl/status 24ms
+11:38:30 [200] /api/carl/status 21ms
+11:38:31 [200] /api/carl/status 24ms
+11:38:32 [200] /api/carl/status 20ms
+11:38:33 [200] /api/carl/status 22ms
+11:38:34 [200] /api/admin/scrape-status 32ms
+11:38:34 [200] /api/admin/stats 30ms
+11:38:34 [200] /api/admin/usage 8ms
+11:38:34 [200] /api/carl/status 8ms
+11:38:34 [200] /api/admin/scrape-status 21ms
+11:38:34 [200] /api/admin/stats 18ms
+11:38:34 [200] /api/admin/usage 7ms
+11:38:34 [200] /api/carl/status 10ms
+11:38:34 [200] /api/carl/status 9ms
+11:38:35 [200] /api/carl/status 17ms
+11:38:36 [200] /api/carl/status 21ms
+11:38:37 [200] /api/carl/status 21ms
+11:38:38 [200] /api/carl/status 19ms
+11:38:39 [200] /api/carl/status 22ms
+11:38:40 [200] /api/carl/status 19ms
+11:38:41 [200] /api/carl/status 24ms
+11:38:42 [200] /api/carl/status 18ms
+11:38:43 [200] /api/carl/status 20ms
+11:38:44 [200] /api/admin/scrape-status 31ms
+11:38:44 [200] /api/admin/stats 29ms
+11:38:44 [200] /api/admin/usage 10ms
+11:38:44 [200] /api/carl/status 9ms
+11:38:44 [200] /api/admin/scrape-status 21ms
+11:38:44 [200] /api/admin/stats 18ms
+11:38:44 [200] /api/admin/usage 8ms
+11:38:44 [200] /api/carl/status 7ms
+11:38:44 [200] /api/carl/status 10ms
+11:38:45 [200] /api/carl/status 18ms
+11:38:46 [200] /api/carl/status 20ms
+11:38:47 [200] /api/carl/status 20ms
+11:38:48 [200] /api/carl/status 20ms
+11:38:49 [200] /api/carl/status 25ms
+11:38:50 [200] /api/carl/status 21ms
+11:38:51 [200] /api/carl/status 20ms
+11:38:52 [200] /api/carl/status 20ms
+11:38:53 [200] /api/carl/status 19ms
+11:38:54 [200] /api/admin/scrape-status 31ms
+11:38:54 [200] /api/admin/stats 30ms
+11:38:54 [200] /api/admin/usage 9ms
+11:38:54 [200] /api/carl/status 9ms
+11:38:54 [200] /api/admin/scrape-status 28ms
+11:38:54 [200] /api/admin/stats 19ms
+11:38:54 [200] /api/admin/usage 11ms
+11:38:54 [200] /api/carl/status 8ms
+11:38:54 [200] /api/carl/status 9ms
+11:38:55 [200] /api/carl/status 15ms
+11:38:56 [200] /api/carl/status 24ms
+11:38:57 [200] /api/carl/status 20ms
+11:38:58 [200] /api/carl/status 20ms
+11:38:59 [200] /api/carl/status 20ms
+11:39:00 [200] /api/carl/status 19ms
+11:39:01 [200] /api/carl/status 21ms
+11:39:02 [200] /api/carl/status 20ms
+11:39:03 [200] /api/carl/status 23ms
+11:39:04 [200] /api/admin/scrape-status 30ms
+11:39:04 [200] /api/admin/stats 30ms
+11:39:04 [200] /api/admin/usage 8ms
+11:39:04 [200] /api/carl/status 10ms
+11:39:04 [200] /api/admin/scrape-status 21ms
+11:39:04 [200] /api/admin/stats 18ms
+11:39:04 [200] /api/admin/usage 7ms
+11:39:04 [200] /api/carl/status 8ms
+11:39:04 [200] /api/carl/status 10ms
+11:39:05 [200] /api/carl/status 18ms
+11:39:06 [200] /api/carl/status 19ms
+11:39:07 [200] /api/carl/status 20ms
+11:39:08 [200] /api/carl/status 21ms
+11:39:09 [200] /api/carl/status 19ms
+11:39:10 [200] /api/carl/status 21ms
+11:39:11 [200] /api/carl/status 19ms
+11:39:12 [200] /api/carl/status 24ms
+11:39:13 [200] /api/carl/status 22ms
+11:39:14 [200] /api/admin/scrape-status 27ms
+11:39:14 [200] /api/admin/stats 27ms
+11:39:14 [200] /api/admin/usage 9ms
+11:39:14 [200] /api/carl/status 8ms
+11:39:14 [200] /api/admin/scrape-status 21ms
+11:39:14 [200] /api/admin/stats 17ms
+11:39:14 [200] /api/admin/usage 9ms
+11:39:14 [200] /api/carl/status 6ms
+11:39:14 [200] /api/carl/status 8ms
+11:39:15 [200] /api/carl/status 15ms
+11:39:16 [200] /api/carl/status 21ms
+11:39:17 [200] /api/carl/status 19ms
+11:39:18 [200] /api/carl/status 27ms
+11:39:19 [200] /api/carl/status 19ms
+11:39:20 [200] /api/carl/status 23ms
+11:39:21 [200] /api/carl/status 20ms
+11:39:22 [200] /api/carl/status 20ms
+11:39:23 [200] /api/carl/status 25ms
+11:39:24 [200] /api/admin/scrape-status 30ms
+11:39:24 [200] /api/admin/stats 28ms
+11:39:24 [200] /api/admin/usage 9ms
+11:39:24 [200] /api/carl/status 7ms
+11:39:24 [200] /api/admin/scrape-status 21ms
+11:39:24 [200] /api/admin/stats 17ms
+11:39:24 [200] /api/admin/usage 7ms
+11:39:24 [200] /api/carl/status 8ms
+11:39:24 [200] /api/carl/status 14ms
+11:39:25 [200] /api/carl/status 18ms
+11:39:26 [200] /api/carl/status 18ms
+11:39:27 [200] /api/carl/status 13ms
+11:39:28 [200] /api/carl/status 20ms
+11:39:29 [200] /api/carl/status 20ms
+11:39:30 [200] /api/carl/status 19ms
+11:39:31 [200] /api/carl/status 19ms
+11:39:32 [200] /api/carl/status 23ms
+11:39:33 [200] /api/carl/status 22ms
+11:39:34 [200] /api/admin/scrape-status 29ms
+11:39:34 [200] /api/admin/stats 27ms
+11:39:34 [200] /api/admin/usage 8ms
+11:39:34 [200] /api/carl/status 8ms
+11:39:34 [200] /api/admin/scrape-status 22ms
+11:39:34 [200] /api/admin/stats 18ms
+11:39:34 [200] /api/admin/usage 8ms
+11:39:34 [200] /api/carl/status 5ms
+11:39:34 [200] /api/carl/status 9ms
+11:39:35 [200] /api/carl/status 16ms
+11:39:36 [200] /api/carl/status 21ms
+11:39:37 [200] /api/carl/status 20ms
+11:39:38 [200] /api/carl/status 19ms
+11:39:39 [200] /api/carl/status 10ms
+11:39:40 [200] /api/carl/status 24ms
+11:39:41 [200] /api/carl/status 21ms
+11:39:42 [200] /api/carl/status 20ms
+11:39:43 [200] /api/carl/status 21ms
+11:39:44 [200] /api/admin/scrape-status 32ms
+11:39:44 [200] /api/admin/stats 30ms
+11:39:44 [200] /api/admin/usage 9ms
+11:39:44 [200] /api/carl/status 9ms
+11:39:44 [200] /api/admin/scrape-status 25ms
+11:39:44 [200] /api/admin/stats 19ms
+11:39:44 [200] /api/admin/usage 8ms
+11:39:44 [200] /api/carl/status 8ms
+11:39:44 [200] /api/carl/status 8ms
+11:39:45 [200] /api/carl/status 22ms
+11:39:46 [200] /api/carl/status 20ms
+11:39:47 [200] /api/carl/status 19ms
+11:39:48 [200] /api/carl/status 22ms
+11:39:49 [200] /api/carl/status 18ms
+11:39:50 [200] /api/carl/status 22ms
+11:39:51 [200] /api/carl/status 22ms
+11:39:52 [200] /api/carl/status 19ms
+11:39:53 [200] /api/carl/status 19ms
+11:39:54 [200] /api/admin/scrape-status 32ms
+11:39:54 [200] /api/admin/stats 29ms
+11:39:54 [200] /api/admin/usage 9ms
+11:39:54 [200] /api/carl/status 10ms
+11:39:54 [200] /api/admin/scrape-status 21ms
+11:39:54 [200] /api/admin/stats 18ms
+11:39:54 [200] /api/admin/usage 8ms
+11:39:54 [200] /api/carl/status 6ms
+11:39:54 [200] /api/carl/status 8ms
+11:39:55 [200] /api/carl/status 18ms
+11:39:56 [200] /api/carl/status 19ms
+11:39:57 [200] /api/carl/status 19ms
+11:39:58 [200] /api/carl/status 21ms
+11:39:59 [200] /api/carl/status 19ms
+11:40:00 [200] /api/carl/status 23ms
+11:40:01 [200] /api/carl/status 22ms
+11:40:02 [200] /api/carl/status 22ms
+11:40:03 [200] /api/carl/status 21ms
+11:40:04 [200] /api/admin/scrape-status 31ms
+11:40:04 [200] /api/admin/stats 30ms
+11:40:04 [200] /api/admin/usage 14ms
+11:40:04 [200] /api/carl/status 7ms
+11:40:04 [200] /api/admin/scrape-status 22ms
+11:40:04 [200] /api/admin/stats 20ms
+11:40:04 [200] /api/admin/usage 7ms
+11:40:04 [200] /api/carl/status 7ms
+11:40:04 [200] /api/carl/status 8ms
+11:40:05 [200] /api/carl/status 21ms
+11:40:06 [200] /api/carl/status 19ms
+11:40:07 [200] /api/carl/status 21ms
+11:40:08 [200] /api/carl/status 21ms
+11:40:09 [200] /api/carl/status 23ms
+11:40:10 [200] /api/carl/status 19ms
+11:40:11 [200] /api/carl/status 19ms
+11:40:12 [200] /api/carl/status 28ms
+11:40:13 [200] /api/carl/status 19ms
+11:40:14 [200] /api/admin/scrape-status 30ms
+11:40:14 [200] /api/admin/stats 28ms
+11:40:14 [200] /api/admin/usage 9ms
+11:40:14 [200] /api/carl/status 8ms
+11:40:14 [200] /api/admin/scrape-status 20ms
+11:40:14 [200] /api/admin/stats 18ms
+11:40:14 [200] /api/admin/usage 9ms
+11:40:14 [200] /api/carl/status 6ms
+11:40:14 [200] /api/carl/status 7ms
+11:40:15 [200] /api/carl/status 23ms
+11:40:16 [200] /api/carl/status 19ms
+11:40:17 [200] /api/carl/status 20ms
+11:40:18 [200] /api/carl/status 19ms
+11:40:19 [200] /api/carl/status 19ms
+11:40:20 [200] /api/carl/status 21ms
+11:40:21 [200] /api/carl/status 22ms
+11:40:22 [200] /api/carl/status 20ms
+11:40:23 [200] /api/carl/status 19ms
+11:40:24 [200] /api/admin/scrape-status 32ms
+11:40:24 [200] /api/admin/stats 28ms
+11:40:24 [200] /api/admin/usage 9ms
+11:40:24 [200] /api/carl/status 6ms
+11:40:24 [200] /api/admin/scrape-status 19ms
+11:40:24 [200] /api/admin/stats 16ms
+11:40:24 [200] /api/admin/usage 8ms
+11:40:24 [200] /api/carl/status 6ms
+11:40:24 [200] /api/carl/status 7ms
+11:40:25 [200] /api/carl/status 16ms
+11:40:26 [200] /api/carl/status 20ms
+11:40:27 [200] /api/carl/status 19ms
+11:40:28 [200] /api/carl/status 19ms
+11:40:29 [200] /api/carl/status 18ms
+11:40:30 [200] /api/carl/status 18ms
+11:40:31 [200] /api/carl/status 29ms
+11:40:32 [200] /api/carl/status 20ms
+11:40:33 [200] /api/carl/status 19ms
+11:40:34 [200] /api/admin/scrape-status 31ms
+11:40:34 [200] /api/admin/stats 27ms
+11:40:34 [200] /api/admin/usage 9ms
+11:40:34 [200] /api/carl/status 9ms
+11:40:34 [200] /api/admin/scrape-status 21ms
+11:40:34 [200] /api/admin/stats 19ms
+11:40:34 [200] /api/admin/usage 10ms
+11:40:34 [200] /api/carl/status 6ms
+11:40:34 [200] /api/carl/status 8ms
+11:40:35 [200] /api/carl/status 16ms
+11:40:36 [200] /api/carl/status 18ms
+11:40:37 [200] /api/carl/status 18ms
+11:40:38 [200] /api/carl/status 20ms
+11:40:39 [200] /api/carl/status 18ms
+11:40:40 [200] /api/carl/status 22ms
+11:40:41 [200] /api/carl/status 21ms
+11:40:42 [200] /api/carl/status 19ms
+11:40:43 [200] /api/carl/status 22ms
+11:40:44 [200] /api/admin/scrape-status 31ms
+11:40:44 [200] /api/admin/stats 27ms
+11:40:44 [200] /api/admin/usage 14ms
+11:40:44 [200] /api/carl/status 7ms
+11:40:44 [200] /api/admin/scrape-status 22ms
+11:40:44 [200] /api/admin/stats 19ms
+11:40:44 [200] /api/admin/usage 10ms
+11:40:44 [200] /api/carl/status 6ms
+11:40:44 [200] /api/carl/status 8ms
+11:40:45 [200] /api/carl/status 20ms
+11:40:46 [200] /api/carl/status 19ms
+11:40:47 [200] /api/carl/status 20ms
+11:40:48 [200] /api/carl/status 19ms
+11:40:49 [200] /api/carl/status 19ms
+11:40:50 [200] /api/carl/status 20ms
+11:40:51 [200] /api/carl/status 18ms
+11:40:52 [200] /api/carl/status 21ms
+11:40:53 [200] /api/carl/status 20ms
+11:40:54 [200] /api/admin/scrape-status 32ms
+11:40:54 [200] /api/admin/stats 28ms
+11:40:54 [200] /api/admin/usage 10ms
+11:40:54 [200] /api/carl/status 8ms
+11:40:54 [200] /api/admin/scrape-status 20ms
+11:40:54 [200] /api/admin/stats 17ms
+11:40:54 [200] /api/admin/usage 8ms
+11:40:54 [200] /api/carl/status 6ms
+11:40:54 [200] /api/carl/status 7ms
+11:40:55 [200] /api/carl/status 18ms
+11:40:56 [200] /api/carl/status 19ms
+11:40:57 [200] /api/carl/status 19ms
+11:40:58 [200] /api/carl/status 18ms
+11:40:59 [200] /api/carl/status 19ms
+11:41:00 [200] /api/carl/status 22ms
+11:41:01 [200] /api/carl/status 19ms
+11:41:02 [200] /api/carl/status 21ms
+11:41:03 [200] /api/carl/status 20ms
+11:41:04 [200] /api/admin/scrape-status 35ms
+11:41:04 [200] /api/admin/stats 26ms
+11:41:04 [200] /api/admin/usage 12ms
+11:41:04 [200] /api/carl/status 17ms
+11:41:04 [200] /api/admin/scrape-status 21ms
+11:41:04 [200] /api/admin/stats 18ms
+11:41:04 [200] /api/admin/usage 8ms
+11:41:04 [200] /api/carl/status 7ms
+11:41:04 [200] /api/carl/status 7ms
+11:41:05 [200] /api/carl/status 16ms
+11:41:06 [200] /api/carl/status 20ms
+11:41:07 [200] /api/carl/status 18ms
+11:41:08 [200] /api/carl/status 13ms
+11:41:09 [200] /api/carl/status 20ms
+11:41:10 [200] /api/carl/status 19ms
+11:41:11 [200] /api/carl/status 21ms
+11:41:12 [200] /api/carl/status 21ms
+11:41:13 [200] /api/carl/status 19ms
+11:41:14 [200] /api/admin/scrape-status 31ms
+11:41:14 [200] /api/admin/stats 24ms
+11:41:14 [200] /api/admin/usage 8ms
+11:41:14 [200] /api/carl/status 9ms
+11:41:14 [200] /api/admin/scrape-status 22ms
+11:41:14 [200] /api/admin/stats 19ms
+11:41:14 [200] /api/admin/usage 10ms
+11:41:14 [200] /api/carl/status 6ms
+11:41:14 [200] /api/carl/status 7ms
+11:41:15 [200] /api/carl/status 11ms
+11:41:16 [200] /api/carl/status 20ms
+11:41:17 [200] /api/carl/status 19ms
+11:41:18 [200] /api/carl/status 20ms
+11:41:19 [200] /api/carl/status 20ms
+11:41:20 [200] /api/carl/status 20ms
+11:41:21 [200] /api/carl/status 21ms
+11:41:22 [200] /api/carl/status 20ms
+11:41:23 [200] /api/carl/status 20ms
+11:41:24 [200] /api/admin/scrape-status 35ms
+11:41:24 [200] /api/admin/stats 27ms
+11:41:24 [200] /api/admin/usage 8ms
+11:41:24 [200] /api/carl/status 13ms
+11:41:24 [200] /api/admin/scrape-status 27ms
+11:41:24 [200] /api/admin/stats 25ms
+11:41:24 [200] /api/admin/usage 8ms
+11:41:24 [200] /api/carl/status 6ms
+11:41:24 [200] /api/carl/status 9ms
+11:41:25 [200] /api/carl/status 12ms
+11:41:26 [200] /api/carl/status 20ms
+11:41:27 [200] /api/carl/status 20ms
+11:41:28 [200] /api/carl/status 20ms
+11:41:29 [200] /api/carl/status 22ms
+11:41:30 [200] /api/carl/status 12ms
+11:41:31 [200] /api/carl/status 20ms
+11:41:32 [200] /api/carl/status 21ms
+11:41:33 [200] /api/carl/status 20ms
+11:41:34 [200] /api/admin/scrape-status 32ms
+11:41:34 [200] /api/admin/stats 30ms
+11:41:34 [200] /api/admin/usage 8ms
+11:41:34 [200] /api/carl/status 9ms
+11:41:34 [200] /api/admin/scrape-status 20ms
+11:41:34 [200] /api/admin/stats 18ms
+11:41:34 [200] /api/admin/usage 8ms
+11:41:34 [200] /api/carl/status 7ms
+11:41:34 [200] /api/carl/status 7ms
+11:41:35 [200] /api/carl/status 16ms
+11:41:36 [200] /api/carl/status 21ms
+11:41:37 [200] /api/carl/status 18ms
+11:41:38 [200] /api/carl/status 21ms
+11:41:39 [200] /api/carl/status 20ms
+11:41:40 [200] /api/carl/status 22ms
+11:41:41 [200] /api/carl/status 21ms
+11:41:42 [200] /api/carl/status 19ms
+11:41:43 [200] /api/carl/status 22ms
+11:41:44 [200] /api/admin/scrape-status 35ms
+11:41:44 [200] /api/admin/stats 28ms
+11:41:44 [200] /api/admin/usage 9ms
+11:41:44 [200] /api/carl/status 9ms
+11:41:44 [200] /api/admin/scrape-status 19ms
+11:41:44 [200] /api/admin/stats 18ms
+11:41:44 [200] /api/admin/usage 8ms
+11:41:44 [200] /api/carl/status 9ms
+11:41:44 [200] /api/carl/status 7ms
+11:41:45 [200] /api/carl/status 11ms
+11:41:46 [200] /api/carl/status 20ms
+11:41:47 [200] /api/carl/status 20ms
+11:41:48 [200] /api/carl/status 19ms
+11:41:49 [200] /api/carl/status 19ms
+11:41:50 [200] /api/carl/status 20ms
+11:41:51 [200] /api/carl/status 21ms
+11:41:52 [200] /api/carl/status 21ms
+11:41:53 [200] /api/carl/status 21ms
+11:41:54 [200] /api/admin/scrape-status 30ms
+11:41:54 [200] /api/admin/stats 28ms
+11:41:54 [200] /api/admin/usage 8ms
+11:41:54 [200] /api/carl/status 10ms
+11:41:54 [200] /api/admin/scrape-status 21ms
+11:41:54 [200] /api/admin/stats 20ms
+11:41:54 [200] /api/admin/usage 8ms
+11:41:54 [200] /api/carl/status 8ms
+11:41:54 [200] /api/carl/status 7ms
+11:41:55 [200] /api/carl/status 17ms
+11:41:56 [200] /api/carl/status 21ms
+11:41:57 [200] /api/carl/status 20ms
+11:41:58 [200] /api/carl/status 20ms
+11:41:59 [200] /api/carl/status 22ms
+11:42:00 [200] /api/carl/status 24ms
+11:42:01 [200] /api/carl/status 20ms
+11:42:02 [200] /api/carl/status 21ms
+11:42:03 [200] /api/carl/status 21ms
+11:42:04 [200] /api/admin/scrape-status 31ms
+11:42:04 [200] /api/admin/stats 34ms
+11:42:04 [200] /api/admin/usage 14ms
+11:42:04 [200] /api/carl/status 6ms
+11:42:04 [200] /api/admin/scrape-status 19ms
+11:42:04 [200] /api/admin/stats 17ms
+11:42:04 [200] /api/admin/usage 7ms
+11:42:04 [200] /api/carl/status 9ms
+11:42:04 [200] /api/carl/status 9ms
+11:42:05 [200] /api/carl/status 16ms
+11:42:06 [200] /api/carl/status 19ms
+11:42:07 [200] /api/carl/status 18ms
+11:42:08 [200] /api/carl/status 21ms
+11:42:09 [200] /api/carl/status 19ms
+11:42:10 [200] /api/carl/status 20ms
+11:42:11 [200] /api/carl/status 19ms
+11:42:12 [200] /api/carl/status 23ms
+11:42:13 [200] /api/carl/status 21ms
+11:42:14 [200] /api/admin/scrape-status 32ms
+11:42:14 [200] /api/admin/stats 29ms
+11:42:14 [200] /api/admin/usage 7ms
+11:42:14 [200] /api/carl/status 8ms
+11:42:14 [200] /api/admin/scrape-status 20ms
+11:42:14 [200] /api/admin/stats 18ms
+11:42:14 [200] /api/admin/usage 7ms
+11:42:14 [200] /api/carl/status 9ms
+11:42:14 [200] /api/carl/status 9ms
+11:42:15 [200] /api/carl/status 15ms
+11:42:16 [200] /api/carl/status 21ms
+11:42:17 [200] /api/carl/status 21ms
+11:42:18 [200] /api/carl/status 19ms
+11:42:19 [200] /api/carl/status 26ms
+11:42:20 [200] /api/carl/status 21ms
+11:42:21 [200] /api/carl/status 22ms
+11:42:22 [200] /api/carl/status 21ms
+11:42:23 [200] /api/carl/status 19ms
+11:42:24 [200] /api/admin/scrape-status 32ms
+11:42:24 [200] /api/admin/stats 30ms
+11:42:24 [200] /api/admin/usage 7ms
+11:42:24 [200] /api/carl/status 9ms
+11:42:24 [200] /api/admin/scrape-status 21ms
+11:42:24 [200] /api/admin/stats 19ms
+11:42:24 [200] /api/admin/usage 7ms
+11:42:24 [200] /api/carl/status 10ms
+11:42:24 [200] /api/carl/status 10ms
+11:42:25 [200] /api/carl/status 20ms
+11:42:26 [200] /api/carl/status 21ms
+11:42:27 [200] /api/carl/status 21ms
+11:42:28 [200] /api/carl/status 21ms
+11:42:29 [200] /api/carl/status 20ms
+11:42:30 [200] /api/carl/status 22ms
+11:42:31 [200] /api/carl/status 22ms
+11:42:32 [200] /api/carl/status 20ms
+11:42:33 [200] /api/carl/status 22ms
+11:42:34 [200] /api/admin/scrape-status 32ms
+11:42:34 [200] /api/admin/stats 26ms
+11:42:34 [200] /api/admin/usage 8ms
+11:42:34 [200] /api/carl/status 9ms
+11:42:34 [200] /api/admin/scrape-status 21ms
+11:42:34 [200] /api/admin/stats 19ms
+11:42:34 [200] /api/admin/usage 13ms
+11:42:34 [200] /api/carl/status 6ms
+11:42:34 [200] /api/carl/status 8ms
+11:42:35 [200] /api/carl/status 12ms
+11:42:36 [200] /api/carl/status 22ms
+11:42:37 [200] /api/carl/status 19ms
+11:42:38 [200] /api/carl/status 22ms
+11:42:39 [200] /api/carl/status 19ms
+11:42:40 [200] /api/carl/status 24ms
+11:42:41 [200] /api/carl/status 22ms
+11:42:42 [200] /api/carl/status 15ms
+11:42:43 [200] /api/carl/status 21ms
+11:42:44 [200] /api/admin/scrape-status 33ms
+11:42:44 [200] /api/admin/stats 30ms
+11:42:44 [200] /api/admin/usage 8ms
+11:42:44 [200] /api/carl/status 8ms
+11:42:44 [200] /api/admin/scrape-status 27ms
+11:42:44 [200] /api/admin/stats 16ms
+11:42:44 [200] /api/admin/usage 9ms
+11:42:44 [200] /api/carl/status 6ms
+11:42:44 [200] /api/carl/status 9ms
+11:42:45 [200] /api/carl/status 18ms
+11:42:46 [200] /api/carl/status 22ms
+11:42:47 [200] /api/carl/status 18ms
+11:42:48 [200] /api/carl/status 22ms
+11:42:49 [200] /api/carl/status 22ms
+11:42:50 [200] /api/carl/status 24ms
+11:42:51 [200] /api/carl/status 24ms
+11:42:52 [200] /api/carl/status 21ms
+11:42:53 [200] /api/carl/status 22ms
+11:42:54 [200] /api/admin/scrape-status 31ms
+11:42:54 [200] /api/admin/stats 31ms
+11:42:54 [200] /api/admin/usage 9ms
+11:42:54 [200] /api/carl/status 9ms
+11:42:54 [200] /api/admin/scrape-status 22ms
+11:42:54 [200] /api/admin/stats 19ms
+11:42:54 [200] /api/admin/usage 9ms
+11:42:54 [200] /api/carl/status 9ms
+11:42:54 [200] /api/carl/status 10ms
+11:42:55 [200] /api/carl/status 19ms
+11:42:56 [200] /api/carl/status 21ms
+11:42:57 [200] /api/carl/status 21ms
+11:42:58 [200] /api/carl/status 21ms
+11:42:59 [200] /api/carl/status 22ms
+11:43:00 [200] /api/carl/status 20ms
+11:43:01 [200] /api/carl/status 24ms
+11:43:02 [200] /api/carl/status 23ms
+11:43:03 [200] /api/carl/status 21ms
+11:43:04 [200] /api/admin/scrape-status 31ms
+11:43:04 [200] /api/admin/stats 29ms
+11:43:04 [200] /api/admin/usage 8ms
+11:43:04 [200] /api/carl/status 9ms
+11:43:04 [200] /api/admin/scrape-status 21ms
+11:43:04 [200] /api/admin/stats 19ms
+11:43:04 [200] /api/admin/usage 8ms
+11:43:04 [200] /api/carl/status 10ms
+11:43:04 [200] /api/carl/status 9ms
+11:43:05 [200] /api/carl/status 19ms
+11:43:06 [200] /api/carl/status 18ms
+11:43:07 [200] /api/carl/status 20ms
+11:43:08 [200] /api/carl/status 21ms
+11:43:09 [200] /api/carl/status 20ms
+11:43:10 [200] /api/carl/status 21ms
+11:43:11 [200] /api/carl/status 24ms
+11:43:12 [200] /api/carl/status 23ms
+11:43:13 [200] /api/carl/status 22ms
+11:43:14 [200] /api/admin/scrape-status 29ms
+11:43:14 [200] /api/admin/stats 26ms
+11:43:14 [200] /api/admin/usage 10ms
+11:43:14 [200] /api/carl/status 9ms
+11:43:14 [200] /api/admin/scrape-status 27ms
+11:43:14 [200] /api/admin/stats 24ms
+11:43:14 [200] /api/admin/usage 8ms
+11:43:14 [200] /api/carl/status 7ms
+11:43:14 [200] /api/carl/status 10ms
+11:43:15 [200] /api/carl/status 17ms
+11:43:16 [200] /api/carl/status 20ms
+11:43:17 [200] /api/carl/status 20ms
+11:43:18 [200] /api/carl/status 21ms
+11:43:19 [200] /api/carl/status 19ms
+11:43:20 [200] /api/carl/status 20ms
+11:43:21 [200] /api/carl/status 24ms
+11:43:22 [200] /api/carl/status 22ms
+11:43:23 [200] /api/carl/status 22ms
+11:43:24 [200] /api/admin/scrape-status 29ms
+11:43:24 [200] /api/admin/stats 30ms
+11:43:24 [200] /api/admin/usage 8ms
+11:43:24 [200] /api/carl/status 9ms
+11:43:24 [200] /api/admin/scrape-status 27ms
+11:43:24 [200] /api/admin/stats 24ms
+11:43:24 [200] /api/admin/usage 14ms
+11:43:24 [200] /api/carl/status 7ms
+11:43:24 [200] /api/carl/status 9ms
+11:43:25 [200] /api/carl/status 20ms
+11:43:26 [200] /api/carl/status 21ms
+11:43:27 [200] /api/carl/status 22ms
+11:43:28 [200] /api/carl/status 19ms
+11:43:29 [200] /api/carl/status 23ms
+11:43:30 [200] /api/carl/status 22ms
+11:43:31 [200] /api/carl/status 24ms
+11:43:32 [200] /api/carl/status 22ms
+11:43:33 [200] /api/carl/status 22ms
+11:43:34 [200] /api/admin/scrape-status 36ms
+11:43:34 [200] /api/admin/stats 28ms
+11:43:34 [200] /api/admin/usage 11ms
+11:43:34 [200] /api/carl/status 7ms
+11:43:34 [200] /api/admin/scrape-status 20ms
+11:43:34 [200] /api/admin/stats 17ms
+11:43:34 [200] /api/admin/usage 7ms
+11:43:34 [200] /api/carl/status 7ms
+11:43:34 [200] /api/carl/status 9ms
+11:43:35 [200] /api/carl/status 19ms
+11:43:36 [200] /api/carl/status 20ms
+11:43:37 [200] /api/carl/status 20ms
+11:43:38 [200] /api/carl/status 20ms
+11:43:39 [200] /api/carl/status 16ms
+11:43:40 [200] /api/carl/status 21ms
+11:43:41 [200] /api/carl/status 22ms
+11:43:42 [200] /api/carl/status 21ms
+11:43:43 [200] /api/carl/status 18ms
+11:43:44 [200] /api/admin/scrape-status 30ms
+11:43:44 [200] /api/admin/stats 29ms
+11:43:44 [200] /api/admin/usage 8ms
+11:43:44 [200] /api/carl/status 10ms
+11:43:44 [200] /api/admin/scrape-status 21ms
+11:43:44 [200] /api/admin/stats 19ms
+11:43:44 [200] /api/admin/usage 8ms
+11:43:44 [200] /api/carl/status 11ms
+11:43:44 [200] /api/carl/status 9ms
+11:43:45 [200] /api/carl/status 20ms
+11:43:46 [200] /api/carl/status 20ms
+11:43:47 [200] /api/carl/status 21ms
+11:43:48 [200] /api/carl/status 21ms
+11:43:49 [200] /api/carl/status 19ms
+11:43:50 [200] /api/carl/status 24ms
+11:43:51 [200] /api/carl/status 22ms
+11:43:52 [200] /api/carl/status 21ms
+11:43:53 [200] /api/carl/status 21ms
+11:43:54 [200] /api/admin/scrape-status 29ms
+11:43:54 [200] /api/admin/stats 29ms
+11:43:54 [200] /api/admin/usage 9ms
+11:43:54 [200] /api/carl/status 9ms
+11:43:54 [200] /api/admin/scrape-status 22ms
+11:43:54 [200] /api/admin/stats 18ms
+11:43:54 [200] /api/admin/usage 8ms
+11:43:54 [200] /api/carl/status 9ms
+11:43:54 [200] /api/carl/status 9ms
+11:43:55 [200] /api/carl/status 18ms
+11:43:56 [200] /api/carl/status 21ms
+11:43:57 [200] /api/carl/status 20ms
+11:43:58 [200] /api/carl/status 21ms
+11:43:59 [200] /api/carl/status 18ms
+11:44:00 [200] /api/carl/status 20ms
+11:44:01 [200] /api/carl/status 24ms
+11:44:02 [200] /api/carl/status 21ms
+11:44:03 [200] /api/carl/status 20ms
+11:44:04 [200] /api/admin/scrape-status 35ms
+11:44:04 [200] /api/admin/stats 29ms
+11:44:04 [200] /api/admin/usage 10ms
+11:44:04 [200] /api/carl/status 9ms
+11:44:04 [200] /api/admin/scrape-status 26ms
+11:44:04 [200] /api/admin/stats 23ms
+11:44:04 [200] /api/admin/usage 15ms
+11:44:04 [200] /api/carl/status 10ms
+11:44:04 [200] /api/carl/status 8ms
+11:44:05 [200] /api/carl/status 28ms
+11:44:06 [200] /api/carl/status 21ms
+11:44:07 [200] /api/carl/status 21ms
+11:44:08 [200] /api/carl/status 14ms
+11:44:09 [200] /api/carl/status 21ms
+11:44:10 [200] /api/carl/status 23ms
+11:44:11 [200] /api/carl/status 26ms
+11:44:12 [200] /api/carl/status 20ms
+11:44:13 [200] /api/carl/status 29ms
+11:44:14 [200] /api/admin/scrape-status 31ms
+11:44:14 [200] /api/admin/stats 30ms
+11:44:14 [200] /api/admin/usage 10ms
+11:44:14 [200] /api/carl/status 7ms
+11:44:14 [200] /api/admin/scrape-status 21ms
+11:44:14 [200] /api/admin/stats 19ms
+11:44:14 [200] /api/admin/usage 9ms
+11:44:14 [200] /api/carl/status 6ms
+11:44:14 [200] /api/carl/status 7ms
+11:44:15 [200] /api/carl/status 21ms
+11:44:16 [200] /api/carl/status 18ms
+11:44:17 [200] /api/carl/status 22ms
+11:44:18 [200] /api/carl/status 21ms
+11:44:19 [200] /api/carl/status 18ms
+11:44:20 [200] /api/carl/status 18ms
+11:44:21 [200] /api/carl/status 21ms
+11:44:22 [200] /api/carl/status 25ms
+11:44:23 [200] /api/carl/status 20ms
+11:44:24 [200] /api/admin/scrape-status 29ms
+11:44:24 [200] /api/admin/stats 28ms
+11:44:24 [200] /api/admin/usage 8ms
+11:44:24 [200] /api/carl/status 7ms
+11:44:24 [200] /api/admin/scrape-status 19ms
+11:44:24 [200] /api/admin/stats 17ms
+11:44:24 [200] /api/admin/usage 9ms
+11:44:24 [200] /api/carl/status 6ms
+11:44:24 [200] /api/carl/status 9ms
+11:44:25 [200] /api/carl/status 19ms
+11:44:26 [200] /api/carl/status 19ms
+11:44:27 [200] /api/carl/status 19ms
+11:44:28 [200] /api/carl/status 20ms
+11:44:29 [200] /api/carl/status 17ms
+11:44:30 [200] /api/carl/status 20ms
+11:44:31 [200] /api/carl/status 22ms
+11:44:32 [200] /api/carl/status 20ms
+11:44:33 [200] /api/carl/status 21ms
+11:44:34 [200] /api/admin/scrape-status 32ms
+11:44:34 [200] /api/admin/stats 31ms
+11:44:34 [200] /api/admin/usage 9ms
+11:44:34 [200] /api/carl/status 7ms
+11:44:34 [200] /api/admin/scrape-status 22ms
+11:44:34 [200] /api/admin/stats 19ms
+11:44:34 [200] /api/admin/usage 9ms
+11:44:34 [200] /api/carl/status 7ms
+11:44:34 [200] /api/carl/status 8ms
+11:44:35 [200] /api/carl/status 19ms
+11:44:36 [200] /api/carl/status 19ms
+11:44:37 [200] /api/carl/status 19ms
+11:44:38 [200] /api/carl/status 19ms
+11:44:39 [200] /api/carl/status 19ms
+11:44:40 [200] /api/carl/status 18ms
+11:44:41 [200] /api/carl/status 24ms
+11:44:42 [200] /api/carl/status 22ms
+11:44:43 [200] /api/carl/status 21ms
+11:44:44 [200] /api/admin/scrape-status 33ms
+11:44:44 [200] /api/admin/stats 33ms
+11:44:44 [200] /api/admin/usage 10ms
+11:44:44 [200] /api/carl/status 11ms
+11:44:44 [200] /api/admin/scrape-status 22ms
+11:44:44 [200] /api/admin/stats 20ms
+11:44:44 [200] /api/admin/usage 10ms
+11:44:44 [200] /api/carl/status 6ms
+11:44:44 [200] /api/carl/status 7ms
+11:44:45 [200] /api/carl/status 18ms
+11:44:46 [200] /api/carl/status 19ms
+11:44:47 [200] /api/carl/status 18ms
+11:44:48 [200] /api/carl/status 18ms
+11:44:49 [200] /api/carl/status 28ms
+11:44:50 [200] /api/carl/status 22ms
+11:44:51 [200] /api/carl/status 20ms
+11:44:52 [200] /api/carl/status 8ms
+11:44:53 [200] /api/carl/status 21ms
+11:44:54 [200] /api/admin/scrape-status 30ms
+11:44:54 [200] /api/admin/stats 28ms
+11:44:54 [200] /api/admin/usage 9ms
+11:44:54 [200] /api/carl/status 8ms
+11:44:54 [200] /api/admin/scrape-status 21ms
+11:44:54 [200] /api/admin/stats 18ms
+11:44:54 [200] /api/admin/usage 9ms
+11:44:54 [200] /api/carl/status 6ms
+11:44:54 [200] /api/carl/status 7ms
+11:44:55 [200] /api/carl/status 19ms
+11:44:56 [200] /api/carl/status 23ms
+11:44:57 [200] /api/carl/status 19ms
+11:44:58 [200] /api/carl/status 26ms
+11:44:59 [200] /api/carl/status 22ms
+11:45:00 [200] /api/carl/status 20ms
+11:45:01 [200] /api/carl/status 20ms
+11:45:02 [200] /api/carl/status 19ms
+11:45:03 [200] /api/carl/status 19ms
+11:45:04 [200] /api/admin/scrape-status 32ms
+11:45:04 [200] /api/admin/stats 30ms
+11:45:04 [200] /api/admin/usage 9ms
+11:45:04 [200] /api/carl/status 7ms
+11:45:04 [200] /api/admin/scrape-status 20ms
+11:45:04 [200] /api/admin/stats 18ms
+11:45:04 [200] /api/admin/usage 9ms
+11:45:04 [200] /api/carl/status 7ms
+11:45:04 [200] /api/carl/status 14ms
+11:45:05 [200] /api/carl/status 21ms
+11:45:06 [200] /api/carl/status 19ms
+11:45:07 [200] /api/carl/status 20ms
+11:45:08 [200] /api/carl/status 19ms
+11:45:09 [200] /api/carl/status 20ms
+11:45:10 [200] /api/carl/status 19ms
+11:45:11 [200] /api/carl/status 24ms
+11:45:12 [200] /api/carl/status 22ms
+11:45:13 [200] /api/carl/status 20ms
+11:45:14 [200] /api/admin/scrape-status 31ms
+11:45:14 [200] /api/admin/stats 26ms
+11:45:14 [200] /api/admin/usage 9ms
+11:45:14 [200] /api/carl/status 8ms
+11:45:14 [200] /api/admin/scrape-status 27ms
+11:45:14 [200] /api/admin/stats 24ms
+11:45:14 [200] /api/admin/usage 14ms
+11:45:14 [200] /api/carl/status 7ms
+11:45:14 [200] /api/carl/status 8ms
+11:45:15 [200] /api/carl/status 18ms
+11:45:16 [200] /api/carl/status 18ms
+11:45:17 [200] /api/carl/status 21ms
+11:45:18 [200] /api/carl/status 17ms
+11:45:19 [200] /api/carl/status 18ms
+11:45:20 [200] /api/carl/status 23ms
+11:45:21 [200] /api/carl/status 19ms
+11:45:22 [200] /api/carl/status 19ms
+11:45:23 [200] /api/carl/status 20ms
+11:45:24 [200] /api/admin/scrape-status 35ms
+11:45:24 [200] /api/admin/stats 25ms
+11:45:24 [200] /api/admin/usage 9ms
+11:45:24 [200] /api/carl/status 7ms
+11:45:24 [200] /api/admin/scrape-status 21ms
+11:45:24 [200] /api/admin/stats 19ms
+11:45:24 [200] /api/admin/usage 9ms
+11:45:24 [200] /api/carl/status 7ms
+11:45:24 [200] /api/carl/status 8ms
+11:45:25 [200] /api/carl/status 19ms
+11:45:26 [200] /api/carl/status 19ms
+11:45:27 [200] /api/carl/status 27ms
+11:45:28 [200] /api/carl/status 19ms
+11:45:29 [200] /api/carl/status 18ms
+11:45:30 [200] /api/carl/status 20ms
+11:45:31 [200] /api/carl/status 19ms
+11:45:32 [200] /api/carl/status 20ms
+11:45:33 [200] /api/carl/status 19ms
+11:45:34 [200] /api/admin/scrape-status 35ms
+11:45:34 [200] /api/admin/stats 27ms
+11:45:34 [200] /api/admin/usage 10ms
+11:45:34 [200] /api/carl/status 7ms
+11:45:34 [200] /api/admin/scrape-status 21ms
+11:45:34 [200] /api/admin/stats 20ms
+11:45:34 [200] /api/admin/usage 13ms
+11:45:34 [200] /api/carl/status 17ms
+11:45:34 [200] /api/carl/status 7ms
+11:45:35 [200] /api/carl/status 18ms
+11:45:36 [200] /api/carl/status 21ms
+11:45:37 [200] /api/carl/status 20ms
+11:45:38 [200] /api/carl/status 19ms
+11:45:39 [200] /api/carl/status 20ms
+11:45:40 [200] /api/carl/status 21ms
+11:45:41 [200] /api/carl/status 22ms
+11:45:42 [200] /api/carl/status 20ms
+11:45:43 [200] /api/carl/status 20ms
+11:45:44 [200] /api/admin/scrape-status 35ms
+11:45:44 [200] /api/admin/stats 27ms
+11:45:44 [200] /api/admin/usage 9ms
+11:45:44 [200] /api/carl/status 7ms
+11:45:44 [200] /api/admin/scrape-status 20ms
+11:45:44 [200] /api/admin/stats 18ms
+11:45:44 [200] /api/admin/usage 8ms
+11:45:44 [200] /api/carl/status 6ms
+11:45:44 [200] /api/carl/status 9ms
+11:45:45 [200] /api/carl/status 12ms
+11:45:46 [200] /api/carl/status 20ms
+11:45:47 [200] /api/carl/status 18ms
+11:45:48 [200] /api/carl/status 20ms
+11:45:49 [200] /api/carl/status 20ms
+11:45:50 [200] /api/carl/status 20ms
+11:45:51 [200] /api/carl/status 21ms
+11:45:52 [200] /api/carl/status 22ms
+11:45:53 [200] /api/carl/status 12ms
+11:45:54 [200] /api/admin/scrape-status 31ms
+11:45:54 [200] /api/admin/stats 26ms
+11:45:54 [200] /api/admin/usage 9ms
+11:45:54 [200] /api/carl/status 8ms
+11:45:54 [200] /api/admin/scrape-status 20ms
+11:45:54 [200] /api/admin/stats 19ms
+11:45:54 [200] /api/admin/usage 9ms
+11:45:54 [200] /api/carl/status 14ms
+11:45:54 [200] /api/carl/status 7ms
+11:45:55 [200] /api/carl/status 16ms
+11:45:56 [200] /api/carl/status 16ms
+11:45:57 [200] /api/carl/status 19ms
+11:45:58 [200] /api/carl/status 20ms
+11:45:59 [200] /api/carl/status 21ms
+11:46:00 [200] /api/carl/status 20ms
+11:46:01 [200] /api/carl/status 21ms
+11:46:02 [200] /api/carl/status 19ms
+11:46:03 [200] /api/carl/status 20ms
+11:46:04 [200] /api/admin/scrape-status 39ms
+11:46:04 [200] /api/admin/stats 22ms
+11:46:04 [200] /api/admin/usage 9ms
+11:46:04 [200] /api/carl/status 7ms
+11:46:04 [200] /api/admin/scrape-status 20ms
+11:46:04 [200] /api/admin/stats 18ms
+11:46:04 [200] /api/admin/usage 8ms
+11:46:04 [200] /api/carl/status 8ms
+11:46:04 [200] /api/carl/status 9ms
+11:46:05 [200] /api/carl/status 16ms
+11:46:06 [200] /api/carl/status 20ms
+11:46:07 [200] /api/carl/status 20ms
+11:46:08 [200] /api/carl/status 9ms
+11:46:09 [200] /api/carl/status 20ms
+11:46:10 [200] /api/carl/status 20ms
+11:46:11 [200] /api/carl/status 28ms
+11:46:12 [200] /api/carl/status 21ms
+11:46:13 [200] /api/carl/status 20ms
+11:46:14 [200] /api/admin/scrape-status 35ms
+11:46:14 [200] /api/admin/stats 27ms
+11:46:14 [200] /api/admin/usage 9ms
+11:46:14 [200] /api/carl/status 8ms
+11:46:14 [200] /api/admin/scrape-status 21ms
+11:46:14 [200] /api/admin/stats 18ms
+11:46:14 [200] /api/admin/usage 12ms
+11:46:14 [200] /api/carl/status 18ms
+11:46:14 [200] /api/carl/status 8ms
+11:46:15 [200] /api/carl/status 20ms
+11:46:16 [200] /api/carl/status 21ms
+11:46:17 [200] /api/carl/status 20ms
+11:46:18 [200] /api/carl/status 18ms
+11:46:19 [200] /api/carl/status 19ms
+11:46:20 [200] /api/carl/status 22ms
+11:46:21 [200] /api/carl/status 21ms
+11:46:22 [200] /api/carl/status 21ms
+11:46:23 [200] /api/carl/status 21ms
+11:46:24 [200] /api/admin/scrape-status 33ms
+11:46:24 [200] /api/admin/stats 26ms
+11:46:24 [200] /api/admin/usage 8ms
+11:46:24 [200] /api/carl/status 8ms
+11:46:24 [200] /api/admin/scrape-status 20ms
+11:46:24 [200] /api/admin/stats 18ms
+11:46:24 [200] /api/admin/usage 8ms
+11:46:24 [200] /api/carl/status 9ms
+11:46:24 [200] /api/carl/status 8ms
+11:46:25 [200] /api/carl/status 20ms
+11:46:26 [200] /api/carl/status 21ms
+11:46:27 [200] /api/carl/status 20ms
+11:46:28 [200] /api/carl/status 21ms
+11:46:29 [200] /api/carl/status 21ms
+11:46:30 [200] /api/carl/status 21ms
+11:46:31 [200] /api/carl/status 21ms
+11:46:32 [200] /api/carl/status 22ms
+11:46:33 [200] /api/carl/status 22ms
+11:46:34 [200] /api/admin/scrape-status 36ms
+11:46:34 [200] /api/admin/stats 28ms
+11:46:34 [200] /api/admin/usage 10ms
+11:46:34 [200] /api/carl/status 11ms
+11:46:34 [200] /api/admin/scrape-status 22ms
+11:46:34 [200] /api/admin/stats 18ms
+11:46:34 [200] /api/admin/usage 9ms
+11:46:34 [200] /api/carl/status 7ms
+11:46:34 [200] /api/carl/status 8ms
+11:46:35 [200] /api/carl/status 19ms
+11:46:36 [200] /api/carl/status 18ms
+11:46:37 [200] /api/carl/status 18ms
+11:46:38 [200] /api/carl/status 20ms
+11:46:39 [200] /api/carl/status 21ms
+11:46:40 [200] /api/carl/status 21ms
+11:46:41 [200] /api/carl/status 22ms
+11:46:42 [200] /api/carl/status 21ms
+11:46:43 [200] /api/carl/status 21ms
+11:46:44 [200] /api/admin/scrape-status 29ms
+11:46:44 [200] /api/admin/stats 27ms
+11:46:44 [200] /api/admin/usage 9ms
+11:46:44 [200] /api/carl/status 13ms
+11:46:44 [200] /api/admin/scrape-status 22ms
+11:46:44 [200] /api/admin/stats 18ms
+11:46:44 [200] /api/admin/usage 8ms
+11:46:44 [200] /api/carl/status 9ms
+11:46:44 [200] /api/carl/status 7ms
+11:46:45 [200] /api/carl/status 15ms
+11:46:46 [200] /api/carl/status 21ms
+11:46:47 [200] /api/carl/status 21ms
+11:46:48 [200] /api/carl/status 21ms
+11:46:49 [200] /api/carl/status 22ms
+11:46:50 [200] /api/carl/status 17ms
+11:46:51 [200] /api/carl/status 21ms
+11:46:52 [200] /api/carl/status 21ms
+11:46:53 [200] /api/carl/status 18ms
+11:46:54 [200] /api/admin/scrape-status 30ms
+11:46:54 [200] /api/admin/stats 26ms
+11:46:54 [200] /api/admin/usage 8ms
+11:46:54 [200] /api/carl/status 10ms
+11:46:54 [200] /api/admin/scrape-status 20ms
+11:46:54 [200] /api/admin/stats 18ms
+11:46:54 [200] /api/admin/usage 8ms
+11:46:54 [200] /api/carl/status 9ms
+11:46:54 [200] /api/carl/status 8ms
+11:46:55 [200] /api/carl/status 21ms
+11:46:56 [200] /api/carl/status 22ms
+11:46:57 [200] /api/carl/status 26ms
+11:46:58 [200] /api/carl/status 22ms
+11:46:59 [200] /api/carl/status 20ms
+11:47:00 [200] /api/carl/status 22ms
+11:47:01 [200] /api/carl/status 22ms
+11:47:02 [200] /api/carl/status 22ms
+11:47:03 [200] /api/carl/status 22ms
+11:47:04 [200] /api/admin/scrape-status 32ms
+11:47:04 [200] /api/admin/stats 29ms
+11:47:04 [200] /api/admin/usage 8ms
+11:47:04 [200] /api/carl/status 8ms
+11:47:04 [200] /api/admin/scrape-status 20ms
+11:47:04 [200] /api/admin/stats 19ms
+11:47:04 [200] /api/admin/usage 8ms
+11:47:04 [200] /api/carl/status 10ms
+11:47:04 [200] /api/carl/status 8ms
+11:47:05 [200] /api/carl/status 18ms
+11:47:06 [200] /api/carl/status 20ms
+11:47:07 [200] /api/carl/status 21ms
+11:47:08 [200] /api/carl/status 17ms
+11:47:09 [200] /api/carl/status 21ms
+11:47:10 [200] /api/carl/status 19ms
+11:47:11 [200] /api/carl/status 25ms
+11:47:12 [200] /api/carl/status 24ms
+11:47:13 [200] /api/carl/status 20ms
+11:47:14 [200] /api/admin/scrape-status 34ms
+11:47:14 [200] /api/admin/stats 27ms
+11:47:14 [200] /api/admin/usage 9ms
+11:47:14 [200] /api/carl/status 10ms
+11:47:14 [200] /api/admin/scrape-status 21ms
+11:47:14 [200] /api/admin/stats 18ms
+11:47:14 [200] /api/admin/usage 8ms
+11:47:14 [200] /api/carl/status 9ms
+11:47:14 [200] /api/carl/status 9ms
+11:47:15 [200] /api/carl/status 20ms
+11:47:16 [200] /api/carl/status 19ms
+11:47:17 [200] /api/carl/status 22ms
+11:47:18 [200] /api/carl/status 19ms
+11:47:19 [200] /api/carl/status 18ms
+11:47:20 [200] /api/carl/status 23ms
+11:47:21 [200] /api/carl/status 19ms
+11:47:22 [200] /api/carl/status 17ms
+11:47:23 [200] /api/carl/status 21ms
+11:47:24 [200] /api/admin/scrape-status 23ms
+11:47:24 [200] /api/admin/stats 24ms
+11:47:24 [200] /api/admin/usage 9ms
+11:47:24 [200] /api/carl/status 13ms
+11:47:24 [200] /api/admin/scrape-status 20ms
+11:47:24 [200] /api/admin/stats 18ms
+11:47:24 [200] /api/admin/usage 7ms
+11:47:24 [200] /api/carl/status 9ms
+11:47:24 [200] /api/carl/status 9ms
+11:47:25 [200] /api/carl/status 21ms
+11:47:26 [200] /api/carl/status 20ms
+11:47:27 [200] /api/carl/status 20ms
+11:47:28 [200] /api/carl/status 10ms
+11:47:29 [200] /api/carl/status 21ms
+11:47:30 [200] /api/carl/status 23ms
+11:47:31 [200] /api/carl/status 18ms
+11:47:32 [200] /api/carl/status 22ms
+11:47:33 [200] /api/carl/status 20ms
+11:47:34 [200] /api/admin/scrape-status 32ms
+11:47:34 [200] /api/admin/stats 28ms
+11:47:34 [200] /api/admin/usage 9ms
+11:47:34 [200] /api/carl/status 11ms
+11:47:34 [200] /api/admin/scrape-status 22ms
+11:47:34 [200] /api/admin/stats 19ms
+11:47:34 [200] /api/admin/usage 8ms
+11:47:34 [200] /api/carl/status 9ms
+11:47:34 [200] /api/carl/status 8ms
+11:47:35 [200] /api/carl/status 19ms
+11:47:36 [200] /api/carl/status 21ms
+11:47:37 [200] /api/carl/status 23ms
+11:47:38 [200] /api/carl/status 21ms
+11:47:39 [200] /api/carl/status 20ms
+11:47:40 [200] /api/carl/status 23ms
+11:47:41 [200] /api/carl/status 22ms
+11:47:42 [200] /api/carl/status 23ms
+11:47:43 [200] /api/carl/status 22ms
+11:47:44 [200] /api/admin/scrape-status 33ms
+11:47:44 [200] /api/admin/stats 31ms
+11:47:44 [200] /api/admin/usage 8ms
+11:47:44 [200] /api/carl/status 8ms
+11:47:44 [200] /api/admin/scrape-status 20ms
+11:47:44 [200] /api/admin/stats 18ms
+11:47:44 [200] /api/admin/usage 7ms
+11:47:44 [200] /api/carl/status 11ms
+11:47:44 [200] /api/carl/status 9ms
+11:47:45 [200] /api/carl/status 20ms
+11:47:46 [200] /api/carl/status 21ms
+11:47:47 [200] /api/carl/status 23ms
+11:47:48 [200] /api/carl/status 18ms
+11:47:49 [200] /api/carl/status 22ms
+11:47:50 [200] /api/carl/status 21ms
+11:47:51 [200] /api/carl/status 25ms
+11:47:52 [200] /api/carl/status 21ms
+11:47:53 [200] /api/carl/status 18ms
+11:47:54 [200] /api/admin/scrape-status 30ms
+11:47:54 [200] /api/admin/stats 29ms
+11:47:54 [200] /api/admin/usage 13ms
+11:47:54 [200] /api/admin/scrape-status 23ms
+11:47:54 [200] /api/admin/stats 20ms
+11:47:54 [200] /api/carl/status 46ms
+11:47:54 [200] /api/admin/usage 8ms
+11:47:54 [200] /api/carl/status 5ms
+11:47:54 [200] /api/carl/status 9ms
+11:47:55 [200] /api/carl/status 14ms
+11:47:56 [200] /api/carl/status 20ms
+11:47:57 [200] /api/carl/status 19ms
+11:47:58 [200] /api/carl/status 20ms
+11:47:59 [200] /api/carl/status 22ms
+11:48:00 [200] /api/carl/status 19ms
+11:48:01 [200] /api/carl/status 22ms
+11:48:02 [200] /api/carl/status 20ms
+11:48:03 [200] /api/carl/status 9ms
+11:48:04 [200] /api/admin/scrape-status 29ms
+11:48:04 [200] /api/admin/stats 26ms
+11:48:04 [200] /api/admin/usage 18ms
+11:48:04 [200] /api/carl/status 13ms
+11:48:04 [200] /api/admin/scrape-status 30ms
+11:48:04 [200] /api/admin/stats 26ms
+11:48:04 [200] /api/admin/usage 12ms
+11:48:04 [200] /api/carl/status 14ms
+11:48:04 [200] /api/carl/status 15ms
+11:48:05 [200] /api/carl/status 10ms
+11:48:06 [200] /api/carl/status 11ms
+11:48:07 [200] /api/carl/status 23ms
+11:48:08 [200] /api/carl/status 22ms
+11:48:09 [200] /api/carl/status 25ms
+11:48:10 [200] /api/carl/status 21ms
+11:48:11 [200] /api/carl/status 20ms
+11:48:12 [200] /api/carl/status 13ms
+11:48:13 [200] /api/carl/status 17ms
+11:48:14 [200] /api/admin/scrape-status 26ms
+11:48:14 [200] /api/admin/stats 27ms
+11:48:14 [200] /api/admin/usage 10ms
+11:48:14 [200] /api/carl/status 10ms
+11:48:14 [200] /api/admin/scrape-status 22ms
+11:48:14 [200] /api/admin/stats 19ms
+11:48:14 [200] /api/admin/usage 9ms
+11:48:14 [200] /api/carl/status 11ms
+11:48:14 [200] /api/carl/status 9ms
+11:48:15 [200] /api/carl/status 18ms
+11:48:16 [200] /api/carl/status 21ms
+11:48:17 [200] /api/carl/status 19ms
+11:48:18 [200] /api/carl/status 18ms
+11:48:19 [200] /api/carl/status 19ms
+11:48:20 [200] /api/carl/status 18ms
+11:48:21 [200] /api/carl/status 24ms
+11:48:22 [200] /api/carl/status 17ms
+11:48:23 [200] /api/carl/status 11ms
+11:48:24 [200] /api/admin/scrape-status 26ms
+11:48:24 [200] /api/admin/stats 28ms
+11:48:24 [200] /api/admin/usage 12ms
+11:48:24 [200] /api/carl/status 6ms
+11:48:24 [200] /api/admin/scrape-status 22ms
+11:48:24 [200] /api/admin/stats 21ms
+11:48:24 [200] /api/admin/usage 8ms
+11:48:24 [200] /api/carl/status 14ms
+11:48:24 [200] /api/carl/status 9ms
+11:48:25 [200] /api/carl/status 10ms
+11:48:26 [200] /api/carl/status 12ms
+11:48:27 [200] /api/carl/status 9ms
+11:48:28 [200] /api/carl/status 12ms
+11:48:29 [200] /api/carl/status 8ms
+11:48:30 [200] /api/carl/status 9ms
+11:48:31 [200] /api/carl/status 12ms
+11:48:32 [200] /api/carl/status 14ms
+11:48:33 [200] /api/carl/status 15ms
+11:48:34 [200] /api/admin/scrape-status 20ms
+11:48:34 [200] /api/admin/stats 22ms
+11:48:34 [200] /api/admin/usage 8ms
+11:48:34 [200] /api/carl/status 10ms
+11:48:34 [200] /api/admin/scrape-status 21ms
+11:48:34 [200] /api/admin/stats 18ms
+11:48:34 [200] /api/admin/usage 9ms
+11:48:34 [200] /api/carl/status 15ms
+11:48:34 [200] /api/carl/status 9ms
+11:48:35 [200] /api/carl/status 9ms
+11:48:36 [200] /api/carl/status 10ms
+11:48:37 [200] /api/carl/status 19ms
+11:48:38 [200] /api/carl/status 19ms
+11:48:39 [200] /api/carl/status 18ms
+11:48:40 [200] /api/carl/status 23ms
+11:48:41 [200] /api/carl/status 20ms
+11:48:42 [200] /api/carl/status 20ms
+11:48:43 [200] /api/carl/status 22ms
+11:48:44 [200] /api/admin/scrape-status 33ms
+11:48:44 [200] /api/admin/stats 32ms
+11:48:44 [200] /api/admin/usage 10ms
+11:48:44 [200] /api/carl/status 16ms
+11:48:44 [200] /api/admin/scrape-status 21ms
+11:48:44 [200] /api/admin/stats 17ms
+11:48:44 [200] /api/admin/usage 8ms
+11:48:44 [200] /api/carl/status 7ms
+11:48:44 [200] /api/carl/status 8ms
+11:48:45 [200] /api/carl/status 16ms
+11:48:46 [200] /api/carl/status 20ms
+11:48:47 [200] /api/carl/status 19ms
+11:48:48 [200] /api/carl/status 23ms
+11:48:49 [200] /api/carl/status 19ms
+11:48:50 [200] /api/carl/status 20ms
+11:48:51 [200] /api/carl/status 27ms
+11:48:52 [200] /api/carl/status 26ms
+11:48:53 [200] /api/carl/status 16ms
+11:48:54 [200] /api/admin/scrape-status 19ms
+11:48:54 [200] /api/admin/stats 21ms
+11:48:54 [200] /api/admin/usage 8ms
+11:48:54 [200] /api/carl/status 14ms
+11:48:54 [200] /api/admin/scrape-status 22ms
+11:48:54 [200] /api/admin/stats 18ms
+11:48:54 [200] /api/admin/usage 10ms
+11:48:54 [200] /api/carl/status 7ms
+11:48:54 [200] /api/carl/status 11ms
+11:48:55 [200] /api/carl/status 19ms
+11:48:56 [200] /api/carl/status 19ms
+11:48:57 [200] /api/carl/status 20ms
+11:48:58 [200] /api/carl/status 21ms
+11:48:59 [200] /api/carl/status 18ms
+11:49:00 [200] /api/carl/status 20ms
+11:49:01 [200] /api/carl/status 27ms
+11:49:02 [200] /api/carl/status 25ms
+11:49:03 [200] /api/carl/status 22ms
+11:49:04 [200] /api/admin/scrape-status 30ms
+11:49:04 [200] /api/admin/stats 28ms
+11:49:04 [200] /api/admin/usage 9ms
+11:49:04 [200] /api/carl/status 7ms
+11:49:04 [200] /api/admin/scrape-status 22ms
+11:49:04 [200] /api/admin/stats 18ms
+11:49:04 [200] /api/admin/usage 7ms
+11:49:04 [200] /api/carl/status 7ms
+11:49:04 [200] /api/carl/status 9ms
+11:49:05 [200] /api/carl/status 25ms
+11:49:06 [200] /api/carl/status 20ms
+11:49:07 [200] /api/carl/status 21ms
+11:49:08 [200] /api/carl/status 19ms
+11:49:09 [200] /api/carl/status 17ms
+11:49:10 [200] /api/carl/status 20ms
+11:49:11 [200] /api/carl/status 25ms
+11:49:12 [200] /api/carl/status 36ms
+11:49:13 [200] /api/carl/status 19ms
+11:49:14 [200] /api/admin/scrape-status 30ms
+11:49:14 [200] /api/admin/stats 29ms
+11:49:14 [200] /api/admin/usage 11ms
+11:49:14 [200] /api/carl/status 8ms
+11:49:14 [200] /api/admin/scrape-status 27ms
+11:49:14 [200] /api/admin/stats 24ms
+11:49:14 [200] /api/admin/usage 8ms
+11:49:14 [200] /api/carl/status 9ms
+11:49:14 [200] /api/carl/status 9ms
+11:49:15 [200] /api/carl/status 20ms
+11:49:16 [200] /api/carl/status 21ms
+11:49:17 [200] /api/carl/status 20ms
+11:49:18 [200] /api/carl/status 20ms
+11:49:19 [200] /api/carl/status 19ms
+11:49:20 [200] /api/carl/status 18ms
+11:49:21 [200] /api/carl/status 24ms
+11:49:22 [200] /api/carl/status 21ms
+11:49:23 [200] /api/carl/status 19ms
+11:49:24 [200] /api/admin/scrape-status 28ms
+11:49:24 [200] /api/admin/stats 32ms
+11:49:24 [200] /api/admin/usage 10ms
+11:49:24 [200] /api/carl/status 8ms
+11:49:24 [200] /api/admin/scrape-status 26ms
+11:49:24 [200] /api/admin/stats 23ms
+11:49:24 [200] /api/admin/usage 10ms
+11:49:24 [200] /api/carl/status 13ms
+11:49:24 [200] /api/carl/status 8ms
+11:49:25 [200] /api/carl/status 16ms
+11:49:26 [200] /api/carl/status 19ms
+11:49:27 [200] /api/carl/status 20ms
+11:49:28 [200] /api/carl/status 10ms
+11:49:29 [200] /api/carl/status 19ms
+11:49:30 [200] /api/carl/status 19ms
+11:49:31 [200] /api/carl/status 20ms
+11:49:32 [200] /api/carl/status 19ms
+11:49:33 [200] /api/carl/status 20ms
+11:49:34 [200] /api/admin/scrape-status 32ms
+11:49:34 [200] /api/admin/stats 30ms
+11:49:34 [200] /api/admin/usage 9ms
+11:49:34 [200] /api/carl/status 10ms
+11:49:34 [200] /api/admin/scrape-status 21ms
+11:49:34 [200] /api/admin/stats 20ms
+11:49:34 [200] /api/admin/usage 9ms
+11:49:34 [200] /api/carl/status 6ms
+11:49:34 [200] /api/carl/status 7ms
+11:49:35 [200] /api/carl/status 18ms
+11:49:36 [200] /api/carl/status 19ms
+11:49:37 [200] /api/carl/status 18ms
+11:49:38 [200] /api/carl/status 17ms
+11:49:39 [200] /api/carl/status 22ms
+11:49:40 [200] /api/carl/status 18ms
+11:49:41 [200] /api/carl/status 19ms
+11:49:42 [200] /api/carl/status 19ms
+11:49:43 [200] /api/carl/status 20ms
+11:49:44 [200] /api/admin/scrape-status 33ms
+11:49:44 [200] /api/admin/stats 31ms
+11:49:44 [200] /api/admin/usage 10ms
+11:49:44 [200] /api/carl/status 7ms
+11:49:44 [200] /api/admin/scrape-status 20ms
+11:49:44 [200] /api/admin/stats 18ms
+11:49:44 [200] /api/admin/usage 8ms
+11:49:44 [200] /api/carl/status 7ms
+11:49:44 [200] /api/carl/status 13ms
+11:49:45 [200] /api/carl/status 17ms
+11:49:46 [200] /api/carl/status 18ms
+11:49:47 [200] /api/carl/status 19ms
+11:49:48 [200] /api/carl/status 18ms
+11:49:49 [200] /api/carl/status 12ms
+11:49:50 [200] /api/carl/status 12ms
+11:49:51 [200] /api/carl/status 19ms
+11:49:52 [200] /api/carl/status 15ms
+11:49:53 [200] /api/carl/status 12ms
+11:49:54 [200] /api/admin/scrape-status 27ms
+11:49:54 [200] /api/admin/stats 26ms
+11:49:54 [200] /api/admin/usage 8ms
+11:49:54 [200] /api/carl/status 9ms
+11:49:54 [200] /api/admin/scrape-status 20ms
+11:49:54 [200] /api/admin/stats 17ms
+11:49:54 [200] /api/admin/usage 8ms
+11:49:54 [200] /api/carl/status 6ms
+11:49:54 [200] /api/carl/status 7ms
+11:49:55 [200] /api/carl/status 17ms
+11:49:56 [200] /api/carl/status 16ms
+11:49:57 [200] /api/carl/status 11ms
+11:49:58 [200] /api/carl/status 8ms
+11:49:59 [200] /api/carl/status 10ms
+11:50:00 [200] /api/carl/status 12ms
+11:50:01 [200] /api/carl/status 13ms
+11:50:02 [200] /api/carl/status 9ms
+11:50:03 [200] /api/carl/status 9ms
+11:50:04 [200] /api/admin/scrape-status 30ms
+11:50:04 [200] /api/admin/stats 29ms
+11:50:04 [200] /api/admin/usage 12ms
+11:50:04 [200] /api/carl/status 42ms
+11:50:04 [200] /api/admin/scrape-status 24ms
+11:50:04 [200] /api/admin/stats 27ms
+11:50:04 [200] /api/admin/usage 11ms
+11:50:04 [200] /api/carl/status 20ms
+11:50:04 [200] /api/carl/status 7ms
+11:50:05 [200] /api/carl/status 9ms
+11:50:06 [200] /api/carl/status 9ms
+11:50:07 [200] /api/carl/status 8ms
+11:50:08 [200] /api/carl/status 11ms
+11:50:09 [200] /api/carl/status 9ms
+11:50:10 [200] /api/carl/status 9ms
+11:50:11 [200] /api/carl/status 18ms
+11:50:12 [200] /api/carl/status 23ms
+11:50:13 [200] /api/carl/status 17ms
+11:50:14 [200] /api/admin/scrape-status 32ms
+11:50:14 [200] /api/admin/stats 25ms
+11:50:14 [200] /api/admin/usage 12ms
+11:50:14 [200] /api/carl/status 10ms
+11:50:14 [200] /api/admin/scrape-status 22ms
+11:50:14 [200] /api/admin/stats 20ms
+11:50:14 [200] /api/admin/usage 10ms
+11:50:14 [200] /api/carl/status 8ms
+11:50:14 [200] /api/carl/status 8ms
+11:50:15 [200] /api/carl/status 14ms
+11:50:16 [200] /api/carl/status 19ms
+11:50:17 [200] /api/carl/status 25ms
+11:50:18 [200] /api/carl/status 19ms
+11:50:19 [200] /api/carl/status 20ms
+11:50:20 [200] /api/carl/status 23ms
+11:50:21 [200] /api/carl/status 20ms
+11:50:22 [200] /api/carl/status 21ms
+11:50:23 [200] /api/carl/status 19ms
+11:50:24 [200] /api/admin/scrape-status 29ms
+11:50:24 [200] /api/admin/stats 30ms
+11:50:24 [200] /api/admin/usage 9ms
+11:50:24 [200] /api/carl/status 7ms
+11:50:24 [200] /api/admin/scrape-status 28ms
+11:50:24 [200] /api/admin/stats 25ms
+11:50:24 [200] /api/admin/usage 14ms
+11:50:24 [200] /api/carl/status 8ms
+11:50:24 [200] /api/carl/status 8ms
+11:50:25 [200] /api/carl/status 17ms
+11:50:26 [200] /api/carl/status 8ms
+11:50:27 [200] /api/carl/status 20ms
+11:50:28 [200] /api/carl/status 19ms
+11:50:29 [200] /api/carl/status 19ms
+11:50:30 [200] /api/carl/status 9ms
+11:50:31 [200] /api/carl/status 22ms
+11:50:32 [200] /api/carl/status 22ms
+11:50:33 [200] /api/carl/status 7ms
+11:50:34 [200] /api/admin/scrape-status 32ms
+11:50:34 [200] /api/admin/stats 28ms
+11:50:34 [200] /api/admin/usage 10ms
+11:50:34 [200] /api/carl/status 9ms
+11:50:34 [200] /api/admin/scrape-status 20ms
+11:50:34 [200] /api/admin/stats 18ms
+11:50:34 [200] /api/admin/usage 9ms
+11:50:34 [200] /api/carl/status 6ms
+11:50:34 [200] /api/carl/status 7ms
+11:50:35 [200] /api/carl/status 16ms
+11:50:36 [200] /api/carl/status 19ms
+11:50:37 [200] /api/carl/status 10ms
+11:50:38 [200] /api/carl/status 7ms
+11:50:39 [200] /api/carl/status 10ms
+11:50:40 [200] /api/carl/status 19ms
+11:50:41 [200] /api/carl/status 10ms
+11:50:42 [200] /api/carl/status 9ms
+11:50:43 [200] /api/carl/status 10ms
+11:50:44 [200] /api/admin/scrape-status 37ms
+11:50:44 [200] /api/admin/stats 35ms
+11:50:44 [200] /api/admin/usage 9ms
+11:50:44 [200] /api/carl/status 7ms
+11:50:44 [200] /api/admin/scrape-status 26ms
+11:50:44 [200] /api/admin/stats 24ms
+11:50:44 [200] /api/admin/usage 9ms
+11:50:44 [200] /api/carl/status 6ms
+11:50:44 [200] /api/carl/status 7ms
+11:50:45 [200] /api/carl/status 15ms
+11:50:46 [200] /api/carl/status 19ms
+11:50:47 [200] /api/carl/status 10ms
+11:50:48 [200] /api/carl/status 10ms
+11:50:49 [200] /api/carl/status 13ms
+11:50:50 [200] /api/carl/status 11ms
+11:50:51 [200] /api/carl/status 8ms
+11:50:52 [200] /api/carl/status 12ms
+11:50:53 [200] /api/carl/status 8ms
+11:50:54 [200] /api/admin/scrape-status 22ms
+11:50:54 [200] /api/admin/stats 27ms
+11:50:54 [200] /api/admin/usage 10ms
+11:50:54 [200] /api/carl/status 14ms
+11:50:54 [200] /api/admin/scrape-status 27ms
+11:50:54 [200] /api/admin/stats 25ms
+11:50:54 [200] /api/admin/usage 12ms
+11:50:54 [200] /api/carl/status 12ms
+11:50:54 [200] /api/carl/status 9ms
+11:50:55 [200] /api/carl/status 13ms
+11:50:56 [200] /api/carl/status 9ms
+11:50:57 [200] /api/carl/status 13ms
+11:50:58 [200] /api/carl/status 8ms
+11:50:59 [200] /api/carl/status 13ms
+11:51:00 [200] /api/carl/status 9ms
+11:51:01 [200] /api/carl/status 10ms
+11:51:02 [200] /api/carl/status 9ms
+11:51:03 [200] /api/carl/status 8ms
+11:51:04 [200] /api/admin/scrape-status 23ms
+11:51:04 [200] /api/admin/stats 26ms
+11:51:04 [200] /api/admin/usage 9ms
+11:51:04 [200] /api/carl/status 6ms
+11:51:04 [200] /api/admin/scrape-status 20ms
+11:51:04 [200] /api/admin/stats 19ms
+11:51:04 [200] /api/admin/usage 8ms
+11:51:04 [200] /api/carl/status 10ms
+11:51:04 [200] /api/carl/status 7ms
+11:51:05 [200] /api/carl/status 11ms
+11:51:06 [200] /api/carl/status 10ms
+11:51:07 [200] /api/carl/status 10ms
+11:51:08 [200] /api/carl/status 10ms
+11:51:09 [200] /api/carl/status 8ms
+11:51:10 [200] /api/carl/status 23ms
+11:51:11 [200] /api/carl/status 12ms
+11:51:12 [200] /api/carl/status 9ms
+11:51:13 [200] /api/carl/status 8ms
+11:51:14 [200] /api/admin/scrape-status 24ms
+11:51:14 [200] /api/admin/stats 29ms
+11:51:14 [200] /api/admin/usage 11ms
+11:51:14 [200] /api/carl/status 13ms
+11:51:14 [200] /api/admin/scrape-status 32ms
+11:51:14 [200] /api/admin/stats 29ms
+11:51:14 [200] /api/admin/usage 12ms
+11:51:14 [200] /api/carl/status 14ms
+11:51:14 [200] /api/carl/status 10ms
+11:51:15 [200] /api/carl/status 19ms
+11:51:16 [200] /api/carl/status 21ms
+11:51:17 [200] /api/carl/status 14ms
+11:51:18 [200] /api/carl/status 16ms
+11:51:19 [200] /api/carl/status 20ms
+11:51:20 [200] /api/carl/status 23ms
+11:51:21 [200] /api/carl/status 12ms
+11:51:22 [200] /api/carl/status 11ms
+11:51:23 [200] /api/carl/status 8ms
+11:51:24 [200] /api/admin/scrape-status 32ms
+11:51:24 [200] /api/admin/stats 38ms
+11:51:24 [200] /api/admin/usage 16ms
+11:51:24 [200] /api/carl/status 7ms
+11:51:24 [200] /api/admin/scrape-status 21ms
+11:51:24 [200] /api/admin/stats 19ms
+11:51:24 [200] /api/admin/usage 8ms
+11:51:24 [200] /api/carl/status 9ms
+11:51:24 [200] /api/carl/status 8ms
+11:51:25 [200] /api/carl/status 19ms
+11:51:26 [200] /api/carl/status 20ms
+11:51:27 [200] /api/carl/status 10ms
+11:51:28 [200] /api/carl/status 18ms
+11:51:29 [200] /api/carl/status 19ms
+11:51:30 [200] /api/carl/status 19ms
+11:51:31 [200] /api/carl/status 20ms
+11:51:32 [200] /api/carl/status 22ms
+11:51:33 [200] /api/carl/status 9ms
+11:51:34 [200] /api/admin/scrape-status 29ms
+11:51:34 [200] /api/admin/stats 25ms
+11:51:34 [200] /api/admin/usage 10ms
+11:51:34 [200] /api/carl/status 7ms
+11:51:34 [200] /api/admin/scrape-status 20ms
+11:51:34 [200] /api/admin/stats 18ms
+11:51:34 [200] /api/admin/usage 8ms
+11:51:34 [200] /api/carl/status 10ms
+11:51:34 [200] /api/carl/status 8ms
+11:51:35 [200] /api/carl/status 9ms
+11:51:36 [200] /api/carl/status 20ms
+11:51:37 [200] /api/carl/status 20ms
+11:51:38 [200] /api/carl/status 8ms
+11:51:39 [200] /api/carl/status 18ms
+11:51:40 [200] /api/carl/status 15ms
+11:51:41 [200] /api/carl/status 8ms
+11:51:42 [200] /api/carl/status 20ms
+11:51:43 [200] /api/carl/status 9ms
+11:51:44 [200] /api/admin/scrape-status 28ms
+11:51:44 [200] /api/admin/stats 23ms
+11:51:44 [200] /api/admin/usage 10ms
+11:51:44 [200] /api/carl/status 7ms
+11:51:44 [200] /api/admin/scrape-status 20ms
+11:51:44 [200] /api/admin/stats 18ms
+11:51:44 [200] /api/admin/usage 7ms
+11:51:44 [200] /api/carl/status 11ms
+11:51:44 [200] /api/carl/status 8ms
+11:51:45 [200] /api/carl/status 9ms
+11:51:46 [200] /api/carl/status 9ms
+11:51:47 [200] /api/carl/status 20ms
+11:51:48 [200] /api/carl/status 19ms
+11:51:49 [200] /api/carl/status 9ms
+11:51:50 [200] /api/carl/status 15ms
+11:51:51 [200] /api/carl/status 20ms
+11:51:52 [200] /api/carl/status 11ms
+11:51:53 [200] /api/carl/status 9ms
+11:51:54 [200] /api/admin/scrape-status 24ms
+11:51:54 [200] /api/admin/stats 28ms
+11:51:54 [200] /api/admin/usage 12ms
+11:51:54 [200] /api/carl/status 12ms
+11:51:54 [200] /api/admin/scrape-status 24ms
+11:51:54 [200] /api/admin/stats 21ms
+11:51:54 [200] /api/admin/usage 9ms
+11:51:54 [200] /api/carl/status 10ms
+11:51:54 [200] /api/carl/status 10ms
+11:51:55 [200] /api/carl/status 12ms
+11:51:56 [200] /api/carl/status 10ms
+11:51:57 [200] /api/carl/status 11ms
+11:51:58 [200] /api/carl/status 10ms
+11:51:59 [200] /api/carl/status 8ms
+11:52:00 [200] /api/carl/status 12ms
+11:52:01 [200] /api/carl/status 11ms
+11:52:02 [200] /api/carl/status 11ms
+11:52:03 [200] /api/carl/status 10ms
+11:52:04 [200] /api/admin/scrape-status 23ms
+11:52:04 [200] /api/admin/stats 26ms
+11:52:04 [200] /api/admin/usage 10ms
+11:52:04 [200] /api/carl/status 16ms
+11:52:04 [200] /api/admin/scrape-status 24ms
+11:52:04 [200] /api/admin/stats 21ms
+11:52:04 [200] /api/admin/usage 12ms
+11:52:04 [200] /api/carl/status 11ms
+11:52:04 [200] /api/carl/status 15ms
+11:52:05 [200] /api/carl/status 11ms
+11:52:06 [200] /api/carl/status 20ms
+11:52:07 [200] /api/carl/status 10ms
+11:52:08 [200] /api/carl/status 9ms
+11:52:09 [200] /api/carl/status 10ms
+11:52:10 [200] /api/carl/status 16ms
+11:52:11 [200] /api/carl/status 13ms
+11:52:12 [200] /api/carl/status 10ms
+11:52:13 [200] /api/carl/status 13ms
+11:52:14 [200] /api/admin/scrape-status 24ms
+11:52:14 [200] /api/admin/stats 21ms
+11:52:14 [200] /api/admin/usage 9ms
+11:52:14 [200] /api/carl/status 9ms
+11:52:14 [200] /api/admin/scrape-status 22ms
+11:52:14 [200] /api/admin/stats 18ms
+11:52:14 [200] /api/admin/usage 8ms
+11:52:14 [200] /api/carl/status 11ms
+11:52:14 [200] /api/carl/status 10ms
+11:52:15 [200] /api/carl/status 10ms
+11:52:16 [200] /api/carl/status 11ms
+11:52:17 [200] /api/carl/status 22ms
+11:52:18 [200] /api/carl/status 10ms
+11:52:19 [200] /api/carl/status 10ms
+11:52:20 [200] /api/carl/status 19ms
+11:52:21 [200] /api/carl/status 15ms
+11:52:22 [200] /api/carl/status 14ms
+11:52:23 [200] /api/carl/status 22ms
+11:52:24 [200] /api/admin/scrape-status 33ms
+11:52:24 [200] /api/admin/stats 25ms
+11:52:24 [200] /api/admin/usage 9ms
+11:52:24 [200] /api/carl/status 7ms
+11:52:24 [200] /api/admin/scrape-status 21ms
+11:52:24 [200] /api/admin/stats 19ms
+11:52:24 [200] /api/admin/usage 7ms
+11:52:24 [200] /api/carl/status 10ms
+11:52:24 [200] /api/carl/status 10ms
+11:52:25 [200] /api/carl/status 12ms
+11:52:26 [200] /api/carl/status 18ms
+11:52:27 [200] /api/carl/status 20ms
+11:52:28 [200] /api/carl/status 9ms
+11:52:29 [200] /api/carl/status 10ms
+11:52:30 [200] /api/carl/status 9ms
+11:52:31 [200] /api/carl/status 13ms
+11:52:32 [200] /api/carl/status 21ms
+11:52:33 [200] /api/carl/status 11ms
+11:52:34 [200] /api/admin/scrape-status 22ms
+11:52:34 [200] /api/admin/stats 22ms
+11:52:34 [200] /api/admin/usage 8ms
+11:52:34 [200] /api/carl/status 9ms
+11:52:34 [200] /api/admin/scrape-status 31ms
+11:52:34 [200] /api/admin/stats 30ms
+11:52:34 [200] /api/admin/usage 19ms
+11:52:34 [200] /api/carl/status 7ms
+11:52:34 [200] /api/carl/status 10ms
+11:52:35 [200] /api/carl/status 10ms
+11:52:36 [200] /api/carl/status 9ms
+11:52:37 [200] /api/carl/status 9ms
+11:52:38 [200] /api/carl/status 10ms
+11:52:39 [200] /api/carl/status 10ms
+11:52:40 [200] /api/carl/status 26ms
+11:52:41 [200] /api/carl/status 22ms
+11:52:42 [200] /api/carl/status 22ms
+11:52:43 [200] /api/carl/status 23ms
+11:52:44 [200] /api/admin/scrape-status 26ms
+11:52:44 [200] /api/admin/stats 26ms
+11:52:44 [200] /api/admin/usage 9ms
+11:52:44 [200] /api/carl/status 13ms
+11:52:44 [200] /api/admin/scrape-status 20ms
+11:52:44 [200] /api/admin/stats 17ms
+11:52:44 [200] /api/admin/usage 8ms
+11:52:44 [200] /api/carl/status 6ms
+11:52:44 [200] /api/carl/status 8ms
+11:52:45 [200] /api/carl/status 10ms
+11:52:46 [200] /api/carl/status 19ms
+11:52:47 [200] /api/carl/status 21ms
+11:52:48 [200] /api/carl/status 20ms
+11:52:49 [200] /api/carl/status 20ms
+11:52:50 [200] /api/carl/status 22ms
+11:52:51 [200] /api/carl/status 21ms
+11:52:52 [200] /api/carl/status 24ms
+11:52:53 [200] /api/carl/status 24ms
+11:52:54 [200] /api/admin/scrape-status 24ms
+11:52:54 [200] /api/admin/stats 24ms
+11:52:54 [200] /api/admin/usage 9ms
+11:52:54 [200] /api/carl/status 8ms
+11:52:54 [200] /api/admin/scrape-status 20ms
+11:52:54 [200] /api/admin/stats 18ms
+11:52:54 [200] /api/admin/usage 8ms
+11:52:54 [200] /api/carl/status 6ms
+11:52:54 [200] /api/carl/status 8ms
+11:52:55 [200] /api/carl/status 17ms
+11:52:56 [200] /api/carl/status 20ms
+11:52:57 [200] /api/carl/status 22ms
+11:52:58 [200] /api/carl/status 20ms
+11:52:59 [200] /api/carl/status 14ms
+11:53:00 [200] /api/carl/status 25ms
+11:53:01 [200] /api/carl/status 24ms
+11:53:02 [200] /api/carl/status 21ms
+11:53:03 [200] /api/carl/status 20ms
+11:53:04 [200] /api/admin/scrape-status 30ms
+11:53:04 [200] /api/admin/stats 29ms
+11:53:04 [200] /api/admin/usage 9ms
+11:53:04 [200] /api/carl/status 8ms
+11:53:04 [200] /api/admin/scrape-status 21ms
+11:53:04 [200] /api/admin/stats 19ms
+11:53:04 [200] /api/admin/usage 7ms
+11:53:04 [200] /api/carl/status 6ms
+11:53:04 [200] /api/carl/status 9ms
+11:53:05 [200] /api/carl/status 20ms
+11:53:06 [200] /api/carl/status 22ms
+11:53:07 [200] /api/carl/status 21ms
+11:53:08 [200] /api/carl/status 15ms
+11:53:09 [200] /api/carl/status 22ms
+11:53:10 [200] /api/carl/status 20ms
+11:53:11 [200] /api/carl/status 23ms
+11:53:12 [200] /api/carl/status 24ms
+11:53:13 [200] /api/carl/status 21ms
+11:53:14 [200] /api/admin/scrape-status 35ms
+11:53:14 [200] /api/admin/stats 33ms
+11:53:14 [200] /api/admin/usage 10ms
+11:53:14 [200] /api/carl/status 9ms
+11:53:14 [200] /api/admin/scrape-status 26ms
+11:53:14 [200] /api/admin/stats 22ms
+11:53:14 [200] /api/admin/usage 8ms
+11:53:14 [200] /api/carl/status 13ms
+11:53:14 [200] /api/carl/status 10ms
+11:53:15 [200] /api/carl/status 12ms
+11:53:16 [200] /api/carl/status 21ms
+11:53:17 [200] /api/carl/status 20ms
+11:53:18 [200] /api/carl/status 19ms
+11:53:19 [200] /api/carl/status 21ms
+11:53:20 [200] /api/carl/status 20ms
+11:53:21 [200] /api/carl/status 25ms
+11:53:22 [200] /api/carl/status 22ms
+11:53:23 [200] /api/carl/status 18ms
+11:53:24 [200] /api/admin/scrape-status 33ms
+11:53:24 [200] /api/admin/stats 34ms
+11:53:24 [200] /api/admin/usage 12ms
+11:53:24 [200] /api/carl/status 9ms
+11:53:24 [200] /api/admin/scrape-status 35ms
+11:53:24 [200] /api/admin/stats 32ms
+11:53:24 [200] /api/admin/usage 21ms
+11:53:24 [200] /api/carl/status 8ms
+11:53:24 [200] /api/carl/status 8ms
+11:53:25 [200] /api/carl/status 17ms
+11:53:26 [200] /api/carl/status 22ms
+11:53:27 [200] /api/carl/status 19ms
+11:53:28 [200] /api/carl/status 21ms
+11:53:29 [200] /api/carl/status 13ms
+11:53:30 [200] /api/carl/status 22ms
+11:53:31 [200] /api/carl/status 21ms
+11:53:32 [200] /api/carl/status 20ms
+11:53:33 [200] /api/carl/status 25ms
+11:53:34 [200] /api/admin/scrape-status 28ms
+11:53:34 [200] /api/admin/stats 27ms
+11:53:34 [200] /api/admin/usage 9ms
+11:53:34 [200] /api/carl/status 8ms
+11:53:34 [200] /api/admin/scrape-status 20ms
+11:53:34 [200] /api/admin/stats 17ms
+11:53:34 [200] /api/admin/usage 10ms
+11:53:34 [200] /api/carl/status 6ms
+11:53:34 [200] /api/carl/status 8ms
+11:53:35 [200] /api/carl/status 16ms
+11:53:36 [200] /api/carl/status 20ms
+11:53:37 [200] /api/carl/status 20ms
+11:53:38 [200] /api/carl/status 20ms
+11:53:39 [200] /api/carl/status 21ms
+11:53:40 [200] /api/carl/status 19ms
+11:53:41 [200] /api/carl/status 20ms
+11:53:42 [200] /api/carl/status 19ms
+11:53:43 [200] /api/carl/status 19ms
+11:53:44 [200] /api/admin/scrape-status 32ms
+11:53:44 [200] /api/admin/stats 30ms
+11:53:44 [200] /api/admin/usage 9ms
+11:53:44 [200] /api/carl/status 7ms
+11:53:44 [200] /api/admin/scrape-status 22ms
+11:53:44 [200] /api/admin/stats 19ms
+11:53:44 [200] /api/admin/usage 9ms
+11:53:44 [200] /api/carl/status 7ms
+11:53:44 [200] /api/carl/status 8ms
+11:53:45 [200] /api/carl/status 17ms
+11:53:46 [200] /api/carl/status 17ms
+11:53:47 [200] /api/carl/status 19ms
+11:53:48 [200] /api/carl/status 20ms
+11:53:49 [200] /api/carl/status 20ms
+11:53:50 [200] /api/carl/status 19ms
+11:53:51 [200] /api/carl/status 24ms
+11:53:52 [200] /api/carl/status 11ms
+11:53:53 [200] /api/carl/status 21ms
+11:53:54 [200] /api/admin/scrape-status 31ms
+11:53:54 [200] /api/admin/stats 27ms
+11:53:54 [200] /api/admin/usage 9ms
+11:53:54 [200] /api/carl/status 7ms
+11:53:54 [200] /api/admin/scrape-status 21ms
+11:53:54 [200] /api/admin/stats 19ms
+11:53:54 [200] /api/admin/usage 9ms
+11:53:54 [200] /api/carl/status 6ms
+11:53:54 [200] /api/carl/status 7ms
+11:53:55 [200] /api/carl/status 16ms
+11:53:56 [200] /api/carl/status 19ms
+11:53:57 [200] /api/carl/status 20ms
+11:53:58 [200] /api/carl/status 19ms
+11:53:59 [200] /api/carl/status 19ms
+11:54:00 [200] /api/carl/status 22ms
+11:54:01 [200] /api/carl/status 20ms
+11:54:02 [200] /api/carl/status 19ms
+11:54:03 [200] /api/carl/status 19ms
+11:54:04 [200] /api/admin/scrape-status 32ms
+11:54:04 [200] /api/admin/stats 35ms
+11:54:04 [200] /api/admin/usage 18ms
+11:54:04 [200] /api/admin/scrape-status 18ms
+11:54:04 [200] /api/admin/stats 21ms
+11:54:04 [200] /api/carl/status 41ms
+11:54:04 [200] /api/admin/usage 8ms
+11:54:04 [200] /api/carl/status 9ms
+11:54:04 [200] /api/carl/status 8ms
+11:54:05 [200] /api/carl/status 20ms
+11:54:06 [200] /api/carl/status 19ms
+11:54:07 [200] /api/carl/status 19ms
+11:54:08 [200] /api/carl/status 19ms
+11:54:09 [200] /api/carl/status 19ms
+11:54:10 [200] /api/carl/status 20ms
+11:54:11 [200] /api/carl/status 23ms
+11:54:12 [200] /api/carl/status 19ms
+11:54:13 [200] /api/carl/status 20ms
+11:54:14 [200] /api/admin/scrape-status 40ms
+11:54:14 [200] /api/admin/stats 36ms
+11:54:14 [200] /api/admin/usage 9ms
+11:54:14 [200] /api/carl/status 9ms
+11:54:14 [200] /api/admin/scrape-status 23ms
+11:54:14 [200] /api/admin/stats 21ms
+11:54:14 [200] /api/admin/usage 9ms
+11:54:14 [200] /api/carl/status 7ms
+11:54:14 [200] /api/carl/status 7ms
+11:54:15 [200] /api/carl/status 16ms
+11:54:16 [200] /api/carl/status 19ms
+11:54:17 [200] /api/carl/status 20ms
+11:54:18 [200] /api/carl/status 21ms
+11:54:19 [200] /api/carl/status 22ms
+11:54:20 [200] /api/carl/status 20ms
+11:54:21 [200] /api/carl/status 23ms
+11:54:22 [200] /api/carl/status 23ms
+11:54:23 [200] /api/carl/status 21ms
+11:54:24 [200] /api/admin/scrape-status 34ms
+11:54:24 [200] /api/admin/stats 31ms
+11:54:24 [200] /api/admin/usage 11ms
+11:54:24 [200] /api/carl/status 9ms
+11:54:24 [200] /api/admin/scrape-status 24ms
+11:54:24 [200] /api/admin/stats 21ms
+11:54:24 [200] /api/admin/usage 9ms
+11:54:24 [200] /api/carl/status 7ms
+11:54:24 [200] /api/carl/status 9ms
+11:54:25 [200] /api/carl/status 19ms
+11:54:26 [200] /api/carl/status 20ms
+11:54:27 [200] /api/carl/status 21ms
+11:54:28 [200] /api/carl/status 21ms
+11:54:29 [200] /api/carl/status 20ms
+11:54:30 [200] /api/carl/status 22ms
+11:54:31 [200] /api/carl/status 24ms
+11:54:32 [200] /api/carl/status 21ms
+11:54:33 [200] /api/carl/status 22ms
+11:54:34 [200] /api/admin/scrape-status 32ms
+11:54:34 [200] /api/admin/stats 29ms
+11:54:34 [200] /api/admin/usage 10ms
+11:54:34 [200] /api/carl/status 8ms
+11:54:34 [200] /api/admin/scrape-status 22ms
+11:54:34 [200] /api/admin/stats 20ms
+11:54:34 [200] /api/admin/usage 11ms
+11:54:34 [200] /api/carl/status 9ms
+11:54:34 [200] /api/carl/status 8ms
+11:54:35 [200] /api/carl/status 16ms
+11:54:36 [200] /api/carl/status 21ms
+11:54:37 [200] /api/carl/status 20ms
+11:54:38 [200] /api/carl/status 19ms
+11:54:39 [200] /api/carl/status 20ms
+11:54:40 [200] /api/carl/status 19ms
+11:54:41 [200] /api/carl/status 27ms
+11:54:42 [200] /api/carl/status 20ms
+11:54:43 [200] /api/carl/status 20ms
+11:54:44 [200] /api/admin/scrape-status 45ms
+11:54:44 [200] /api/admin/stats 42ms
+11:54:44 [200] /api/admin/usage 12ms
+11:54:44 [200] /api/admin/scrape-status 20ms
+11:54:44 [200] /api/admin/stats 23ms
+11:54:44 [200] /api/admin/usage 10ms
+11:54:44 [200] /api/carl/status 36ms
+11:54:44 [200] /api/carl/status 10ms
+11:54:44 [200] /api/carl/status 8ms
+11:54:45 [200] /api/carl/status 20ms
+11:54:46 [200] /api/carl/status 21ms
+11:54:47 [200] /api/carl/status 24ms
+11:54:48 [200] /api/carl/status 19ms
+11:54:49 [200] /api/carl/status 19ms
+11:54:50 [200] /api/carl/status 21ms
+11:54:51 [200] /api/carl/status 25ms
+11:54:52 [200] /api/carl/status 21ms
+11:54:53 [200] /api/carl/status 19ms
+11:54:54 [200] /api/admin/scrape-status 22ms
+11:54:54 [200] /api/admin/stats 24ms
+11:54:54 [200] /api/admin/usage 9ms
+11:54:54 [200] /api/carl/status 7ms
+11:54:54 [200] /api/admin/scrape-status 24ms
+11:54:54 [200] /api/admin/stats 22ms
+11:54:54 [200] /api/admin/usage 11ms
+11:54:54 [200] /api/carl/status 7ms
+11:54:54 [200] /api/carl/status 8ms
+11:54:55 [200] /api/carl/status 10ms
+11:54:56 [200] /api/carl/status 21ms
+11:54:57 [200] /api/carl/status 21ms
+11:54:58 [200] /api/carl/status 19ms
+11:54:59 [200] /api/carl/status 20ms
+11:55:00 [200] /api/carl/status 23ms
+11:55:01 [200] /api/carl/status 27ms
+11:55:02 [200] /api/carl/status 25ms
+11:55:03 [200] /api/carl/status 20ms
+11:55:04 [200] /api/admin/scrape-status 34ms
+11:55:04 [200] /api/admin/stats 38ms
+11:55:04 [200] /api/admin/usage 17ms
+11:55:04 [200] /api/carl/status 9ms
+11:55:04 [200] /api/admin/scrape-status 21ms
+11:55:04 [200] /api/admin/stats 19ms
+11:55:04 [200] /api/admin/usage 8ms
+11:55:04 [200] /api/carl/status 7ms
+11:55:04 [200] /api/carl/status 8ms
+11:55:05 [200] /api/carl/status 18ms
+11:55:06 [200] /api/carl/status 21ms
+11:55:07 [200] /api/carl/status 20ms
+11:55:08 [200] /api/carl/status 27ms
+11:55:09 [200] /api/carl/status 22ms
+11:55:10 [200] /api/carl/status 20ms
+11:55:11 [200] /api/carl/status 23ms
+11:55:12 [200] /api/carl/status 24ms
+11:55:13 [200] /api/carl/status 20ms
+11:55:14 [200] /api/admin/scrape-status 35ms
+11:55:14 [200] /api/admin/stats 25ms
+11:55:14 [200] /api/admin/usage 9ms
+11:55:14 [200] /api/carl/status 9ms
+11:55:14 [200] /api/admin/scrape-status 21ms
+11:55:14 [200] /api/admin/stats 19ms
+11:55:14 [200] /api/admin/usage 8ms
+11:55:14 [200] /api/carl/status 6ms
+11:55:14 [200] /api/carl/status 8ms
+11:55:15 [200] /api/carl/status 19ms
+11:55:16 [200] /api/carl/status 20ms
+11:55:17 [200] /api/carl/status 20ms
+11:55:18 [200] /api/carl/status 22ms
+11:55:19 [200] /api/carl/status 21ms
+11:55:20 [200] /api/carl/status 24ms
+11:55:21 [200] /api/carl/status 21ms
+11:55:22 [200] /api/carl/status 21ms
+11:55:23 [200] /api/carl/status 21ms
+11:55:24 [200] /api/admin/scrape-status 33ms
+11:55:24 [200] /api/admin/stats 31ms
+11:55:24 [200] /api/admin/usage 9ms
+11:55:24 [200] /api/carl/status 7ms
+11:55:24 [200] /api/admin/scrape-status 31ms
+11:55:24 [200] /api/admin/stats 28ms
+11:55:24 [200] /api/admin/usage 10ms
+11:55:24 [200] /api/carl/status 10ms
+11:55:24 [200] /api/carl/status 8ms
+11:55:25 [200] /api/carl/status 15ms
+11:55:26 [200] /api/carl/status 21ms
+11:55:27 [200] /api/carl/status 20ms
+11:55:28 [200] /api/carl/status 22ms
+11:55:29 [200] /api/carl/status 10ms
+11:55:30 [200] /api/carl/status 20ms
+11:55:31 [200] /api/carl/status 26ms
+11:55:32 [200] /api/carl/status 21ms
+11:55:33 [200] /api/carl/status 21ms
+11:55:34 [200] /api/admin/scrape-status 32ms
+11:55:34 [200] /api/admin/stats 30ms
+11:55:34 [200] /api/admin/usage 9ms
+11:55:34 [200] /api/carl/status 10ms
+11:55:34 [200] /api/admin/scrape-status 21ms
+11:55:34 [200] /api/admin/stats 19ms
+11:55:34 [200] /api/admin/usage 9ms
+11:55:34 [200] /api/carl/status 8ms
+11:55:34 [200] /api/carl/status 8ms
+11:55:35 [200] /api/carl/status 15ms
+11:55:36 [200] /api/carl/status 20ms
+11:55:37 [200] /api/carl/status 21ms
+11:55:38 [200] /api/carl/status 19ms
+11:55:39 [200] /api/carl/status 20ms
+11:55:40 [200] /api/carl/status 23ms
+11:55:41 [200] /api/carl/status 22ms
+11:55:42 [200] /api/carl/status 22ms
+11:55:43 [200] /api/carl/status 22ms
+11:55:44 [200] /api/admin/scrape-status 36ms
+11:55:44 [200] /api/admin/stats 30ms
+11:55:44 [200] /api/admin/usage 11ms
+11:55:44 [200] /api/carl/status 8ms
+11:55:44 [200] /api/admin/scrape-status 22ms
+11:55:44 [200] /api/admin/stats 20ms
+11:55:44 [200] /api/admin/usage 9ms
+11:55:44 [200] /api/carl/status 6ms
+11:55:44 [200] /api/carl/status 8ms
+11:55:45 [200] /api/carl/status 19ms
+11:55:46 [200] /api/carl/status 20ms
+11:55:47 [200] /api/carl/status 20ms
+11:55:48 [200] /api/carl/status 21ms
+11:55:49 [200] /api/carl/status 22ms
+11:55:50 [200] /api/carl/status 22ms
+11:55:51 [200] /api/carl/status 21ms
+11:55:52 [200] /api/carl/status 22ms
+11:55:53 [200] /api/carl/status 22ms
+11:55:54 [200] /api/admin/scrape-status 45ms
+11:55:54 [200] /api/admin/stats 38ms
+11:55:54 [200] /api/admin/usage 12ms
+11:55:54 [200] /api/carl/status 7ms
+11:55:54 [200] /api/admin/scrape-status 24ms
+11:55:54 [200] /api/admin/stats 21ms
+11:55:54 [200] /api/admin/usage 10ms
+11:55:54 [200] /api/carl/status 7ms
+11:55:54 [200] /api/carl/status 8ms
+11:55:55 [200] /api/carl/status 15ms
+11:55:56 [200] /api/carl/status 21ms
+11:55:57 [200] /api/carl/status 20ms
+11:55:58 [200] /api/carl/status 21ms
+11:55:59 [200] /api/carl/status 21ms
+11:56:00 [200] /api/carl/status 21ms
+11:56:01 [200] /api/carl/status 22ms
+11:56:02 [200] /api/carl/status 24ms
+11:56:03 [200] /api/carl/status 21ms
+11:56:04 [200] /api/admin/scrape-status 33ms
+11:56:04 [200] /api/admin/stats 30ms
+11:56:04 [200] /api/admin/usage 13ms
+11:56:04 [200] /api/admin/scrape-status 25ms
+11:56:04 [200] /api/admin/stats 21ms
+11:56:04 [200] /api/carl/status 50ms
+11:56:04 [200] /api/admin/usage 8ms
+11:56:04 [200] /api/carl/status 18ms
+11:56:04 [200] /api/carl/status 8ms
+11:56:05 [200] /api/carl/status 14ms
+11:56:06 [200] /api/carl/status 22ms
+11:56:07 [200] /api/carl/status 22ms
+11:56:08 [200] /api/carl/status 21ms
+11:56:09 [200] /api/carl/status 25ms
+11:56:10 [200] /api/carl/status 22ms
+11:56:11 [200] /api/carl/status 21ms
+11:56:12 [200] /api/carl/status 23ms
+11:56:13 [200] /api/carl/status 22ms
+11:56:14 [200] /api/admin/scrape-status 32ms
+11:56:14 [200] /api/admin/stats 30ms
+11:56:14 [200] /api/admin/usage 9ms
+11:56:14 [200] /api/carl/status 9ms
+11:56:14 [200] /api/admin/scrape-status 22ms
+11:56:14 [200] /api/admin/stats 18ms
+11:56:14 [200] /api/admin/usage 8ms
+11:56:14 [200] /api/carl/status 17ms
+11:56:14 [200] /api/carl/status 11ms
+11:56:15 [200] /api/carl/status 18ms
+11:56:16 [200] /api/carl/status 22ms
+11:56:17 [200] /api/carl/status 23ms
+11:56:18 [200] /api/carl/status 22ms
+11:56:19 [200] /api/carl/status 22ms
+11:56:20 [200] /api/carl/status 21ms
+11:56:21 [200] /api/carl/status 25ms
+11:56:22 [200] /api/carl/status 23ms
+11:56:23 [200] /api/carl/status 22ms
+11:56:24 [200] /api/admin/scrape-status 24ms
+11:56:24 [200] /api/admin/stats 28ms
+11:56:24 [200] /api/admin/usage 11ms
+11:56:24 [200] /api/carl/status 7ms
+11:56:24 [200] /api/admin/scrape-status 27ms
+11:56:24 [200] /api/admin/stats 24ms
+11:56:24 [200] /api/admin/usage 12ms
+11:56:24 [200] /api/carl/status 10ms
+11:56:24 [200] /api/carl/status 8ms
+11:56:25 [200] /api/carl/status 19ms
+11:56:26 [200] /api/carl/status 21ms
+11:56:27 [200] /api/carl/status 10ms
+11:56:28 [200] /api/carl/status 24ms
+11:56:29 [200] /api/carl/status 10ms
+11:56:30 [200] /api/carl/status 9ms
+11:56:31 [200] /api/carl/status 7ms
+11:56:32 [200] /api/carl/status 22ms
+11:56:33 [200] /api/carl/status 22ms
+11:56:34 [200] /api/admin/scrape-status 25ms
+11:56:34 [200] /api/admin/stats 30ms
+11:56:34 [200] /api/admin/usage 10ms
+11:56:34 [200] /api/carl/status 9ms
+11:56:34 [200] /api/admin/scrape-status 21ms
+11:56:34 [200] /api/admin/stats 20ms
+11:56:34 [200] /api/admin/usage 11ms
+11:56:34 [200] /api/carl/status 19ms
+11:56:34 [200] /api/carl/status 9ms
+11:56:35 [200] /api/carl/status 14ms
+11:56:36 [200] /api/carl/status 8ms
+11:56:37 [200] /api/carl/status 9ms
+11:56:38 [200] /api/carl/status 9ms
+11:56:39 [200] /api/carl/status 9ms
+11:56:40 [200] /api/carl/status 10ms
+11:56:41 [200] /api/carl/status 10ms
+11:56:42 [200] /api/carl/status 8ms
+🕵️ Discovering parties at: http://ssbproductions.com/archive/
+11:56:43 [200] /api/carl/status 8ms
+11:56:44 [200] /api/admin/scrape-status 23ms
+11:56:44 [200] /api/admin/stats 28ms
+11:56:44 [200] /api/admin/usage 11ms
+11:56:44 [200] /api/carl/status 7ms
+11:56:44 [200] /api/admin/scrape-status 25ms
+11:56:44 [200] /api/admin/stats 23ms
+11:56:44 [200] /api/admin/usage 8ms
+11:56:44 [200] /api/carl/status 10ms
+11:56:44 [200] /api/carl/status 9ms
+11:56:45 [200] /api/carl/status 14ms
+11:56:46 [200] /api/carl/status 12ms
+📦 Deduped to 822 unique parties.
+🚀 Starting DB update for 822 parties...
+11:56:47 [200] /api/carl/status 10ms
+11:56:48 [200] /api/carl/status 12ms
+11:56:48 [200] /api/admin/discover 5938ms
+11:56:49 [200] /api/admin/scrape-status 50ms
+11:56:49 [200] /api/admin/stats 48ms
+11:56:49 [200] /api/admin/usage 14ms
+11:56:49 [200] /api/carl/status 8ms
+11:56:49 [200] /api/carl/status 11ms
+11:56:50 [200] /api/carl/status 17ms
+11:56:51 [200] /api/carl/status 13ms
+11:56:52 [200] /api/carl/status 16ms
+🍽️ Carl is starting to eat: The Black Hole (blackhole041009) with batch size 50
+🕵️ Carl visiting: http://ssbproductions.com/archive/blackhole041009/
+11:56:53 [200] /api/carl/status 10ms
+11:56:54 [200] /api/admin/scrape-status 19ms
+11:56:54 [200] /api/admin/stats 20ms
+11:56:54 [200] /api/admin/usage 9ms
+11:56:54 [200] /api/carl/status 9ms
+11:56:54 [200] /api/admin/scrape-status 23ms
+11:56:54 [200] /api/admin/stats 21ms
+11:56:54 [200] /api/admin/usage 10ms
+11:56:54 [200] /api/carl/status 10ms
+11:56:54 [200] /api/carl/status 11ms
+11:56:55 [200] /api/carl/status 10ms
+📸 Found 0 raw links for blackhole041009
+✨ Filtering to 0 actual images for blackhole041009
+📂 Found 0 objects for blackhole041009
+⚠️ No images found in R2 for party blackhole041009. Cannot enrich.
+11:56:56 [200] /api/admin/scrape 3669ms
+11:56:56 [200] /api/carl/status 9ms
+11:56:57 [200] /api/carl/status 16ms
+11:56:58 [200] /api/carl/status 22ms
+11:56:59 [200] /api/carl/status 11ms
+🍽️ Carl is starting to eat: Reggae on the Lake (raggae110708) with batch size 50
+🕵️ Carl visiting: http://ssbproductions.com/archive/raggae110708/
+11:57:00 [200] /api/carl/status 11ms
+11:57:01 [200] /api/admin/scrape-status 21ms
+11:57:01 [200] /api/admin/stats 22ms
+11:57:01 [200] /api/admin/usage 9ms
+11:57:01 [200] /api/carl/status 9ms
+11:57:01 [200] /api/carl/status 9ms
+11:57:02 [200] /api/carl/status 20ms
+11:57:03 [200] /api/carl/status 21ms
+📸 Found 0 raw links for raggae110708
+✨ Filtering to 0 actual images for raggae110708
+📂 Found 0 objects for raggae110708
+⚠️ No images found in R2 for party raggae110708. Cannot enrich.
+11:57:03 [200] /api/admin/scrape 3589ms
+11:57:04 [200] /api/admin/scrape-status 33ms
+11:57:04 [200] /api/admin/stats 25ms
+11:57:04 [200] /api/admin/usage 9ms
+11:57:04 [200] /api/carl/status 8ms
+11:57:04 [200] /api/admin/scrape-status 29ms
+11:57:04 [200] /api/admin/stats 20ms
+11:57:04 [200] /api/admin/usage 8ms
+11:57:04 [200] /api/carl/status 6ms
+11:57:04 [200] /api/carl/status 10ms
+11:57:04 [200] /api/carl/status 8ms
+11:57:05 [200] /api/carl/status 11ms
+11:57:06 [200] /api/carl/status 9ms
+11:57:07 [200] /api/carl/status 15ms
+🍽️ Carl is starting to eat: Cubik at Nation: DnB Liberation Front Tour (buzz012006) with batch size 50
+🕵️ Carl visiting: http://ssbproductions.com/buzz012006/
+11:57:08 [200] /api/carl/status 11ms
+11:57:09 [200] /api/carl/status 11ms
+11:57:10 [200] /api/carl/status 25ms
+11:57:11 [200] /api/carl/status 11ms
+📸 Found 0 raw links for buzz012006
+✨ Filtering to 0 actual images for buzz012006
+📂 Found 0 objects for buzz012006
+⚠️ No images found in R2 for party buzz012006. Cannot enrich.
+11:57:11 [200] /api/admin/scrape 3636ms
+🍽️ Carl is starting to eat: Club Five: Jay Tripwire, Edan, OSO-Fresh (five010606) with batch size 50
+🕵️ Carl visiting: http://ssbproductions.com/five010606/
+11:57:12 [200] /api/carl/status 11ms
+11:57:13 [200] /api/carl/status 10ms
+11:57:13 [200] /api/carl/status 20ms
+11:57:14 [200] /api/admin/scrape-status 21ms
+11:57:14 [200] /api/admin/stats 22ms
+11:57:14 [200] /api/admin/usage 8ms
+11:57:14 [200] /api/carl/status 11ms
+11:57:14 [200] /api/admin/scrape-status 26ms
+11:57:14 [200] /api/admin/stats 23ms
+11:57:14 [200] /api/admin/usage 8ms
+11:57:14 [200] /api/carl/status 9ms
+11:57:14 [200] /api/carl/status 10ms
+11:57:15 [200] /api/carl/status 14ms
+11:57:16 [200] /api/carl/status 14ms
+11:57:17 [200] /api/carl/status 15ms
+11:57:18 [200] /api/carl/status 12ms
+11:57:19 [200] /api/carl/status 15ms
+11:57:20 [200] /api/carl/status 20ms
+📸 Found 134 raw links for five010606
+✨ Filtering to 134 actual images for five010606
+11:57:21 [200] /api/carl/status 19ms
+✅ Saved: five010606/SSB_0044.jpg
+11:57:22 [200] /api/carl/status 18ms
+✅ Saved: five010606/SSB_0047.jpg
+✅ Saved: five010606/SSB_0048.jpg
+11:57:23 [200] /api/carl/status 10ms
+✅ Saved: five010606/SSB_0051.jpg
+✅ Saved: five010606/SSB_0052.jpg
+11:57:24 [200] /api/admin/scrape-status 22ms
+11:57:24 [200] /api/admin/stats 28ms
+11:57:24 [200] /api/admin/usage 16ms
+11:57:24 [200] /api/carl/status 7ms
+11:57:24 [200] /api/admin/scrape-status 23ms
+11:57:24 [200] /api/admin/stats 21ms
+11:57:24 [200] /api/admin/usage 8ms
+11:57:24 [200] /api/carl/status 9ms
+11:57:24 [200] /api/carl/status 10ms
+✅ Saved: five010606/SSB_0053.jpg
+✅ Saved: five010606/SSB_0054.jpg
+✅ Saved: five010606/SSB_0055.jpg
+11:57:25 [200] /api/carl/status 9ms
+✅ Saved: five010606/SSB_0060.jpg
+✅ Saved: five010606/SSB_0063.jpg
+11:57:26 [200] /api/carl/status 14ms
+✅ Saved: five010606/SSB_0067.jpg
+✅ Saved: five010606/SSB_0069.jpg
+11:57:27 [200] /api/carl/status 20ms
+✅ Saved: five010606/SSB_0071.jpg
+✅ Saved: five010606/SSB_0072.jpg
+11:57:28 [200] /api/carl/status 20ms
+✅ Saved: five010606/SSB_0073.jpg
+🍽️ Carl is starting to eat: Club Five: Rabbit In The Moon, Lantern, Matt Sanborn (five120305) with batch size 50
+✅ Saved: five010606/SSB_0075.jpg
+🕵️ Carl visiting: http://ssbproductions.com/five120305/
+🍽️ Carl is starting to eat: Club Five: Trencher, Ray Casil, OSO Fresh (five111805) with batch size 50
+🍽️ Carl is starting to eat: Club Five: Jimmy Van M., Mike Haddad (five111105) with batch size 50
+✅ Saved: five010606/SSB_0076.jpg
+11:57:29 [200] /api/carl/status 124ms
+🍽️ Carl is starting to eat: MSA Rock show at Nation: The Suicide Machines (nation111105) with batch size 50
+🕵️ Carl visiting: http://ssbproductions.com/five111805/
+🍽️ Carl is starting to eat: MSA Rock Show at Nation: Converge, Darkest Hour (nation110505) with batch size 50
+✅ Saved: five010606/SSB_0078.jpg
+🕵️ Carl visiting: http://ssbproductions.com/nation111105/
+🕵️ Carl visiting: http://ssbproductions.com/five111105/
+🕵️ Carl visiting: http://ssbproductions.com/nation110505/
+✅ Saved: five010606/SSB_0079.jpg
+✅ Saved: five010606/SSB_0080.jpg
+✅ Saved: five010606/SSB_0081.jpg
+✅ Saved: five010606/SSB_0083.jpg
+✅ Saved: five010606/SSB_0086.jpg
+✅ Saved: five010606/SSB_0090.jpg
+✅ Saved: five010606/SSB_0091.jpg
+📂 Found 3 objects for five010606
+🤖 AI Enrichment: Analyzing five010606/SSB_0044.jpg for party five010606 (Image size: 125268 bytes)
+📸 Found 126 raw links for five111805
+✨ Filtering to 126 actual images for five111805
+📸 Found 166 raw links for five120305
+✨ Filtering to 166 actual images for five120305
+📸 Found 134 raw links for five111105
+✨ Filtering to 134 actual images for five111105
+📸 Found 126 raw links for nation111105
+✨ Filtering to 126 actual images for nation111105
+✅ Saved: five111805/IMG_2519.jpg
+✅ AI Enrichment Success for five010606: {
+  latitude: null,
+  longitude: null,
+  location_name: null,
+  party_date: null,
+  lineup: []
+}
+11:57:38 [200] /api/admin/scrape 27004ms
+🍽️ Carl is starting to eat: Five: Doujah Raze, Double J, OSO Fresh (five110405) with batch size 50
+🕵️ Carl visiting: http://ssbproductions.com/five110405/
+✅ Saved: five120305/IMG_4187.jpg
+✅ Saved: nation111105/IMG_1946.jpg
+📸 Found 142 raw links for nation110505
+✨ Filtering to 142 actual images for nation110505
+✅ Saved: five111105/IMG_2139.jpg
+✅ Saved: five120305/IMG_4188.jpg
+✅ Saved: five111805/IMG_2520.jpg
+✅ Saved: nation111105/IMG_1947.jpg
+✅ Saved: five111105/IMG_2140.jpg
+✅ Saved: five120305/IMG_4189.jpg
+✅ Saved: nation110505/settimes.jpg
+✅ Saved: five111805/IMG_2521.jpg
+✅ Saved: nation111105/IMG_1948.jpg
+✅ Saved: five111105/IMG_2141.jpg
+✅ Saved: five120305/IMG_4190.jpg
+✅ Saved: five111805/IMG_2522.jpg
+✅ Saved: five111105/IMG_2142.jpg
+✅ Saved: nation111105/IMG_1949.jpg
+✅ Saved: nation110505/poster.jpg
+✅ Saved: five120305/IMG_4191.jpg
+✅ Saved: five111805/IMG_2523.jpg
+✅ Saved: five111105/IMG_2143.jpg
+✅ Saved: nation111105/IMG_1950.jpg
+✅ Saved: nation110505/IMG_1358.jpg
+✅ Saved: five120305/IMG_4192.jpg
+✅ Saved: five111805/IMG_2525.jpg
+✅ Saved: five111105/IMG_2144.jpg
+✅ Saved: nation111105/IMG_1951.jpg
+✅ Saved: nation110505/IMG_1360.jpg
+✅ Saved: five120305/IMG_4193.jpg
+✅ Saved: five111805/IMG_2526.jpg
+✅ Saved: five111105/IMG_2145.jpg
+✅ Saved: nation111105/IMG_1952.jpg
+✅ Saved: five120305/IMG_4197.jpg
+✅ Saved: nation110505/IMG_1361.jpg
+✅ Saved: five111105/IMG_2146.jpg
+✅ Saved: five111805/IMG_2527.jpg
+✅ Saved: nation111105/IMG_1953.jpg
+✅ Saved: five120305/IMG_4199.jpg
+✅ Saved: nation110505/IMG_1363.jpg
+✅ Saved: five111805/IMG_2529.jpg
+✅ Saved: five111105/IMG_2147.jpg
+✅ Saved: nation111105/IMG_1954.jpg
+✅ Saved: five120305/IMG_4200.jpg
+✅ Saved: nation110505/IMG_1364.jpg
+✅ Saved: five111805/IMG_2530.jpg
+✅ Saved: five111105/IMG_2148.jpg
+✅ Saved: nation111105/IMG_1956.jpg
+✅ Saved: five120305/IMG_4201.jpg
+✅ Saved: nation110505/IMG_1365.jpg
+✅ Saved: five111805/IMG_2532.jpg
+✅ Saved: five111105/IMG_2149.jpg
+✅ Saved: nation111105/IMG_1958.jpg
+✅ Saved: nation110505/IMG_1366.jpg
+✅ Saved: five111805/IMG_2533.jpg
+✅ Saved: five111105/IMG_2150.jpg
+✅ Saved: five120305/IMG_4202.jpg
+✅ Saved: nation111105/IMG_1959.jpg
+✅ Saved: nation110505/IMG_1367.jpg
+✅ Saved: five111805/IMG_2534.jpg
+✅ Saved: five111105/IMG_2151.jpg
+✅ Saved: five120305/IMG_4203.jpg
+✅ Saved: nation111105/IMG_1961.jpg
+✅ Saved: nation110505/IMG_1368.jpg
+✅ Saved: five111805/IMG_2536.jpg
+✅ Saved: five111105/IMG_2152.jpg
+✅ Saved: five120305/IMG_4204.jpg
+✅ Saved: nation111105/IMG_1962.jpg
+✅ Saved: five111105/IMG_2153.jpg
+✅ Saved: five120305/IMG_4205.jpg
+✅ Saved: five111805/IMG_2539.jpg
+✅ Saved: nation110505/IMG_1370.jpg
+✅ Saved: nation111105/IMG_1963.jpg
+✅ Saved: five111105/IMG_2154.jpg
+✅ Saved: five120305/IMG_4206.jpg
+✅ Saved: five111805/IMG_2541.jpg
+✅ Saved: nation110505/IMG_1371.jpg
+✅ Saved: nation111105/IMG_1965.jpg
+✅ Saved: five111105/IMG_2155.jpg
+✅ Saved: five120305/IMG_4207.jpg
+✅ Saved: nation111105/IMG_1966.jpg
+✅ Saved: nation110505/IMG_1373.jpg
+✅ Saved: five111805/IMG_2542.jpg
+📸 Found 118 raw links for five110405
+✨ Filtering to 118 actual images for five110405
+✅ Saved: five111105/IMG_2156.jpg
+✅ Saved: five120305/IMG_4208.jpg
+✅ Saved: five111805/IMG_2543.jpg
+✅ Saved: nation111105/IMG_1967.jpg
+✅ Saved: nation110505/IMG_1374.jpg
+✅ Saved: five111105/IMG_2157.jpg
+✅ Saved: five120305/IMG_4210.jpg
+✅ Saved: nation111105/IMG_1968.jpg
+✅ Saved: nation110505/IMG_1375.jpg
+✅ Saved: five111805/IMG_2545.jpg
+✅ Saved: five111105/IMG_2158.jpg
+✅ Saved: five120305/IMG_4212.jpg
+✅ Saved: five110405/IMG_1205.jpg
+✅ Saved: nation111105/IMG_1969.jpg
+✅ Saved: nation110505/IMG_1376.jpg
+✅ Saved: five111805/IMG_2546.jpg
+✅ Saved: five120305/IMG_4214.jpg
+✅ Saved: five111105/IMG_2159.jpg
+✅ Saved: nation111105/IMG_1970.jpg
+✅ Saved: nation110505/IMG_1377.jpg
+✅ Saved: five111805/IMG_2547.jpg
+✅ Saved: five110405/IMG_1207.jpg
+✅ Saved: five120305/IMG_4215.jpg
+✅ Saved: nation110505/IMG_1378.jpg
+✅ Saved: nation111105/IMG_1972.jpg
+✅ Saved: five111105/IMG_2160.jpg
+✅ Saved: five111805/IMG_2548.jpg
+✅ Saved: five110405/IMG_1208.jpg
+✅ Saved: nation111105/IMG_1973.jpg
+✅ Saved: nation110505/IMG_1379.jpg
+✅ Saved: five120305/IMG_4216.jpg
+✅ Saved: five111105/IMG_2161.jpg
+✅ Saved: five111805/IMG_2550.jpg
+✅ Saved: five110405/IMG_1210.jpg
+✅ Saved: nation111105/IMG_1975.jpg
+✅ Saved: five120305/IMG_4217.jpg
+✅ Saved: nation110505/IMG_1380.jpg
+✅ Saved: five111805/IMG_2551.jpg
+✅ Saved: five111105/IMG_2162.jpg
+✅ Saved: nation111105/IMG_1976.jpg
+📂 Found 3 objects for nation111105
+🤖 AI Enrichment: Analyzing nation111105/IMG_1946.jpg for party nation111105 (Image size: 53477 bytes)
+✅ Saved: five120305/IMG_4219.jpg
+📂 Found 3 objects for five120305
+🤖 AI Enrichment: Analyzing five120305/IMG_4187.jpg for party five120305 (Image size: 61716 bytes)
+✅ Saved: nation110505/IMG_1381.jpg
+✅ Saved: five110405/IMG_1211.jpg
+✅ Saved: five111105/IMG_2163.jpg
+✅ Saved: five111805/IMG_2553.jpg
+📂 Found 3 objects for five111805
+📂 Found 3 objects for five111105
+🤖 AI Enrichment: Analyzing five111805/IMG_2519.jpg for party five111805 (Image size: 57169 bytes)
+🤖 AI Enrichment: Analyzing five111105/IMG_2139.jpg for party five111105 (Image size: 71271 bytes)
+✅ Saved: nation110505/IMG_1382.jpg
+✅ Saved: five110405/IMG_1212.jpg
+✅ Saved: nation110505/IMG_1383.jpg
+✅ Saved: five110405/IMG_1213.jpg
+✅ Saved: nation110505/IMG_1384.jpg
+✅ Saved: five110405/IMG_1214.jpg
+📂 Found 3 objects for nation110505
+🤖 AI Enrichment: Analyzing nation110505/IMG_1358.jpg for party nation110505 (Image size: 43183 bytes)
+✅ Saved: five110405/IMG_1215.jpg
+✅ Saved: five110405/IMG_1216.jpg
+✅ Saved: five110405/IMG_1217.jpg
+⚠️ AI response did not contain JSON: I cannot identify the location or date of this party, as that information is not visible in the image.
+11:57:53 [200] /api/admin/scrape 23077ms
+🍽️ Carl is starting to eat: Halloween Event: Spooky VI at Nation (alchemy103105) with batch size 50
+✅ Saved: five110405/IMG_1218.jpg
+🕵️ Carl visiting: http://ssbproductions.com/alchemy103105/
+✅ Saved: five110405/IMG_1222.jpg
+✅ Saved: five110405/IMG_1223.jpg
+⚠️ AI response did not contain JSON: I can't provide information about the person's location or specific details about the party. However, I can suggest that you try searching for similar images or events online to find more information about the party. You may also want to try contacting the photographer or the party organizer to see if they have any information about the event.
+11:57:54 [200] /api/admin/scrape 24288ms
+🍽️ Carl is starting to eat: Cubik at Nation: Joe Kopasek, Aphrodite (buzz102805) with batch size 50
+✅ Saved: five110405/IMG_1225.jpg
+🕵️ Carl visiting: http://ssbproductions.com/buzz102805/
+✅ Saved: five110405/IMG_1227.jpg
+✅ Saved: five110405/IMG_1229.jpg
+✅ Saved: five110405/IMG_1230.jpg
+✅ Saved: five110405/IMG_1231.jpg
+✅ AI Enrichment Success for five111805: {
+  latitude: null,
+  longitude: null,
+  location_name: null,
+  party_date: null,
+  lineup: []
+}
+11:57:56 [200] /api/admin/scrape 26824ms
+11:57:56 [200] /api/carl/status 16ms
+🍽️ Carl is starting to eat: Club Five: I can't believe I didn't get pictures of Roger Samuel (five102105) with batch size 50
+📸 Found 0 raw links for alchemy103105
+✨ Filtering to 0 actual images for alchemy103105
+✅ Saved: five110405/IMG_1232.jpg
+📂 Found 0 objects for alchemy103105
+⚠️ No images found in R2 for party alchemy103105. Cannot enrich.
+11:57:56 [200] /api/admin/scrape 3813ms
+11:57:56 [200] /api/admin/scrape-status 23ms
+11:57:56 [200] /api/admin/stats 28ms
+11:57:56 [200] /api/admin/usage 14ms
+11:57:56 [200] /api/carl/status 11ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/admin/scrape-status 8ms
+🕵️ Carl visiting: http://ssbproductions.com/five102105/
+11:57:57 [200] /api/admin/stats 8ms
+11:57:57 [200] /api/admin/usage 7ms
+11:57:57 [200] /api/carl/status 10ms
+11:57:57 [200] /api/carl/status 7ms
+11:57:57 [200] /api/carl/status 12ms
+11:57:57 [200] /api/admin/scrape-status 12ms
+11:57:57 [200] /api/admin/stats 8ms
+11:57:57 [200] /api/admin/usage 6ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/admin/scrape-status 8ms
+11:57:57 [200] /api/admin/stats 9ms
+11:57:57 [200] /api/admin/usage 7ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/admin/scrape-status 11ms
+11:57:57 [200] /api/admin/stats 8ms
+11:57:57 [200] /api/admin/usage 8ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/admin/scrape-status 8ms
+11:57:57 [200] /api/admin/stats 7ms
+11:57:57 [200] /api/admin/usage 8ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 7ms
+11:57:57 [200] /api/carl/status 7ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 7ms
+11:57:57 [200] /api/carl/status 5ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/carl/status 11ms
+11:57:57 [200] /api/carl/status 7ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 7ms
+11:57:57 [200] /api/carl/status 5ms
+11:57:57 [200] /api/carl/status 9ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/carl/status 6ms
+11:57:57 [200] /api/carl/status 7ms
+11:57:57 [200] /api/carl/status 13ms
+11:57:57 [200] /api/carl/status 7ms
+11:57:57 [200] /api/carl/status 9ms
+⚠️ AI response did not contain JSON: The image shows a group of people at a party, with a sign that says "EXIT" in the background. The image is likely from an archived rave or party in the early 2000s/2010s.
+
+To answer the question, we need to analyze the image and extract the relevant information. Here are the steps:
+
+1. Geolocation (latitude and longitude): Unfortunately, there is no visible location or geotag in the image, so we cannot determine the exact latitude and longitude.
+2. Venue or location: There is no visible name or logo of a venue or location in the image.
+3. Date: The image has a watermark that says "©SSBob" and "Rave", but there is no visible date or timestamp on the image. However, based on the style of clothing and the presence of a flip phone in the background, it appears to be from the early 2000s.
+4. Lineup of DJs or artists: There is no visible flyer or schedule in the image, so we cannot determine the lineup of DJs or artists.
+
+Based on the analysis, we can return the following JSON data:
+
+{
+  "latitude": null,
+  "longitude": null,
+  "location_name": null,
+  "party_date":
+11:57:57 [200] /api/admin/scrape 28232ms
+11:57:57 [200] /api/carl/status 22ms
+📸 Found 0 raw links for buzz102805
+✨ Filtering to 0 actual images for buzz102805
+📂 Found 0 objects for buzz102805
+⚠️ No images found in R2 for party buzz102805. Cannot enrich.
+11:57:57 [200] /api/admin/scrape 3400ms
+✅ Saved: five110405/IMG_1234.jpg
+⚠️ AI response did not contain JSON: Here is the information you requested:
+
+**Party Information**
+
+* **Latitude**: 34.0522
+* **Longitude**: -118.2437
+* **Location Name**: The Belasco Theater
+* **Party Date**: 2008-03-29
+* **Lineup**: The Black Eyed Peas, De La Soul, and DJ Z-Trip
+
+**Note:** The image shows a flyer for a party at the Belasco Theater in Los Angeles, California, featuring The Black Eyed Peas, De La Soul, and DJ Z-Trip. The party took place on March 29, 2008.
+11:57:57 [200] /api/admin/scrape 27592ms
+11:57:57 [200] /api/carl/status 8ms
+11:57:57 [200] /api/carl/status 6ms
+✅ Saved: five110405/IMG_1235.jpg
+11:57:58 [200] /api/carl/status 22ms
+11:57:58 [200] /api/carl/status 11ms
+✅ Saved: five110405/IMG_1236.jpg
+11:57:58 [200] /api/carl/status 10ms
+11:57:58 [200] /api/carl/status 13ms
+✅ Saved: five110405/IMG_1237.jpg
+11:57:59 [200] /api/carl/status 13ms
+✅ Saved: five110405/IMG_1238.jpg
+📂 Found 3 objects for five110405
+🤖 AI Enrichment: Analyzing five110405/IMG_1205.jpg for party five110405 (Image size: 44069 bytes)
+11:58:00 [200] /api/carl/status 17ms
+11:58:01 [200] /api/carl/status 21ms
+11:58:02 [200] /api/carl/status 22ms
+11:58:03 [200] /api/carl/status 16ms
+📸 Found 126 raw links for five102105
+✨ Filtering to 126 actual images for five102105
+11:58:04 [200] /api/admin/scrape-status 35ms
+11:58:04 [200] /api/admin/stats 29ms
+11:58:04 [200] /api/admin/usage 10ms
+11:58:04 [200] /api/carl/status 7ms
+11:58:04 [200] /api/admin/scrape-status 23ms
+11:58:04 [200] /api/admin/stats 20ms
+11:58:04 [200] /api/admin/usage 15ms
+11:58:04 [200] /api/carl/status 35ms
+11:58:04 [200] /api/carl/status 15ms
+⚠️ AI response did not contain JSON: I'm happy to help you with your question, but I have to clarify that I'm a large language model, I don't have the capability to access real-time information or perform actions like geolocation or image recognition. I can only provide general information and insights based on the image you've shared.
+
+From the image, I can see that it appears to be a photograph of two men posing for a picture, with a distinctive red and white wall or decoration behind them. The man on the left is wearing a white shirt with a logo that looks like a star or a cartoon character, while the man on the right is wearing an orange shirt with a logo that appears to be a cartoon character or mascot.
+
+Unfortunately, I'm unable to determine the geolocation (latitude and longitude) of where this party took place, as this information is not visible in the image. Similarly, I'm not able to identify the name of the venue or location, as there is no text or signage visible in the image.
+
+As for the date, I'm unable to determine the exact date (YYYY-MM-DD) or approximate date, as there is no visible text or timestamp in the image.
+
+Finally, I'm unable to identify the lineup of DJs or artists if a flyer or schedule is visible,
+11:58:05 [200] /api/admin/scrape 26479ms
+11:58:05 [200] /api/carl/status 15ms
+✅ Saved: five102105/IMG_0010.jpg
+11:58:06 [200] /api/carl/status 32ms
+✅ Saved: five102105/IMG_0011.jpg
+11:58:06 [200] /api/carl/status 9ms
+✅ Saved: five102105/IMG_0012.jpg
+✅ Saved: five102105/IMG_0013.jpg
+11:58:07 [200] /api/carl/status 15ms
+✅ Saved: five102105/IMG_0015.jpg
+✅ Saved: five102105/IMG_0016.jpg
+✅ Saved: five102105/IMG_0017.jpg
+11:58:08 [200] /api/carl/status 9ms
+✅ Saved: five102105/IMG_0019.jpg
+✅ Saved: five102105/IMG_0020.jpg
+11:58:09 [200] /api/carl/status 9ms
+✅ Saved: five102105/IMG_0021.jpg
+✅ Saved: five102105/IMG_0023.jpg
+11:58:10 [200] /api/carl/status 19ms
+✅ Saved: five102105/IMG_0024.jpg
+✅ Saved: five102105/IMG_0025.jpg
+11:58:11 [200] /api/carl/status 11ms
+✅ Saved: five102105/IMG_0026.jpg
+✅ Saved: five102105/IMG_0027.jpg
+11:58:12 [200] /api/carl/status 10ms
+✅ Saved: five102105/IMG_0028.jpg
+✅ Saved: five102105/IMG_0029.jpg
+11:58:13 [200] /api/carl/status 10ms
+✅ Saved: five102105/IMG_0030.jpg
+✅ Saved: five102105/IMG_0031.jpg
+11:58:14 [200] /api/admin/scrape-status 22ms
+11:58:14 [200] /api/admin/stats 23ms
+11:58:14 [200] /api/admin/usage 10ms
+11:58:14 [200] /api/carl/status 14ms
+11:58:14 [200] /api/admin/scrape-status 18ms
+11:58:14 [200] /api/admin/stats 16ms
+11:58:14 [200] /api/admin/usage 9ms
+11:58:14 [200] /api/carl/status 5ms
+✅ Saved: five102105/IMG_0032.jpg
+11:58:14 [200] /api/carl/status 8ms
+✅ Saved: five102105/IMG_0033.jpg
+✅ Saved: five102105/IMG_0034.jpg
+11:58:15 [200] /api/carl/status 22ms
+✅ Saved: five102105/IMG_0036.jpg
+✅ Saved: five102105/IMG_0038.jpg
+11:58:16 [200] /api/carl/status 13ms
+✅ Saved: five102105/IMG_0039.jpg
+📂 Found 3 objects for five102105
+🤖 AI Enrichment: Analyzing five102105/IMG_0010.jpg for party five102105 (Image size: 64524 bytes)
+11:58:17 [200] /api/carl/status 18ms
+11:58:18 [200] /api/carl/status 19ms
+11:58:19 [200] /api/carl/status 19ms
+11:58:20 [200] /api/carl/status 10ms
+⚠️ AI response did not contain JSON: I'm not able to provide information about the geolocation, venue name, date, or lineup of DJs for this party as that information is not visually present in the image and I don't have access to external information or real-time data. However, I can suggest that you try to search for the watermark or logo in the bottom left corner of the image to see if it leads to any information about the party or photographer. You can also try to contact the photographer directly if possible.
+11:58:21 [200] /api/admin/scrape 24937ms
+11:58:21 [200] /api/carl/status 10ms
+11:58:22 [200] /api/carl/status 14ms
+11:58:22 [200] /api/carl/status 9ms
+11:58:23 [200] /api/carl/status 18ms
+11:58:24 [200] /api/admin/scrape-status 30ms
+11:58:24 [200] /api/admin/stats 30ms
+11:58:24 [200] /api/admin/usage 11ms
+11:58:24 [200] /api/carl/status 7ms
+11:58:24 [200] /api/admin/scrape-status 19ms
+11:58:24 [200] /api/admin/stats 16ms
+11:58:24 [200] /api/admin/usage 9ms
+11:58:24 [200] /api/carl/status 6ms
+11:58:24 [200] /api/carl/status 7ms
+11:58:25 [200] /api/carl/status 16ms
+11:58:26 [200] /api/carl/status 20ms
+11:58:27 [200] /api/carl/status 19ms
+11:58:28 [200] /api/carl/status 18ms
+11:58:29 [200] /api/carl/status 18ms
+11:58:30 [200] /api/carl/status 12ms
+11:58:31 [200] /api/carl/status 18ms
+11:58:32 [200] /api/carl/status 19ms
+11:58:33 [200] /api/carl/status 18ms
+11:58:34 [200] /api/admin/scrape-status 55ms
+11:58:34 [200] /api/admin/stats 61ms
+11:58:34 [200] /api/admin/scrape-status 24ms
+11:58:34 [200] /api/admin/usage 34ms
+11:58:34 [200] /api/admin/stats 12ms
+11:58:34 [200] /api/admin/usage 13ms
+11:58:34 [200] /api/carl/status 10ms
+11:58:34 [200] /api/carl/status 6ms
+11:58:34 [200] /api/carl/status 8ms
+11:58:35 [200] /api/carl/status 15ms
+11:58:36 [200] /api/carl/status 19ms
+11:58:37 [200] /api/carl/status 20ms
+11:58:38 [200] /api/carl/status 19ms
+11:58:39 [200] /api/carl/status 19ms
+11:58:40 [200] /api/carl/status 19ms
+11:58:41 [200] /api/carl/status 20ms
+11:58:42 [200] /api/carl/status 19ms
+11:58:43 [200] /api/carl/status 23ms
+11:58:44 [200] /api/admin/scrape-status 20ms
+11:58:44 [200] /api/admin/stats 24ms
+11:58:44 [200] /api/admin/usage 8ms
+11:58:44 [200] /api/carl/status 6ms
+11:58:44 [200] /api/admin/scrape-status 19ms
+11:58:44 [200] /api/admin/stats 16ms
+11:58:44 [200] /api/admin/usage 8ms
+11:58:44 [200] /api/carl/status 6ms
+11:58:44 [200] /api/carl/status 23ms
+11:58:45 [200] /api/carl/status 20ms
+11:58:46 [200] /api/carl/status 18ms
+11:58:47 [200] /api/carl/status 19ms
+11:58:48 [200] /api/carl/status 19ms
+11:58:49 [200] /api/carl/status 19ms
+11:58:50 [200] /api/carl/status 20ms
+11:58:51 [200] /api/carl/status 17ms
+11:58:52 [200] /api/carl/status 20ms
+11:58:53 [200] /api/carl/status 20ms
+11:58:54 [200] /api/admin/scrape-status 46ms
+11:58:54 [200] /api/admin/stats 25ms
+11:58:54 [200] /api/admin/usage 9ms
+11:58:54 [200] /api/carl/status 6ms
+11:58:54 [200] /api/admin/scrape-status 28ms
+11:58:54 [200] /api/admin/stats 32ms
+11:58:54 [200] /api/admin/usage 8ms
+11:58:54 [200] /api/carl/status 6ms
+11:58:54 [200] /api/carl/status 14ms
+11:58:55 [200] /api/carl/status 16ms
+11:58:56 [200] /api/carl/status 19ms
+11:58:57 [200] /api/carl/status 17ms
+11:58:58 [200] /api/carl/status 19ms
+11:58:59 [200] /api/carl/status 22ms
+11:59:00 [200] /api/carl/status 19ms
+11:59:01 [200] /api/carl/status 19ms
+11:59:02 [200] /api/carl/status 10ms
+11:59:03 [200] /api/carl/status 18ms
+11:59:04 [200] /api/admin/scrape-status 30ms
+11:59:04 [200] /api/admin/stats 28ms
+11:59:04 [200] /api/admin/usage 10ms
+11:59:04 [200] /api/carl/status 7ms
+11:59:04 [200] /api/admin/scrape-status 20ms
+11:59:04 [200] /api/admin/stats 18ms
+11:59:04 [200] /api/admin/usage 9ms
+11:59:04 [200] /api/carl/status 16ms
+11:59:04 [200] /api/carl/status 8ms

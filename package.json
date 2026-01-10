@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/post-build.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run --config vitest.config.ts",
@@ -22,6 +22,7 @@
     "astro": "^5.16.7",
     "hono": "^4.11.3",
     "lit": "^3.3.2",
+    "posthog-js": "^1.318.1",
     "unocss": "^66.5.12"
   },
   "devDependencies": {

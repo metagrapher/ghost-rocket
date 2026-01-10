@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { trackEvent } from '../lib/analytics.ts';
 import './OptionButton.ts';
 import './FaceTagger.ts';
 
@@ -478,6 +479,14 @@ export class RaveGame extends LitElement {
             // Assigning the new quiz data only AFTER any flip-back is done
             this.quiz = data;
 
+            // Enrich tracking event with party data
+            trackEvent('party_viewed', {
+                party_id: this.quiz?.correctId,
+                party_title: this.quiz?.options.find(o => o.id === this.quiz?.correctId)?.label,
+                image_url: this.quiz?.imageUrl,
+                party_date: this.quiz?.date ? `${this.quiz.date.year}-${this.quiz.date.month}-${this.quiz.date.day}` : null
+            });
+
             // Preload image
             if (this.quiz?.imageUrl) {
                 console.log(`🖼️ Preloading image: ${this.quiz.imageUrl}`);
@@ -539,6 +548,12 @@ export class RaveGame extends LitElement {
         const isCorrect = id === this.quiz.correctId;
         this.result = isCorrect ? 'correct' : 'wrong';
 
+        trackEvent('guess_submitted', {
+            party_id: this.quiz.correctId,
+            guessed_id: id,
+            is_correct: isCorrect
+        });
+
         // Flip after a short delay to let the button click be felt
         setTimeout(() => {
             this.flipped = true;
@@ -574,6 +589,10 @@ export class RaveGame extends LitElement {
         try {
             await navigator.clipboard.writeText(url.toString());
             this.showToast = true;
+            trackEvent('share_link_copied', {
+                party_id: this.quiz.correctId,
+                url: url.toString()
+            });
             setTimeout(() => this.showToast = false, 2500);
         } catch (err) {
             console.error('Failed to copy using API', err);
@@ -667,6 +686,9 @@ export class RaveGame extends LitElement {
                 if (urlParams.get('photo')) {
                     window.history.pushState({}, '', '/');
                 }
+                trackEvent('next_photo_clicked', {
+                    previous_party_id: this.quiz?.correctId
+                });
                 this.loadGame();
             }}>NEXT PHOTO →</button>
                         </div>

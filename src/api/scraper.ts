@@ -13,13 +13,26 @@ interface ImageMetadata {
     caption: string | null
 }
 
-export async function scrapeArchive(party: any, env: any): Promise<ScrapeReport> {
+export async function scrapeArchive(party: any, env: any, limit: number = 50): Promise<ScrapeReport> {
     const bucket = env.BUCKET
     const db = env.DB
     const browserBinding = env.BROWSER
 
     if (!browserBinding) {
         return { id: party.id, found: 0, saved: 0, status: 'error', error: 'Browser binding not found' }
+    }
+
+    // [CARL] Set status to processing immediately
+    try {
+        await db.prepare(`
+            INSERT INTO scrape_status (party_id, images_found, images_saved, status, last_scraped_at)
+            VALUES (?, 0, 0, 'processing', CURRENT_TIMESTAMP)
+            ON CONFLICT(party_id) DO UPDATE SET
+                status = 'processing',
+                last_scraped_at = excluded.last_scraped_at
+        `).bind(party.id).run()
+    } catch (e) {
+        console.warn('Failed to set initial processing status', e)
     }
 
     let browser;
@@ -29,7 +42,7 @@ export async function scrapeArchive(party: any, env: any): Promise<ScrapeReport>
 
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
 
-        console.log(`🕵️ Scraper visiting: ${party.url}`)
+        console.log(`🕵️ Carl visiting: ${party.url}`)
         await page.goto(party.url, { waitUntil: 'networkidle2', timeout: 30000 })
 
         const images = await page.evaluate(() => {
@@ -100,7 +113,12 @@ export async function scrapeArchive(party: any, env: any): Promise<ScrapeReport>
         console.log(`✨ Filtering to ${uniqueImages.length} actual images for ${party.id}`)
 
         let saved = 0
-        const LIMIT = 50
+        const LIMIT = limit
+
+        // [CARL] Update found count
+        await db.prepare(`
+            UPDATE scrape_status SET images_found = ? WHERE party_id = ?
+        `).bind(uniqueImages.length, party.id).run()
 
         for (const img of uniqueImages.slice(0, LIMIT)) {
             const filename = img.link.split('/').pop()!
@@ -121,20 +139,26 @@ export async function scrapeArchive(party: any, env: any): Promise<ScrapeReport>
                 const existing = await bucket.head(r2Key)
                 if (existing) {
                     saved++
-                    continue
+                } else {
+                    const imgRes = await fetch(img.link, { headers: { 'Referer': party.url } })
+                    if (imgRes.ok) {
+                        const contentType = imgRes.headers.get('content-type') || 'image/jpeg'
+                        if (contentType.includes('image')) {
+                            const blob = await imgRes.arrayBuffer()
+                            await bucket.put(r2Key, blob, { httpMetadata: { contentType: contentType } })
+                            saved++
+                            console.log(`✅ Saved: ${r2Key}`)
+                        }
+                    } else {
+                        console.warn(`❌ Failed to fetch: ${img.link} (${imgRes.status})`)
+                    }
                 }
 
-                const imgRes = await fetch(img.link, { headers: { 'Referer': party.url } })
-                if (imgRes.ok) {
-                    const contentType = imgRes.headers.get('content-type') || 'image/jpeg'
-                    if (contentType.includes('image')) {
-                        const blob = await imgRes.arrayBuffer()
-                        await bucket.put(r2Key, blob, { httpMetadata: { contentType: contentType } })
-                        saved++
-                        console.log(`✅ Saved: ${r2Key}`)
-                    }
-                } else {
-                    console.warn(`❌ Failed to fetch: ${img.link} (${imgRes.status})`)
+                // [CARL] Incremental Update (every 5 images)
+                if (saved % 5 === 0) {
+                    await db.prepare(`
+                        UPDATE scrape_status SET images_saved = ? WHERE party_id = ?
+                    `).bind(saved, party.id).run()
                 }
             } catch (e) {
                 console.error(`💔 Error processing ${img.link}:`, e)

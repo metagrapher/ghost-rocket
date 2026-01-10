@@ -16,6 +16,43 @@ app.get('/hello', (c) =>
         })
 )
 
+// PostHog Proxy for "Server-Side" Tracking & Enrichment
+app.all('/ingest/*', async (c) => {
+    // URL rewrite: /api/ingest/e/ -> https://us.i.posthog.com/e/
+    const url = new URL(c.req.url)
+    const path = url.pathname.replace('/api/ingest', '')
+    const targetUrl = new URL(path, 'https://us.i.posthog.com')
+
+    // Copy query params
+    url.searchParams.forEach((v, k) => targetUrl.searchParams.append(k, v))
+
+    const headers = new Headers(c.req.header())
+    headers.set('Host', 'us.i.posthog.com')
+
+    // Important for PostHog to correct GeoIP
+    const clientIp = c.req.header('CF-Connecting-IP')
+    if (clientIp) {
+        headers.set('X-Forwarded-For', clientIp)
+    }
+
+    try {
+        const res = await fetch(targetUrl.toString(), {
+            method: c.req.method,
+            headers,
+            body: c.req.method !== 'GET' && c.req.method !== 'HEAD' ? c.req.raw.body : undefined,
+            redirect: 'follow'
+        })
+
+        return new Response(res.body, {
+            status: res.status,
+            headers: res.headers
+        })
+    } catch (e: any) {
+        console.error('PostHog Proxy Error:', e)
+        return c.json({ error: 'Proxy Failed' }, 502)
+    }
+})
+
 app.get('/archive', async (c) => {
     const { results } = await c.env.DB.prepare('SELECT * FROM parties ORDER BY discovered_at DESC').all()
     return c.json(results)
@@ -54,6 +91,7 @@ app.get('/image-proxy', async (c) => {
 import { scrapeArchive } from './scraper'
 import { discoverParties } from './discover'
 import { enrichPartyWithAI } from './enrichment'
+import { runCarl, getCarlStatus } from './carl'
 
 app.get('/admin/discover', async (c) => {
     const env = c.env
@@ -65,38 +103,75 @@ app.get('/admin/discover', async (c) => {
     }
 })
 
+// === CARL THE SCRAPER API ===
+
+app.get('/carl/status', async (c) => {
+    try {
+        const status = await getCarlStatus(c.env)
+        return c.json(status)
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+app.post('/carl/config', async (c) => {
+    try {
+        const { batch_size, enabled, frequency_hours } = await c.req.json() as any
+
+        // Update DB (id=1 is the singleton row)
+        await c.env.DB.prepare(`
+            UPDATE carl_settings 
+            SET batch_size = COALESCE(?, batch_size), 
+                enabled = COALESCE(?, enabled), 
+                frequency_hours = COALESCE(?, frequency_hours),
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = 1
+        `).bind(batch_size, enabled, frequency_hours).run()
+
+        return c.json({ success: true })
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+// Internal endpoint to be hit by the cron trigger
+app.get('/admin/cron-trigger', async (c) => {
+    // In a real app, verify a secret header here!
+    // const secret = c.req.header('X-Cron-Secret')
+    // if (secret !== c.env.CRON_SECRET) return c.text('Unauthorized', 401)
+
+    c.executionCtx.waitUntil((async () => {
+        await runCarl(c.env)
+    })())
+
+    return c.json({ status: 'Triggered' })
+})
+
 app.get('/admin/scrape', async (c) => {
     const env = c.env
     const targetId = c.req.query('id')
+    const force = c.req.query('force') === 'true'
 
-    let parties: any[] = []
     if (targetId) {
+        // Manual specific target scrape (bypass Carl logic, just direct)
+        // Check config for batch size though
+        const config = await env.DB.prepare('SELECT batch_size FROM carl_settings WHERE id = 1').first()
+        const batchSize = config?.batch_size || 50
+
         const party = await env.DB.prepare('SELECT * FROM parties WHERE id = ?').bind(targetId).first()
-        if (party) parties = [party]
-    } else {
-        // Pick 2 random parties that haven't been scraped recently or at all
-        const { results } = await env.DB.prepare(`
-            SELECT p.* FROM parties p
-            LEFT JOIN scrape_status s ON p.id = s.party_id
-            ORDER BY s.last_scraped_at ASC NULLS FIRST
-            LIMIT 2
-        `).all()
-        parties = results
-    }
+        if (!party) return c.json({ error: 'Party not found' }, 404)
 
-    if (parties.length === 0) {
-        return c.json({ status: 'No parties found to scrape' })
-    }
-
-    c.executionCtx.waitUntil((async () => {
-        for (const party of parties) {
-            await scrapeArchive(party, env)
-            // Trigger enrichment after scrape
+        c.executionCtx.waitUntil((async () => {
+            await scrapeArchive(party, env, batchSize)
             await enrichPartyWithAI(party.id, env)
-        }
-    })())
+        })())
 
-    return c.json({ status: 'Scrape and Enrichment started in background', batch: parties.map((b: any) => b.id) })
+        return c.json({ status: 'Manual Scrape Started', party: targetId })
+    }
+
+    // Manual 'Wake Carl' trigger
+    const result = await runCarl(env, force)
+    return c.json(result)
 })
 
 app.get('/admin/enrich', async (c) => {
