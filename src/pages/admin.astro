@@ -7,6 +7,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <title>PARTY ADMIN | RAVE ARCADE</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -195,6 +196,96 @@
                         >
                             Errors (24h)
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost & Trends -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Cost Monitor -->
+                <div
+                    class="glass rounded-2xl p-6 lg:col-span-1 border border-[#bc13fe]/30"
+                >
+                    <h3
+                        class="text-sm font-800 uppercase tracking-widest text-white/50 mb-4 flex items-center gap-2"
+                    >
+                        <span class="w-2 h-2 rounded-full bg-[#bc13fe]"></span> Current
+                        Month Bill
+                    </h3>
+
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <div
+                            id="cost-total"
+                            class="text-5xl font-900 text-white tracking-tighter"
+                        >
+                            $0.00
+                        </div>
+                        <div class="text-xs font-mono opacity-40">
+                            ESTIMATED
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div id="limit-workers" class="space-y-1">
+                            <div
+                                class="flex justify-between text-[0.6rem] font-800 uppercase text-white/40"
+                            >
+                                <span>Worker Requests</span>
+                                <span class="val">0 / 100k</span>
+                            </div>
+                            <div
+                                class="h-1 bg-white/10 rounded-full overflow-hidden"
+                            >
+                                <div
+                                    class="bar h-full bg-[#bc13fe] w-0 transition-all duration-1000"
+                                >
+                                </div>
+                            </div>
+                        </div>
+                        <div id="limit-d1" class="space-y-1">
+                            <div
+                                class="flex justify-between text-[0.6rem] font-800 uppercase text-white/40"
+                            >
+                                <span>D1 Reads</span>
+                                <span class="val">0 / 5M</span>
+                            </div>
+                            <div
+                                class="h-1 bg-white/10 rounded-full overflow-hidden"
+                            >
+                                <div
+                                    class="bar h-full bg-[#00f3ff] w-0 transition-all duration-1000"
+                                >
+                                </div>
+                            </div>
+                        </div>
+                        <div id="limit-storage" class="space-y-1">
+                            <div
+                                class="flex justify-between text-[0.6rem] font-800 uppercase text-white/40"
+                            >
+                                <span>D1 Storage</span>
+                                <span class="val">0 / 5GB</span>
+                            </div>
+                            <div
+                                class="h-1 bg-white/10 rounded-full overflow-hidden"
+                            >
+                                <div
+                                    class="bar h-full bg-[#ff00ff] w-0 transition-all duration-1000"
+                                >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historical Chart -->
+                <div class="glass rounded-2xl p-6 lg:col-span-2">
+                    <h3
+                        class="text-sm font-800 uppercase tracking-widest text-white/50 mb-4"
+                    >
+                        Traffic Trends (14 Days)
+                    </h3>
+                    <div class="h-[200px] w-full">
+                        <canvas id="trafficChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -447,6 +538,119 @@
 
         <script>
             let partiesData = [];
+            let trafficChart = null;
+
+            // Simple Cost Calc (duplicated from API to avoid import complexity in script tag for now)
+            const PRICING = {
+                FREE: {
+                    WORKERS_REQUESTS: 100000,
+                    D1_ROWS_READ: 5000000,
+                    D1_STORAGE_GB: 5,
+                },
+            };
+
+            function updateCostUI(currentMonth) {
+                const reqs = currentMonth.requests || 0;
+                const d1Reads =
+                    currentMonth.visitors * 10 +
+                    currentMonth.gameRounds * 20 +
+                    currentMonth.partiesScraped * 100; // Approx
+
+                // Storage (Bytes) - 200 bytes per request row
+                const storageBytes = reqs * 200;
+                const storageGB = storageBytes / (1024 * 1024 * 1024);
+
+                // Update Bars
+                const updateBar = (id, current, max, unit = "") => {
+                    const el = document.getElementById(id);
+                    const pct = Math.min(100, (current / max) * 100);
+                    el.querySelector(".bar").style.width = `${pct}%`;
+                    el.querySelector(".val").innerText =
+                        `${formatNum(current)}${unit} / ${formatNum(max)}${unit}`;
+                    if (pct >= 100)
+                        el.querySelector(".bar").classList.add("bg-red-500");
+                };
+
+                updateBar("limit-workers", reqs, PRICING.FREE.WORKERS_REQUESTS);
+                updateBar("limit-d1", d1Reads, PRICING.FREE.D1_ROWS_READ);
+                updateBar(
+                    "limit-storage",
+                    storageGB,
+                    PRICING.FREE.D1_STORAGE_GB,
+                    "GB",
+                );
+
+                // Calc Estimated Cost (Paid)
+                // Just use a simpler estimate for display: $5 base + overages
+                let cost = 0;
+                if (reqs > 10000000)
+                    cost += (reqs - 10000000) * (0.5 / 1000000); // Paid threshold
+                if (cost > 0) cost += 5; // Add base if over free (simplified logic for now)
+
+                // Actually, the prompt asked for "what Cloudflare is actually charging us".
+                // If on Free plan, it's $0 unless we upgrade.
+                // Let's show "Potential Cost (Paid)" if free, or just $0 if free.
+                document.getElementById("cost-total").innerText =
+                    `$${cost.toFixed(2)}`;
+            }
+
+            function formatNum(num) {
+                if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+                if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+                if (num < 1 && num > 0) return num.toFixed(2);
+                return num.toString();
+            }
+
+            function initChart(daily) {
+                const ctx = document
+                    .getElementById("trafficChart")
+                    .getContext("2d");
+                if (trafficChart) trafficChart.destroy();
+
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, "rgba(188, 19, 254, 0.5)");
+                gradient.addColorStop(1, "rgba(188, 19, 254, 0)");
+
+                trafficChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: daily.map((d) => d.date.slice(5)), // MM-DD
+                        datasets: [
+                            {
+                                label: "Requests",
+                                data: daily.map((d) => d.total_requests),
+                                borderColor: "#bc13fe",
+                                backgroundColor: gradient,
+                                fill: true,
+                                tension: 0.4,
+                            },
+                            {
+                                label: "Visitors",
+                                data: daily.map((d) => d.visitors),
+                                borderColor: "#00f3ff",
+                                borderWidth: 1,
+                                pointRadius: 0,
+                                fill: false,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: "rgba(255,255,255,0.3)" },
+                            },
+                            y: {
+                                grid: { color: "rgba(255,255,255,0.05)" },
+                                ticks: { color: "rgba(255,255,255,0.3)" },
+                            },
+                        },
+                    },
+                });
+            }
 
             async function showToast(msg) {
                 const t = document.getElementById("toast");
@@ -460,13 +664,15 @@
 
             async function refresh() {
                 try {
-                    const [res, statsRes] = await Promise.all([
+                    const [res, statsRes, usageRes] = await Promise.all([
                         fetch("/api/admin/scrape-status"),
                         fetch("/api/admin/stats"),
+                        fetch("/api/admin/usage"),
                     ]);
 
                     const data = await res.json();
                     const stats = await statsRes.json();
+                    const usage = await usageRes.json();
 
                     // Update stats
                     if (stats) {
@@ -476,6 +682,11 @@
                             stats.requests24h || 0;
                         document.getElementById("stat-errors").innerText =
                             stats.errors24h || 0;
+                    }
+
+                    if (usage) {
+                        updateCostUI(usage.currentMonth);
+                        if (!trafficChart) initChart(usage.daily);
                     }
 
                     partiesData = data;

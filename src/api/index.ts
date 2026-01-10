@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { trackRequest, getStats } from './metrics'
+import { trackRequest, getStats, getUsageStats } from './metrics'
 
 export const app = new Hono().basePath('/api')
 
@@ -119,6 +119,15 @@ app.get('/admin/enrich', async (c) => {
 app.get('/admin/stats', async (c) => {
     try {
         const stats = await getStats(c.env)
+        return c.json(stats)
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+app.get('/admin/usage', async (c) => {
+    try {
+        const stats = await getUsageStats(c.env)
         return c.json(stats)
     } catch (e: any) {
         return c.json({ error: e.message }, 500)

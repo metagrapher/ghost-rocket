@@ -66,3 +66,59 @@ export const getStats = async (env: any) => {
         scraped24h: dbStats?.scraped_24h || 0
     }
 }
+
+export const getUsageStats = async (env: any, period: 'month' | 'all' = 'month') => {
+    // Current month start
+    const now = new Date()
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime()
+    const queryStart = period === 'month' ? startOfMonth : 0
+
+    // 1. Aggregated Daily Stats (for Chart)
+    const { results: dailyStats } = await env.DB.prepare(`
+        SELECT 
+            strftime('%Y-%m-%d', datetime(timestamp / 1000, 'unixepoch')) as date,
+            COUNT(*) as total_requests,
+            SUM(CASE WHEN type = 'page_view' THEN 1 ELSE 0 END) as visitors,
+            SUM(CASE WHEN status >= 500 THEN 1 ELSE 0 END) as errors,
+            SUM(CASE WHEN path LIKE '/api/quiz' THEN 1 ELSE 0 END) as game_rounds
+        FROM usage_metrics
+        WHERE timestamp > ?
+        GROUP BY date
+        ORDER BY date ASC
+    `).bind(queryStart).all()
+
+    // 2. Month Totals (for Cost Calc)
+    let currentMonth = {
+        visitors: 0,
+        requests: 0,
+        gameRounds: 0,
+        errors: 0
+    }
+
+    dailyStats.forEach((day: any) => {
+        currentMonth.visitors += day.visitors
+        currentMonth.requests += day.total_requests
+        currentMonth.gameRounds += day.game_rounds
+        currentMonth.errors += day.errors
+    })
+
+    // 3. Scrape Stats (Month)
+    // We need to count how many parties were scraped this month
+    const { results: scrapedStats } = await env.DB.prepare(`
+        SELECT COUNT(*) as count, SUM(images_saved) as images
+        FROM scrape_status 
+        WHERE status = 'success' AND last_scraped_at > ?
+    `).bind(startOfMonth).all()
+
+    const scrapedCount = scrapedStats[0]?.count || 0
+    const imagesSaved = scrapedStats[0]?.images || 0
+
+    return {
+        daily: dailyStats,
+        currentMonth: {
+            ...currentMonth,
+            partiesScraped: scrapedCount,
+            imagesSaved: imagesSaved
+        }
+    }
+}
