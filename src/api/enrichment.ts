@@ -1,10 +1,73 @@
-
 export interface EnrichmentResult {
     latitude: number | null
     longitude: number | null
     location_name: string | null
     party_date: string | null
     lineup: string[]
+    enrichment_level?: number
+}
+
+// Gradient Enrichment Types
+// 0x[Date][Location][Lineup]
+
+const DATE_WEIGHT = 256 // 16^2
+const LOC_WEIGHT = 16   // 16^1
+const LINEUP_WEIGHT = 1 // 16^0
+
+enum DateState {
+    UNKNOWN = 0,
+    YEAR_ONLY = 1,
+    MONTH_YEAR = 2,
+    PARTIAL = 3,
+    EXACT = 0xF
+}
+
+enum LocationState {
+    UNKNOWN = 0,
+    VAGUE = 1,     // "London", "South East"
+    CITY = 2,      // "Brixton Academy, London"
+    COORDS = 0xF   // Exact lat/long
+}
+
+enum LineupState {
+    UNKNOWN = 0,
+    SINGLE = 1,
+    PARTIAL = 2,
+    FULL = 0xF
+}
+
+function calculateEnrichmentLevel(data: EnrichmentResult): number {
+    let dateScore = DateState.UNKNOWN
+    if (data.party_date) {
+        // Simple heuristic: if we have a full YYYY-MM-DD string
+        if (/^\d{4}-\d{2}-\d{2}$/.test(data.party_date)) {
+            dateScore = DateState.EXACT
+        } else if (data.party_date.length === 4) { // YYYY
+            dateScore = DateState.YEAR_ONLY
+        } else {
+            dateScore = DateState.MONTH_YEAR
+        }
+    }
+
+    let locScore = LocationState.UNKNOWN
+    if (data.latitude && data.longitude) {
+        locScore = LocationState.COORDS
+    } else if (data.location_name) {
+        // If we have a location name but no coords, it's at least CITY level for now
+        locScore = LocationState.CITY
+    }
+
+    let lineupScore = LineupState.UNKNOWN
+    if (data.lineup && data.lineup.length > 0) {
+        if (data.lineup.length > 2) {
+            lineupScore = LineupState.FULL
+        } else {
+            lineupScore = LineupState.SINGLE
+        }
+    }
+
+    // 0x[Date][Location][Lineup]
+    return (dateScore * DATE_WEIGHT) + (locScore * LOC_WEIGHT) + (lineupScore * LINEUP_WEIGHT)
 }
 
 export async function enrichPartyWithAI(partyId: string, env: any): Promise<EnrichmentResult | null> {
@@ -77,12 +140,14 @@ export async function enrichPartyWithAI(partyId: string, env: any): Promise<Enri
         }
 
         const data: EnrichmentResult = JSON.parse(jsonMatch[0])
+        const enrichmentLevel = calculateEnrichmentLevel(data)
+        data.enrichment_level = enrichmentLevel
 
         // Update D1
         console.log(`✅ AI Enrichment Success for ${partyId}:`, data)
         await db.prepare(`
             UPDATE parties 
-            SET latitude = ?, longitude = ?, location_name = ?, party_date = ?, lineup = ?, enriched_at = CURRENT_TIMESTAMP
+            SET latitude = ?, longitude = ?, location_name = ?, party_date = ?, lineup = ?, enrichment_level = ?, enriched_at = CURRENT_TIMESTAMP
             WHERE id = ?
         `).bind(
             data.latitude
@@ -90,6 +155,7 @@ export async function enrichPartyWithAI(partyId: string, env: any): Promise<Enri
             , data.location_name
             , data.party_date
             , JSON.stringify(data.lineup)
+            , enrichmentLevel
             , partyId
         ).run()
 

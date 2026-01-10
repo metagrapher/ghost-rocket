@@ -210,11 +210,26 @@ app.get('/admin/usage', async (c) => {
 })
 
 app.get('/admin/scrape-status', async (c) => {
+    const sort = c.req.query('sort') || 'last_scraped_at'
+    const dir = c.req.query('dir') === 'asc' ? 'ASC' : 'DESC'
+
+    let orderBy = 's.last_scraped_at DESC NULLS FIRST, p.id ASC'
+
+    if (sort === 'enrichment_level') {
+        orderBy = `p.enrichment_level ${dir} NULLS LAST, p.id ASC`
+    } else if (sort === 'title') {
+        orderBy = `p.title ${dir}, p.id ASC`
+    } else if (sort === 'status') {
+        orderBy = `s.status ${dir} NULLS LAST, p.id ASC`
+    } else if (sort === 'date') {
+        orderBy = `p.party_date ${dir} NULLS LAST, p.id ASC`
+    }
+
     const { results } = await c.env.DB.prepare(`
-        SELECT p.id, p.title, p.series, p.location_name, p.latitude, p.longitude, p.party_date, p.enriched_at, s.last_scraped_at, s.images_found, s.images_saved, s.status
+        SELECT p.id, p.title, p.series, p.location_name, p.latitude, p.longitude, p.party_date, p.enriched_at, p.enrichment_level, s.last_scraped_at, s.images_found, s.images_saved, s.status
         FROM parties p
         LEFT JOIN scrape_status s ON p.id = s.party_id
-        ORDER BY s.last_scraped_at DESC NULLS FIRST, p.id ASC
+        ORDER BY ${orderBy}
     `).all()
     return c.json(results)
 })
@@ -290,6 +305,7 @@ app.get('/quiz', async (c) => {
             }
         }
 
+
         const key = selectedPhoto.image_key
         const publicIdOutput = selectedPhoto.public_id || key // Prefer public_id, fallback to key if missing
 
@@ -349,6 +365,14 @@ app.get('/quiz', async (c) => {
             if (yearOnly) photoDate.year = yearOnly[1]
         }
 
+        // Generate Token/Nonce for updating preferences
+        // Since we don't have user accounts, we sign the photoID with a rotating daily secret or just the env secret
+        // For simplicity and speed in this context, we'll hash the photoID with a secret.
+        const msgBuffer = new TextEncoder().encode(publicIdOutput + (c.env.CRON_SECRET || 'dev-secret'));
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const nonce = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
         // Return URL with publicId if possible, else key.
         // And ensure photoId returns the opaque ID.
         return c.json({
@@ -356,12 +380,40 @@ app.get('/quiz', async (c) => {
             photoId: encodeURIComponent(publicIdOutput),
             correctId: partyId,
             options,
-            date: photoDate
+            date: photoDate,
+            qrInverted: selectedPhoto.qr_inverted === 1 ? true : (selectedPhoto.qr_inverted === 0 ? false : null),
+            nonce
         })
 
     } catch (e: any) {
         console.error('Quiz Error:', e)
         return c.json({ error: e.message || 'Failed to generate quiz' }, 500)
+    }
+})
+
+app.post('/photos/qr-pref', async (c) => {
+    try {
+        const { publicId, inverted, nonce } = await c.req.json() as any
+
+        if (!publicId || !nonce) return c.json({ error: 'Missing required fields' }, 400)
+
+        // Verify Nonce
+        const msgBuffer = new TextEncoder().encode(publicId + (c.env.CRON_SECRET || 'dev-secret'));
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const expectedNonce = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        if (nonce !== expectedNonce) {
+            return c.json({ error: 'Invalid Nonce' }, 403)
+        }
+
+        await c.env.DB.prepare('UPDATE photos SET qr_inverted = ? WHERE public_id = ?')
+            .bind(inverted ? 1 : 0, publicId)
+            .run()
+
+        return c.json({ success: true })
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
     }
 })
 

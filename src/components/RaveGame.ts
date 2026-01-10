@@ -413,6 +413,7 @@ export class RaveGame extends LitElement {
         
     `;
 
+
     @state() quiz: QuizData | null = null;
     @state() loading = true;
     @state() result: 'correct' | 'wrong' | null = null;
@@ -422,7 +423,11 @@ export class RaveGame extends LitElement {
     @state() caption = "Guess the party...";
     @state() raverClicks = 0;
     @state() imagePosition = '50% 50%';
+    @state() qrDataUrl: string | null = null;
+    @state() qrInverted: boolean = false;
 
+    // Nonce for updating QR preference
+    private qrNonce: string | null = null;
 
     connectedCallback() {
         super.connectedCallback();
@@ -441,7 +446,9 @@ export class RaveGame extends LitElement {
         this.caption = "Guess the party...";
         this.raverClicks = 0; // Reset frustration meter
         this.imagePosition = '50% 50%';
-
+        this.qrDataUrl = null;
+        this.qrInverted = false;
+        this.qrNonce = null;
 
         try {
             console.log("🎮 Loading next quiz question...");
@@ -479,6 +486,20 @@ export class RaveGame extends LitElement {
             // Assigning the new quiz data only AFTER any flip-back is done
             this.quiz = data;
 
+            // Set QR state from API if available
+            if (data.qrInverted !== null && data.qrInverted !== undefined) {
+                this.qrInverted = data.qrInverted;
+                console.log(`📡 Used server-side QR preference: ${this.qrInverted ? 'Inverted' : 'Normal'}`);
+            }
+            if (data.nonce) {
+                this.qrNonce = data.nonce;
+            }
+
+            // Generate QR Code immediately (client-side)
+            if (this.quiz?.photoId) {
+                this.generateQRCode(this.quiz.photoId);
+            }
+
             // Enrich tracking event with party data
             trackEvent('party_viewed', {
                 party_id: this.quiz?.correctId,
@@ -491,12 +512,18 @@ export class RaveGame extends LitElement {
             if (this.quiz?.imageUrl) {
                 console.log(`🖼️ Preloading image: ${this.quiz.imageUrl}`);
                 const img = new Image();
+                img.crossOrigin = "Anonymous"; // Required for canvas reading
                 img.src = this.quiz.imageUrl;
 
                 img.onload = () => {
                     console.log("✅ Image loaded successfully.");
                     this.imageLoaded = true;
                     this.loading = false;
+
+                    // Verify QR Scannability if preference is unknown
+                    if (data.qrInverted === null || data.qrInverted === undefined) {
+                        this.verifyScannability(img);
+                    }
                 };
 
                 img.onerror = (err) => {
@@ -519,6 +546,135 @@ export class RaveGame extends LitElement {
             console.error("💔 Rave API Error:", e);
             this.loading = false;
             this.caption = `Error: ${e.message}`;
+        }
+    }
+
+    async generateQRCode(photoId: string) {
+        try {
+            const QRCode = await import('qrcode');
+            const url = new URL(window.location.origin);
+            url.searchParams.set('photo', decodeURIComponent(photoId));
+
+            this.qrDataUrl = await QRCode.toDataURL(url.toString(), {
+                margin: 0,
+                color: {
+                    dark: '#000000',
+                    light: '#ffffff'
+                },
+                errorCorrectionLevel: 'M'
+            });
+        } catch (e) {
+            console.error("QR Gen Failed", e);
+        }
+    }
+
+    async verifyScannability(img: HTMLImageElement) {
+        if (!this.qrDataUrl) return;
+
+        try {
+            const jsQR = (await import('jsqr')).default;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            if (!ctx) return;
+
+            // Canvas size should match the display size roughly for accurate simulation, 
+            // but for raw pixel analysis, we can work with the natural size.
+            // However, the QR code is overlaid on the BOTTOM RIGHT.
+            // Let's simulate the composition.
+
+            // Use a standard size for analysis to be consistent
+            const w = 800;
+            const h = 600;
+            canvas.width = w;
+            canvas.height = h;
+
+            // Draw Image (simulate object-fit: cover)
+            // For simplicity, we just draw it to fill.
+            ctx.drawImage(img, 0, 0, w, h);
+
+            // Define QR Location (Bottom Right, similar to CSS)
+            // CSS: bottom: 0; right: 0; width: 22%; (approx from visual)
+            const qrSize = w * 0.20;
+            const qrX = w - qrSize - (w * 0.05); // 5% margin right
+            const qrY = h - qrSize - (h * 0.05); // 5% margin bottom
+
+            // Create ImageBitmap from QR Data URL
+            const qrImg = new Image();
+            qrImg.src = this.qrDataUrl;
+            await new Promise(r => qrImg.onload = r);
+
+            // Function to test readability
+            const testReadability = (invert: boolean): boolean => {
+                // Restore background area
+                ctx.drawImage(img, qrX, qrY, qrSize, qrSize, qrX, qrY, qrSize, qrSize);
+
+                // Draw QR
+                ctx.save();
+                ctx.globalAlpha = 0.6; // Opacity 0.6
+                ctx.filter = invert ? 'invert(1)' : 'none';
+                ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+                ctx.restore();
+
+                // Read Pixels
+                const imageData = ctx.getImageData(0, 0, w, h);
+                const code = jsQR(imageData.data, w, h, { inversionAttempts: 'dontInvert' });
+
+                return !!code;
+            };
+
+            // Test Normal
+            const normalWorks = testReadability(false);
+            console.log(`🧐 QR Check (Normal): ${normalWorks ? 'PASS' : 'FAIL'}`);
+
+            // Test Inverted
+            const invertedWorks = testReadability(true);
+            console.log(`🧐 QR Check (Inverted): ${invertedWorks ? 'PASS' : 'FAIL'}`);
+
+            let bestInverted = false;
+
+            if (normalWorks && !invertedWorks) bestInverted = false;
+            else if (!normalWorks && invertedWorks) bestInverted = true;
+            else if (normalWorks && invertedWorks) bestInverted = false; // Default to normal if both work
+            else {
+                // Both failed. Fallback to luminance check.
+                // Capture the area behind the QR code
+                ctx.drawImage(img, 0, 0, w, h);
+                const bgData = ctx.getImageData(qrX, qrY, qrSize, qrSize);
+                let totalLum = 0;
+                for (let i = 0; i < bgData.data.length; i += 4) {
+                    const r = bgData.data[i];
+                    const g = bgData.data[i + 1];
+                    const b = bgData.data[i + 2];
+                    // Relative luminance
+                    totalLum += (0.2126 * r + 0.7152 * g + 0.0722 * b);
+                }
+                const avgLum = totalLum / (bgData.data.length / 4);
+                console.log(`🌑 Fallback Luminance Check: ${avgLum}`);
+
+                // If background is dark (low lum), we want Inverted (White) QR.
+                // If background is light (high lum), we want Normal (Black) QR.
+                bestInverted = avgLum < 128;
+            }
+
+            this.qrInverted = bestInverted;
+            console.log(`🏁 Final Decision: ${this.qrInverted ? "Inverted" : "Normal"}`);
+
+            // Save to API
+            if (this.quiz?.photoId && this.qrNonce) {
+                fetch('/api/photos/qr-pref', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        publicId: this.quiz.photoId,
+                        inverted: this.qrInverted,
+                        nonce: this.qrNonce
+                    })
+                }).catch(e => console.error("Failed to save QR pref", e));
+            }
+
+        } catch (e) {
+            console.error("Verification logic failed", e);
         }
     }
 
@@ -631,12 +787,36 @@ export class RaveGame extends LitElement {
                                     @faces-detected=${this.handleFacesDetected}
                                 ></face-tagger>
 
-                                <button class="share-btn" @click=${this.copyShareLink} title="Copy Link">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                                    </svg>
-                                </button>
+                                <!-- QR Watermark / Share Button -->
+                                ${this.qrDataUrl ? html`
+                                    <div class="share-btn" 
+                                         @click=${this.copyShareLink} 
+                                         title="Scan to Share / Click to Copy"
+                                         style="
+                                            background: none; 
+                                            border: none; 
+                                            width: 22%; 
+                                            height: auto; 
+                                            aspect-ratio: 1; 
+                                            bottom: 0; 
+                                            right: 0; 
+                                            border-radius: 0; 
+                                            opacity: 0.6;
+                                            filter: ${this.qrInverted ? 'invert(1) drop-shadow(0 0 2px rgba(0,0,0,0.5))' : 'drop-shadow(0 0 2px rgba(255,255,255,0.5))'};
+                                            transition: opacity 0.3s;
+                                         "
+                                    >
+                                        <img src="${this.qrDataUrl}" style="width: 100%; height: 100%; object-fit: contain; pointer-events: none;" />
+                                    </div>
+                                ` : html`
+                                    <button class="share-btn" @click=${this.copyShareLink} title="Copy Link">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                        </svg>
+                                    </button>
+                                `}
+
                                 ${this.showToast ? html`<div class="toast">LINK COPIED!</div>` : ''}
                             ` : ''}
 

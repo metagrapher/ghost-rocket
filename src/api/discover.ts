@@ -1,4 +1,5 @@
 import puppeteer from '@cloudflare/puppeteer'
+import { disambiguatePartyNames } from './name-utils'
 
 export async function discoverParties(env: any) {
     const db = env.DB
@@ -183,11 +184,15 @@ export async function discoverParties(env: any) {
             }
         })
         const unique = Array.from(uniqueMap.values())
-        console.log(`📦 Deduped to ${unique.length} unique parties.`)
+        console.log(`📦 Deduped to ${unique.length} unique parties before disambiguation.`)
+
+        // Disambiguate names for recurring parties
+        const finalParties = disambiguatePartyNames(unique)
+        console.log(`✨ Disambiguated names for ${finalParties.length} parties.`)
 
         let added = 0
-        console.log(`🚀 Starting DB update for ${unique.length} parties...`)
-        for (const party of unique) {
+        console.log(`🚀 Starting DB update for ${finalParties.length} parties...`)
+        for (const party of finalParties) {
             try {
                 // Force update title, series, and DATE
                 const result = await db.prepare(`
