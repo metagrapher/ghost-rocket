@@ -41,18 +41,22 @@
       </header>
 
       <main
-        class="w-full flex flex-col items-center justify-center relative overflow-hidden"
+        class="w-full flex flex-col items-center justify-center relative overflow-visible"
       >
         <!-- Lit Component Game View -->
         <rave-game></rave-game>
-
-        <script>
-          import "../components/RaveGame.ts";
-          import { initAnalytics } from "../lib/analytics.ts";
-
-          initAnalytics();
-        </script>
       </main>
     </div>
+
+    <!-- Gun.js Presence Floor -->
+    <raver-floor></raver-floor>
+
+    <script>
+      import "../components/RaveGame.ts";
+      import "../components/RaverFloor.ts";
+      import { initAnalytics } from "../lib/analytics.ts";
+
+      initAnalytics();
+    </script>
   </body>
 </html>

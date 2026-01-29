@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, state, query } from 'lit/decorators.js';
 import { trackEvent } from '../lib/analytics.ts';
 import './OptionButton.ts';
 import './FaceTagger.ts';
@@ -23,6 +23,9 @@ export class RaveGame extends LitElement {
     @state()
     private showToast = false;
 
+    @query('.handwriting') private handwritingEl?: HTMLElement;
+    @query('.reveal-party') private revealPartyEl?: HTMLElement;
+
     static styles = css`
         :host {
             display: block;
@@ -41,7 +44,7 @@ export class RaveGame extends LitElement {
             transform: rotate(1deg);
             filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
             /* Add padding to prevent clipping of sticking-out elements like the pin button */
-            padding: 20px; 
+            padding: 20px 40px; 
             box-sizing: border-box;
         }
         .polaroid-container:hover {
@@ -204,6 +207,9 @@ export class RaveGame extends LitElement {
             text-align: center;
             z-index: 40;
             transform: translateZ(10px);
+            /* Prevent overflow during font-scaling */
+            overflow: hidden;
+            max-height: 16%;
         }
         .handwriting {
             font-family: 'Permanent Marker', cursive;
@@ -222,6 +228,15 @@ export class RaveGame extends LitElement {
             margin-top: 0.25rem;
             opacity: 0.6;
         }
+        .meta a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .meta a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
         .serial-number {
             position: absolute;
             bottom: 0.75rem;
@@ -233,6 +248,7 @@ export class RaveGame extends LitElement {
             opacity: 0.8;
             font-weight: bold;
             letter-spacing: 0.15em;
+            z-index: 50; /* Ensure visibility */
         }
 
         .share-btn {
@@ -264,6 +280,51 @@ export class RaveGame extends LitElement {
             width: 20px;
             height: 20px;
             pointer-events: none;
+        }
+
+        .flip-btn {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%) translateZ(100px);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: white;
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .flip-btn:hover {
+            background: rgba(0, 0, 0, 0.6);
+            transform: translateY(-50%) translateZ(110px) scale(1.1);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .flip-btn:active {
+            transform: translateY(-50%) translateZ(90px) scale(0.95);
+        }
+
+        .flip-btn svg {
+            width: 28px;
+            height: 28px;
+            opacity: 0.8;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .flip-btn:hover svg {
+            opacity: 1;
+            transform: rotate(180deg);
         }
 
         .share-btn-top {
@@ -314,20 +375,41 @@ export class RaveGame extends LitElement {
         }
         .reveal-party {
             font-family: 'Permanent Marker', cursive;
-            color: #2563eb; /* Marker Blue for correct reveal */
-            font-size: 2.5rem;
+            color: #f472b6; /* Pink for visibility on black */
+            font-size: 5rem;
             margin: 0;
             transform: rotate(-1deg);
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            line-height: 1.1;
+            width: 100%;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: font-size 0.3s ease;
         }
         .reveal-wrong .reveal-party {
-            color: #f87171; /* Red for wrong reveal */
+            color: #f87171; /* Keep Red for wrong, but ensure visibility */
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
         .reveal-label {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: rgba(255, 255, 255, 0.6);
             text-transform: uppercase;
             letter-spacing: 0.1em;
             margin-bottom: 0.5rem;
+        }
+
+        .handwritten-year {
+            position: absolute;
+            bottom: 12%;
+            right: 12%;
+            font-family: 'Permanent Marker', cursive;
+            color: #f472b6;
+            font-size: 1.5rem;
+            transform: rotate(5deg);
+            z-index: 40;
+            pointer-events: none;
         }
 
         .options-grid {
@@ -393,10 +475,14 @@ export class RaveGame extends LitElement {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 1rem;
             z-index: 60;
             transform: translateZ(20px);
             pointer-events: none;
+            /* Container for scaling */
+            overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
         }
         .reveal-actions .next-btn {
             pointer-events: auto;
@@ -434,6 +520,46 @@ export class RaveGame extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         this.loadGame();
+    }
+
+    updated(changedProperties: Map<string, any>) {
+        if (changedProperties.has('flipped') && this.flipped) {
+            // When card flips, adjust font for the reveal
+            if (this.revealPartyEl) {
+                this.adjustFontSize(this.revealPartyEl, 5.0);
+            }
+        }
+        if (changedProperties.has('caption')) {
+            // When caption changes, adjust font for handwriting
+            if (this.handwritingEl) {
+                this.adjustFontSize(this.handwritingEl, 1.75);
+            }
+        }
+    }
+
+    private adjustFontSize(el: HTMLElement, maxRem: number) {
+        // Reset to max
+        let currentRem = maxRem;
+        el.style.fontSize = `${currentRem}rem`;
+
+        const container = el.parentElement;
+        if (!container) return;
+
+        // Iteratively shrink until it fits
+        // We use scrollHeight vs offsetHeight check
+        let safety = 0;
+        // Enforce minimum legibility (approx 18px on mobile)
+        const minRem = 1.1;
+        while (
+            (el.scrollHeight > el.offsetHeight || el.scrollWidth > el.offsetWidth) &&
+            currentRem > minRem &&
+            safety < 20
+        ) {
+            currentRem -= 0.1;
+            el.style.fontSize = `${currentRem}rem`;
+            safety++;
+        }
+        console.log(`📏 Adjusted font size for ${el.className} to ${currentRem}rem`);
     }
 
     async loadGame() {
@@ -680,6 +806,24 @@ export class RaveGame extends LitElement {
         }
     }
 
+    private toggleFlip(e: MouseEvent) {
+        e.stopPropagation();
+
+        // If they flip to the back and haven't guessed yet, it's effectively a skip/wrong answer
+        if (!this.flipped && this.result === null) {
+            this.result = 'wrong';
+            trackEvent('photo_skipped', {
+                party_id: this.quiz?.correctId
+            });
+        }
+
+        this.flipped = !this.flipped;
+        trackEvent('manual_flip_clicked', {
+            is_face_up: !this.flipped,
+            party_id: this.quiz?.correctId
+        });
+    }
+
     handleRaverClick(e: MouseEvent) {
         e.stopPropagation();
         this.raverClicks++;
@@ -763,9 +907,25 @@ export class RaveGame extends LitElement {
 
         const imageKey = this.quiz.imageUrl.split('/api/img/')[1] ? decodeURIComponent(this.quiz.imageUrl.split('/api/img/')[1]) : '';
         const correctOption = this.quiz.options.find(o => o.id === this.quiz?.correctId);
+        const label = correctOption?.label || '';
+        const yearMatch = label.match(/\((\d{4})\)$| (\d{4})$/);
+        const year = yearMatch ? (yearMatch[1] || yearMatch[2]) : '';
+        const displayLabel = year ? label.replace(yearMatch[0], '').trim() : label;
 
         return html`
             <div class="polaroid-container">
+                <!-- Flip/Skip Button -->
+                <button class="flip-btn" 
+                        @click=${this.toggleFlip} 
+                        title="${this.flipped ? 'Flip back' : 'Flip over / Skip'}"
+                        aria-label="${this.flipped ? 'Flip back' : 'Flip over / Skip'}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.99 6.57 2.57L21 8"></path>
+                        <polyline points="21 3 21 8 16 8"></polyline>
+                    </svg>
+                </button>
+
                 <div class="polaroid-inner ${this.flipped ? 'is-flipped' : ''}">
                     <!-- FRONT FACE -->
                     <div class="polaroid-face polaroid-front">
@@ -867,49 +1027,57 @@ export class RaveGame extends LitElement {
                             <div class="result-text">
                                  ${this.result === 'correct' ? html`<span style="color: #4ade80; font-size: 2.25rem;">THE VIBE IS RIGHT</span>` : this.result === 'wrong' ? html`<span style="color: #f87171; font-size: 3rem;">NOT THE VIBE</span>` : ''}
                             </div>
-                            <button class="next-btn" @click=${() => {
-                // Clear deep link for next photo
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('photo')) {
-                    window.history.pushState({}, '', '/');
-                }
-                trackEvent('next_photo_clicked', {
-                    previous_party_id: this.quiz?.correctId
-                });
-                this.loadGame();
-            }}>NEXT PHOTO →</button>
+                            
+                            <div class="reveal-text ${this.result === 'wrong' ? 'reveal-wrong' : ''}">
+                                <h3 class="reveal-party">${this.result ? displayLabel : ''}</h3>
+                            </div>
                         </div>
 
-                        <div class="caption">
-                           <div class="reveal-text ${this.result === 'wrong' ? 'reveal-wrong' : ''}">
-                                <div class="reveal-label">LOCATION REVEALED:</div>
-                                <h3 class="reveal-party">${this.result ? correctOption?.label : ''}</h3>
-                           </div>
-                           <div class="serial-number">
-                                ${(() => {
+                        <!-- Year on the border -->
+                        ${year ? html`<div class="handwritten-year">${year}</div>` : ''}
+
+                        <div class="serial-number">
+                             ${(() => {
                 const d = this.quiz?.date || { month: '01', day: '01', year: '00' };
                 const machine = '43';
                 const film = '80';
                 return `${d.month}${d.year}${machine}${film}${d.day}`;
             })()}
-                           </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Next Button (Outside Polaroid) -->
+            ${this.result !== null ? html`
+                <div style="display: flex; justify-content: center; margin-bottom: 2rem; animation: fadeIn 0.5s ease;">
+                    <button class="next-btn" @click=${() => {
+                    // Clear deep link for next photo
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('photo')) {
+                        window.history.pushState({}, '', '/');
+                    }
+                    trackEvent('next_photo_clicked', {
+                        previous_party_id: this.quiz?.correctId
+                    });
+                    this.loadGame();
+                }}>NEXT PHOTO →</button>
+                </div>
+            ` : ''}
+
+
             <!-- Options -->
             <div class="options-grid">
                 ${this.quiz.options.map(opt => {
-                let state = 'default';
-                // Reveal Phase
-                if (this.result !== null) {
-                    if (opt.id === this.quiz?.correctId) state = 'correct';
-                    else if (opt.id === this.selectedId) state = 'wrong';
-                    else state = 'default';
-                }
+                    let state = 'default';
+                    // Reveal Phase
+                    if (this.result !== null) {
+                        if (opt.id === this.quiz?.correctId) state = 'correct';
+                        else if (opt.id === this.selectedId) state = 'wrong';
+                        else state = 'default';
+                    }
 
-                return html`
+                    return html`
                         <option-button 
                             label="${opt.label}" 
                             value="${opt.id}"
@@ -918,7 +1086,7 @@ export class RaveGame extends LitElement {
                             @click=${() => this.handleGuess(opt.id)}
                         ></option-button>
                     `;
-            })}
+                })}
             </div>
         `;
     }
