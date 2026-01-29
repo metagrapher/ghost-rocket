@@ -128,13 +128,22 @@ export async function scrapeArchive(party: any, env: any, limit: number = 50): P
                 const publicId = crypto.randomUUID()
 
                 // Upsert into D1 photos table first
+                // Upsert into D1 photos table first
+                // Determine copyright (Simple domain check for now, extendable later)
+                let copyright = "SSB Productions" // Default
+                if (party.url.includes('ssbproductions.com')) {
+                    copyright = "SSB Productions"
+                }
+
                 await db.prepare(`
-                    INSERT INTO photos (image_key, party_id, caption, public_id)
-                    VALUES (?, ?, ?, ?)
+                    INSERT INTO photos (image_key, party_id, caption, public_id, copyright, source_url)
+                    VALUES (?, ?, ?, ?, ?, ?)
                     ON CONFLICT(image_key) DO UPDATE SET
                         caption = COALESCE(excluded.caption, photos.caption),
-                        public_id = COALESCE(photos.public_id, excluded.public_id)
-                `).bind(r2Key, party.id, img.caption, publicId).run()
+                        public_id = COALESCE(photos.public_id, excluded.public_id),
+                        copyright = COALESCE(photos.copyright, excluded.copyright),
+                        source_url = COALESCE(photos.source_url, excluded.source_url)
+                `).bind(r2Key, party.id, img.caption, publicId, copyright, party.url).run()
 
                 const existing = await bucket.head(r2Key)
                 if (existing) {
