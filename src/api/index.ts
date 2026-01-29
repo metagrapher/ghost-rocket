@@ -276,6 +276,48 @@ app.get('/admin/backfill-public-ids', async (c) => {
     return c.json({ status: 'Backfill Complete', updated, total: results.length })
 })
 
+app.get('/admin/backfill-credits', async (c) => {
+    const db = c.env.DB
+    // Get all photos without source_url or copyright
+    const { results } = await db.prepare('SELECT image_key, party_id FROM photos WHERE source_url IS NULL OR copyright IS NULL').all()
+
+    let updated = 0
+    for (const photo of results) {
+        // Fetch party to get the URL
+        const party = await db.prepare('SELECT url FROM parties WHERE id = ?').bind(photo.party_id).first()
+
+        let sourceUrl = party?.url || ''
+        let copyright = "SSB Productions" // Default
+        if (sourceUrl.includes('ssbproductions.com')) {
+            copyright = "SSB Productions"
+        }
+
+        if (sourceUrl) {
+            await db.prepare('UPDATE photos SET source_url = ?, copyright = ? WHERE image_key = ?')
+                .bind(sourceUrl, copyright, photo.image_key)
+                .run()
+            updated++
+        }
+    }
+
+    return c.json({ status: 'Credit Backfill Complete', updated, total: results.length })
+})
+
+app.get('/jump', async (c) => {
+    const id = c.req.query('id')
+    if (!id) return c.text('Missing ID', 400)
+
+    try {
+        const photo = await c.env.DB.prepare('SELECT source_url FROM photos WHERE public_id = ?').bind(id).first()
+        if (photo && photo.source_url) {
+            return c.redirect(photo.source_url, 302)
+        }
+        return c.text('Source link not found', 404)
+    } catch (e) {
+        return c.text('Error resolving link', 500)
+    }
+})
+
 app.get('/quiz', async (c) => {
     try {
         const db = c.env.DB
