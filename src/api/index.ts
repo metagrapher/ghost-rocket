@@ -8,13 +8,27 @@ app.use('*', async (c, next) => {
     return next()
 })
 
-app.get('/hello', (c) =>
-    c.json(
-        {
-            message: 'Welcome to rave.arca.de.com'
-            , status: 'RAVEtastic'
-        })
-)
+app.get('/hello', (c) => {
+    return c.json({
+        message: 'Welcome to rave.arca.de.com'
+        , status: 'RAVEtastic'
+    })
+})
+
+// Gun.js Relay Route
+app.get('/gun', async (c) => {
+    const upgradeHeader = c.req.header('Upgrade')
+    const uniqueId = c.env.GUN_RELAY.idFromName('global-relay')
+    const stub = c.env.GUN_RELAY.get(uniqueId)
+
+    if (upgradeHeader === 'websocket') {
+        return stub.fetch(c.req.raw)
+    }
+
+    // Proxy other requests (PUT/GET for Gun REST) if needed
+    // For now, simple fallback
+    return stub.fetch(c.req.raw)
+})
 
 // PostHog Proxy for "Server-Side" Tracking & Enrichment
 app.all('/ingest/*', async (c) => {

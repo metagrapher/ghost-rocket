@@ -42,5 +42,21 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "GUN_RELAY",
+        "class_name": "GunRelay"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": [
+        "GunRelay"
+      ]
+    }
+  ]
 }
