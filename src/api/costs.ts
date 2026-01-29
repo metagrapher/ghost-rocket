@@ -11,7 +11,9 @@ export interface CostBreakdown {
     d1: number
     r2: number
     browsers: number
+    browsers: number
     kv: number
+    durableObjects?: number
     total: number
     isFreeTierExceeded: boolean
     exceededLimits: string[]
@@ -48,6 +50,8 @@ export const PRICING = {
         BROWSER_OVERAGE_HOUR: 0.10, // approximate
         KV_READS_OVERAGE: 0.50 / 1_000_000,
         KV_WRITES_OVERAGE: 5.00 / 1_000_000,
+        DO_REQUESTS: 0.50 / 1_000_000, // per million
+        DO_DURATION_GB_SEC: 12.50 / 1_000_000, // per GB-second (simplified)
     }
 }
 
@@ -58,12 +62,16 @@ export const UNIT_USAGE = {
         D1_READS: 10,
         D1_WRITES: 5, // 1 per request (metrics)
         KV_READS: 2,
+        DO_REQ: 1, // Connection setup
+        DO_DURATION_SEC: 60, // Avg session
     },
     GAME_ROUND: {
         WORKERS_REQ: 3, // /api/quiz, submission, tags
         D1_READS: 20,
         D1_WRITES: 2,
         R2_CLASS_B: 1, // photo fetch
+        DO_REQ: 5, // signals per round
+        DO_DURATION_SEC: 30,
     },
     SCRAPE_PARTY: {
         WORKERS_REQ: 5,
@@ -101,6 +109,17 @@ export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown =>
 
     const kvReads = monthlyVisitors * UNIT_USAGE.VISITOR.KV_READS
 
+    // Durable Object Metrics
+    // 1 WebSocket connection per visitor + signals per round
+    const doReqs = (monthlyVisitors * UNIT_USAGE.VISITOR.DO_REQ) + (totalRounds * UNIT_USAGE.GAME_ROUND.DO_REQ)
+
+    // Duration: Visitors stay for base time + round time
+    const doDurationSec = (monthlyVisitors * UNIT_USAGE.VISITOR.DO_DURATION_SEC)
+        + (totalRounds * UNIT_USAGE.GAME_ROUND.DO_DURATION_SEC)
+
+    // Memory: 128MB is standard for DOs usually, calculate as GB-s
+    const doGbSec = doDurationSec * (128 / 1024)
+
     // Breakdown and Breaches
     const exceededLimits: string[] = []
     const rejectedUsage: Record<string, number> = {}
@@ -120,6 +139,14 @@ export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown =>
     checkLimit('KV Reads', kvReads, PRICING.FREE.KV_READS)
     checkLimit('R2 Class A', r2A, PRICING.FREE.R2_CLASS_A, true)
     checkLimit('R2 Class B', r2B, PRICING.FREE.R2_CLASS_B, true)
+
+    // DOs not available on free plan generally, or very limited (not modeling free DOs here, assume rejected if used? 
+    // Actually, Workers Free includes some DO usage now? No, usually Paid only or specific add-on. 
+    // We'll mark DO usage as "rejected" on Free plan for safety.)
+    if (doReqs > 0) {
+        exceededLimits.push('Durable Objects (Not on Free)')
+        rejectedUsage['Durable Objects'] = doReqs
+    }
 
     // D1 Storage Estimation (Metrics)
     const totalRequests = reqs // Approximation: every worker req is a metric row
@@ -151,8 +178,7 @@ export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown =>
     paidTotal += d1WritesCost
 
     // D1 Storage Overage
-    const d1StorageOver = Math.max(0, totalStorageGB - PRICING.FREE.D1_STORAGE_GB) // Paid includes 5GB? Actually pricing says "per GB after 5 included" effectively same base.
-    // Wait, PRICING.PAID.D1_STORAGE_GB says 0.75.
+    const d1StorageOver = Math.max(0, totalStorageGB - PRICING.FREE.D1_STORAGE_GB)
     const d1StorageCost = d1StorageOver * 0.75
     paidTotal += d1StorageCost
 
@@ -169,12 +195,21 @@ export const calculateMonthlyCosts = (scenario: UsageScenario): CostBreakdown =>
     const browserCost = browserOver * PRICING.PAID.BROWSER_OVERAGE_HOUR
     paidTotal += browserCost
 
+    // Durable Objects Costs (Paid)
+    // Requests
+    const doReqCost = doReqs * PRICING.PAID.DO_REQUESTS
+    // Duration
+    const doDurationCost = doGbSec * PRICING.PAID.DO_DURATION_GB_SEC
+    const doTotalCost = doReqCost + doDurationCost
+    paidTotal += doTotalCost
+
     return {
         workers: workersCost,
         d1: d1ReadsCost + d1WritesCost + d1StorageCost,
         r2: r2ACost + r2BCost,
         browsers: browserCost,
-        kv: 0, // usually negligible
+        kv: 0,
+        durableObjects: doTotalCost,
         total: plan === 'FREE' ? 0 : paidTotal,
         isFreeTierExceeded,
         exceededLimits,

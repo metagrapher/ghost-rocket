@@ -272,6 +272,10 @@ export class CostDashboard extends LitElement {
                             <span>Browser Rendering Overages</span>
                             <span>$${paidComparison.browsers.toFixed(2)}</span>
                         </div>
+                        <div class="breakdown-row">
+                            <span>Durable Objects (Presence)</span>
+                            <span>$${(paidComparison.durableObjects || 0).toFixed(2)}</span>
+                        </div>
                         <div class="breakdown-row" style="font-weight: 900; color: white; border-top: 1px solid rgba(255, 255, 255, 0.2); margin-top: 0.5rem;">
                             <span>Total Estimated Monthly</span>
                             <span>$${paidComparison.total.toFixed(2)}</span>
