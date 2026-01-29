@@ -396,7 +396,9 @@ app.get('/quiz', async (c) => {
             options,
             date: photoDate,
             qrInverted: selectedPhoto.qr_inverted === 1 ? true : (selectedPhoto.qr_inverted === 0 ? false : null),
-            nonce
+            nonce,
+            copyright: selectedPhoto.copyright || "SSB Productions",
+            sourceLink: `/api/jump?id=${encodeURIComponent(publicIdOutput)}`
         })
 
     } catch (e: any) {

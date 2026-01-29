@@ -14,6 +14,8 @@ interface QuizData {
     correctId: string;
     options: QuizOption[];
     date?: { month: string; day: string; year: string; };
+    copyright?: string;
+    sourceLink?: string;
 }
 
 @customElement('rave-game')
@@ -844,7 +846,12 @@ export class RaveGame extends LitElement {
                         
                         <div class="caption">
                             <div class="handwriting">${this.caption}</div>
-                            <div class="meta">SSB ARCHIVE</div>
+                            <div class="meta">
+                                ${this.quiz.sourceLink
+                ? html`<a href="${this.quiz.sourceLink}" target="_blank" rel="noopener noreferrer">${this.quiz.copyright || 'SSB Productions'}</a>`
+                : (this.quiz.copyright || 'SSB Productions')
+            }
+                            </div>
                         </div>
                     </div>
 
