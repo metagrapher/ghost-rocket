@@ -1,7 +1,7 @@
 {
   "main": "dist/_worker.js/index.js",
   "name": "ghost-rocket",
-  "compatibility_date": "2026-01-09",
+  "compatibility_date": "2026-01-07",
   "compatibility_flags": [
     "nodejs_compat",
     "global_fetch_strictly_public"
@@ -16,13 +16,47 @@
       "bucket_name": "rave-archive"
     }
   ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rave-data",
+      "database_id": "34fd284e-91b6-40f1-aa71-5f5bc38c3e8a"
+    }
+  ],
   "routes": [
     {
       "pattern": "rave.arca.de.com",
       "custom_domain": true
     }
   ],
+  "browser": {
+    "binding": "BROWSER"
+  },
+  "ai": {
+    "binding": "AI"
+  },
+  "triggers": {
+    "crons": [
+      "0 3 * * *"
+    ]
+  },
   "observability": {
     "enabled": true
-  }
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "GUN_RELAY",
+        "class_name": "GunRelay"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": [
+        "GunRelay"
+      ]
+    }
+  ]
 }

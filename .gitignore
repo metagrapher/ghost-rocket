@@ -20,5 +20,17 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# local development state
+.wrangler/
+.direnv/
+
+# database files
+*.db
+*.sqlite
+
 # jetbrains setting folder
 .idea/
+
+# Antigravity
+~/Temp/AntigravityTestProfile/*
+

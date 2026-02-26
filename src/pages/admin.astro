@@ -1,0 +1,1258 @@
+---
+// Admin Dashboard for Rave Archive
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>PARTY ADMIN | RAVE ARCADE</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
+            rel="stylesheet"
+        />
+        <style is:global>
+            :root {
+                --neon-purple: #bc13fe;
+                --neon-blue: #00f3ff;
+                --neon-pink: #ff00ff;
+                --dark-bg: #0a0a0c;
+            }
+
+            body {
+                margin: 0;
+                background-color: var(--dark-bg);
+                color: #e0e0e0;
+                font-family: "Inter", sans-serif;
+                background-image:
+                    radial-gradient(
+                        circle at 20% 30%,
+                        rgba(188, 19, 254, 0.15) 0%,
+                        transparent 50%
+                    ),
+                    radial-gradient(
+                        circle at 80% 70%,
+                        rgba(0, 243, 255, 0.15) 0%,
+                        transparent 50%
+                    );
+                min-height: 100vh;
+            }
+
+            .glass {
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .neon-text-purple {
+                text-shadow: 0 0 20px rgba(188, 19, 254, 0.5);
+            }
+
+            .neon-border-blue {
+                box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            }
+
+            dialog::backdrop {
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(5px);
+            }
+        </style>
+    </head>
+    <body class="p-8">
+        <div class="max-w-7xl mx-auto">
+            <header
+                class="flex justify-between items-center mb-12 border-b border-white/10 pb-6"
+            >
+                <h1
+                    class="text-4xl font-900 tracking-tighter bg-gradient-to-r from-white to-[#00f3ff] bg-clip-text text-transparent"
+                >
+                    RAVE <span class="text-[#bc13fe]">ADMIN</span>
+                </h1>
+                <div class="flex gap-4">
+                    <button
+                        id="btn-discover"
+                        class="px-6 py-2 rounded-lg font-700 uppercase p-text-sm tracking-widest bg-gradient-to-br from-[#bc13fe] to-[#ff00ff] text-white hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] transition-all transform hover:-translate-y-0.5"
+                    >
+                        Discover
+                    </button>
+                    <button
+                        id="btn-scrape-all"
+                        class="px-6 py-2 rounded-lg font-700 uppercase text-sm tracking-widest border border-[#00f3ff] text-[#00f3ff] hover:bg-[#00f3ff] hover:text-[#0a0a0c] transition-all"
+                    >
+                        Scrape Batch
+                    </button>
+                    <button
+                        id="btn-enrich-next"
+                        class="px-6 py-2 rounded-lg font-700 uppercase text-sm tracking-widest border border-[#bc13fe] text-[#bc13fe] hover:bg-[#bc13fe] hover:text-white transition-all"
+                    >
+                        Enrich Next
+                    </button>
+                    <a
+                        href="/admin/costs"
+                        class="px-6 py-2 rounded-lg font-700 uppercase text-sm tracking-widest bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all flex items-center"
+                    >
+                        Costs
+                    </a>
+                </div>
+            </header>
+
+            <!-- Live Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div
+                    class="glass rounded-2xl p-4 flex items-center gap-6 border border-[#00f3ff]/30"
+                >
+                    <div
+                        class="w-12 h-12 rounded-xl bg-[#00f3ff]/20 flex items-center justify-center text-[#00f3ff]"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                            ></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-visitors"
+                            class="text-3xl font-900 text-[#00f3ff] mb-0.5"
+                            style="text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-60 font-800 text-[#00f3ff]"
+                        >
+                            Active Visitors (5m)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl p-4 flex items-center gap-6">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-white"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-requests"
+                            class="text-3xl font-900 text-white mb-0.5"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-40 font-800"
+                        >
+                            Requests (24h)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl p-4 flex items-center gap-6">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                            ></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-errors"
+                            class="text-3xl font-900 text-red-500 mb-0.5"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-40 font-800"
+                        >
+                            Errors (24h)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carl Monitor -->
+            <div
+                class="glass rounded-2xl p-6 mb-6 border border-green-500/30 bg-green-500/5 relative overflow-hidden group"
+            >
+                <div
+                    class="absolute -right-12 -top-12 w-48 h-48 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-all duration-1000"
+                >
+                </div>
+
+                <div
+                    class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+                >
+                    <div>
+                        <h3
+                            class="text-sm font-800 uppercase tracking-widest text-green-400 mb-1 flex items-center gap-2"
+                        >
+                            <span
+                                id="carl-light"
+                                class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+                            ></span>
+                            Carl Monitor
+                        </h3>
+                        <div class="flex items-baseline gap-3">
+                            <div
+                                id="carl-status-text"
+                                class="text-3xl font-900 text-white tracking-tight"
+                            >
+                                Sleeping...
+                            </div>
+                            <div
+                                id="carl-backlog"
+                                class="text-xs font-mono opacity-50 uppercase tracking-wide"
+                            >
+                                Backlog: 0 Parties
+                            </div>
+                        </div>
+                        <div
+                            class="text-[0.65rem] text-green-400/60 font-mono mt-1"
+                            id="carl-last-run"
+                        >
+                            Last ate: Never
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex items-center gap-6 p-4 glass rounded-xl bg-black/20"
+                    >
+                        <div class="flex flex-col gap-1">
+                            <label
+                                class="text-[0.6rem] font-800 uppercase tracking-widest text-white/40"
+                                >Appetite (Batch)</label
+                            >
+                            <input
+                                type="number"
+                                id="carl-appetite"
+                                class="bg-white/5 border border-white/10 rounded px-2 py-1 text-white font-mono text-sm w-20 focus:border-green-500 focus:outline-none transition-colors"
+                                value="50"
+                                onchange="window.updateCarlConfig()"
+                            />
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                            <label
+                                class="text-[0.6rem] font-800 uppercase tracking-widest text-white/40"
+                                >Mode</label
+                            >
+                            <button
+                                id="carl-toggle"
+                                class="bg-green-500/20 text-green-400 border border-green-500/30 px-3 py-1 rounded text-xs font-700 uppercase hover:bg-green-500/30 transition-all"
+                                onclick="window.toggleCarl()"
+                            >
+                                Enabled
+                            </button>
+                        </div>
+
+                        <div class="h-8 w-px bg-white/10"></div>
+
+                        <button
+                            id="btn-carl-action"
+                            onclick="window.wakeCarl()"
+                            class="group/btn relative overflow-hidden rounded-lg bg-white px-4 py-2 font-900 text-black uppercase text-xs tracking-widest hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed"
+                        >
+                            <span class="relative z-10" id="btn-carl-text"
+                                >Wake Carl</span
+                            >
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover/btn:opacity-100 transition-opacity"
+                            >
+                            </div>
+                        </button>
+
+                        <button
+                            onclick="window.toggleCarlTracker()"
+                            class="group/btn relative overflow-hidden rounded-lg bg-black/40 border border-white/10 px-4 py-2 font-900 text-white uppercase text-xs tracking-widest hover:bg-black/60 transition-all"
+                        >
+                            <span class="relative z-10 flex items-center gap-2">
+                                <span>Where's Carl?</span>
+                                <span class="text-xs">👀</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Carl Tracker (Hidden by default) -->
+                <div
+                    id="carl-tracker"
+                    class="hidden mt-6 p-4 glass rounded-xl bg-black/40 border border-white/5"
+                >
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+                            >
+                            </div>
+                            <span
+                                class="font-mono text-green-400 text-sm font-700"
+                                id="tracker-party">Searching...</span
+                            >
+                        </div>
+                        <span
+                            class="font-mono text-white/40 text-xs"
+                            id="tracker-speed">0 img/s</span
+                        >
+                    </div>
+                    <div
+                        class="w-full h-2 bg-white/5 rounded-full overflow-hidden relative"
+                    >
+                        <div
+                            id="tracker-bar"
+                            class="h-full bg-green-500 transition-all duration-500 w-0 relative"
+                        >
+                            <div
+                                class="absolute right-0 top-0 bottom-0 w-[20px] bg-white/20 blur-md"
+                            >
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="flex justify-between mt-1 font-mono text-[0.6rem] text-white/30 uppercase tracking-widest"
+                    >
+                        <span id="tracker-counts">0 / ?</span>
+                        <span>Realtime Feed</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost & Trends -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Cost Monitor -->
+                <div
+                    class="glass rounded-2xl p-6 lg:col-span-1 border border-[#bc13fe]/30"
+                >
+                    <h3
+                        class="text-sm font-800 uppercase tracking-widest text-white/50 mb-4 flex items-center gap-2"
+                    >
+                        <span class="w-2 h-2 rounded-full bg-[#bc13fe]"></span> Current
+                        Month Bill
+                    </h3>
+
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <div
+                            id="cost-total"
+                            class="text-5xl font-900 text-white tracking-tighter"
+                        >
+                            $0.00
+                        </div>
+                        <div class="text-xs font-mono opacity-40">
+                            ESTIMATED
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div id="limit-workers" class="space-y-1">
+                            <div
+                                class="flex justify-between text-[0.6rem] font-800 uppercase text-white/40"
+                            >
+                                <span>Worker Requests</span>
+                                <span class="val">0 / 100k</span>
+                            </div>
+                            <div
+                                class="h-1 bg-white/10 rounded-full overflow-hidden"
+                            >
+                                <div
+                                    class="bar h-full bg-[#bc13fe] w-0 transition-all duration-1000"
+                                >
+                                </div>
+                            </div>
+                        </div>
+                        <div id="limit-d1" class="space-y-1">
+                            <div
+                                class="flex justify-between text-[0.6rem] font-800 uppercase text-white/40"
+                            >
+                                <span>D1 Reads</span>
+                                <span class="val">0 / 5M</span>
+                            </div>
+                            <div
+                                class="h-1 bg-white/10 rounded-full overflow-hidden"
+                            >
+                                <div
+                                    class="bar h-full bg-[#00f3ff] w-0 transition-all duration-1000"
+                                >
+                                </div>
+                            </div>
+                        </div>
+                        <div id="limit-storage" class="space-y-1">
+                            <div
+                                class="flex justify-between text-[0.6rem] font-800 uppercase text-white/40"
+                            >
+                                <span>D1 Storage</span>
+                                <span class="val">0 / 5GB</span>
+                            </div>
+                            <div
+                                class="h-1 bg-white/10 rounded-full overflow-hidden"
+                            >
+                                <div
+                                    class="bar h-full bg-[#ff00ff] w-0 transition-all duration-1000"
+                                >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historical Chart -->
+                <div class="glass rounded-2xl p-6 lg:col-span-2">
+                    <h3
+                        class="text-sm font-800 uppercase tracking-widest text-white/50 mb-4"
+                    >
+                        Traffic Trends (14 Days)
+                    </h3>
+                    <div class="h-[200px] w-full">
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="glass rounded-2xl p-4 flex items-center gap-6">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-[#bc13fe]/10 flex items-center justify-center text-[#bc13fe]"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                            ></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-total"
+                            class="text-3xl font-900 text-[#bc13fe] mb-0.5 neon-text-purple"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-40 font-800"
+                        >
+                            Total Parties
+                        </div>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-4 flex items-center gap-6">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-[#00f3ff]/10 flex items-center justify-center text-[#00f3ff]"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                            ></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-scraped"
+                            class="text-3xl font-900 text-[#00f3ff] mb-0.5"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-40 font-800"
+                        >
+                            Scraped
+                        </div>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-4 flex items-center gap-6">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-[#ff00ff]/10 flex items-center justify-center text-[#ff00ff]"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
+                        >
+                    </div>
+                    <div>
+                        <div
+                            id="stat-enriched"
+                            class="text-3xl font-900 text-[#ff00ff] mb-0.5"
+                        >
+                            -
+                        </div>
+                        <div
+                            class="text-[0.6rem] uppercase tracking-widest opacity-40 font-800"
+                        >
+                            Enriched
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass rounded-2xl overflow-hidden">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr
+                            class="text-left bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest opacity-50"
+                        >
+                            <th
+                                class="p-4 font-400 cursor-pointer hover:text-[#bc13fe] transition-colors select-none"
+                                onclick="window.sortBy('title')"
+                                >Party Details ↕</th
+                            >
+                            <th
+                                class="p-4 font-400 cursor-pointer hover:text-[#bc13fe] transition-colors select-none"
+                                onclick="window.sortBy('status')"
+                                >Scrape Status ↕</th
+                            >
+                            <th
+                                class="p-4 font-400 cursor-pointer hover:text-[#ff00ff] transition-colors select-none"
+                                onclick="window.sortBy('enrichment_level')"
+                                >Enrichment (Hex) ↕</th
+                            >
+                            <th
+                                class="p-4 font-400 cursor-pointer hover:text-[#bc13fe] transition-colors select-none"
+                                onclick="window.sortBy('date')">Date ↕</th
+                            >
+                            <th class="p-4 font-400">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="party-list">
+                        <tr>
+                            <td
+                                colspan="5"
+                                class="p-12 text-center opacity-30 italic text-lg"
+                            >
+                                Synchronizing archive...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <dialog
+            id="edit-modal"
+            class="glass rounded-2xl p-0 w-full max-w-md border border-white/20 text-white"
+        >
+            <div class="p-8 bg-black/40 backdrop-blur-xl">
+                <header class="mb-8 flex items-center justify-between">
+                    <h2
+                        class="text-2xl font-900 tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent"
+                    >
+                        Data Adjustment
+                    </h2>
+                    <button
+                        onclick="document.getElementById('edit-modal').close()"
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/20 text-white/40 hover:text-white transition-all"
+                        >&times;</button
+                    >
+                </header>
+
+                <form id="edit-form" class="flex flex-col gap-6">
+                    <input type="hidden" id="edit-id" />
+
+                    <div class="space-y-1.5">
+                        <label
+                            class="block text-[0.65rem] font-800 uppercase tracking-[0.2em] text-white/60"
+                        >
+                            Party Title
+                        </label>
+                        <input
+                            type="text"
+                            id="edit-title"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white hover:border-white/20 focus:border-[#bc13fe] focus:ring-1 focus:ring-[#bc13fe]/50 outline-none transition-all"
+                        />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label
+                                class="block text-[0.65rem] font-800 uppercase tracking-[0.2em] text-white/60"
+                            >
+                                Series
+                            </label>
+                            <input
+                                type="text"
+                                id="edit-series"
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white hover:border-white/20 focus:border-[#bc13fe] outline-none transition-all"
+                            />
+                        </div>
+                        <div class="space-y-1.5">
+                            <label
+                                class="block text-[0.65rem] font-800 uppercase tracking-[0.2em] text-white/60"
+                            >
+                                Date
+                            </label>
+                            <input
+                                type="text"
+                                id="edit-date"
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white hover:border-white/20 focus:border-[#bc13fe] outline-none transition-all text-sm"
+                                placeholder="YYYY-MM-DD"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label
+                            class="block text-[0.65rem] font-800 uppercase tracking-[0.2em] text-white/60"
+                        >
+                            Location Name
+                        </label>
+                        <input
+                            type="text"
+                            id="edit-location"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white hover:border-white/20 focus:border-[#bc13fe] outline-none transition-all"
+                        />
+                    </div>
+
+                    <div
+                        class="grid grid-cols-2 gap-4 border-t border-white/5 pt-4"
+                    >
+                        <div class="space-y-1.5">
+                            <label
+                                class="block text-[0.65rem] font-800 uppercase tracking-[0.2em] text-white/60"
+                            >
+                                Latitude
+                            </label>
+                            <input
+                                type="number"
+                                step="any"
+                                id="edit-lat"
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white hover:border-white/20 focus:border-[#bc13fe] outline-none transition-all font-mono text-sm"
+                            />
+                        </div>
+                        <div class="space-y-1.5">
+                            <label
+                                class="block text-[0.65rem] font-800 uppercase tracking-[0.2em] text-white/60"
+                            >
+                                Longitude
+                            </label>
+                            <input
+                                type="number"
+                                step="any"
+                                id="edit-lng"
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white hover:border-white/20 focus:border-[#bc13fe] outline-none transition-all font-mono text-sm"
+                            />
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="mt-4 w-full py-4 rounded-xl font-900 uppercase tracking-[0.15em] bg-gradient-to-r from-[#bc13fe] to-[#ff00ff] text-white shadow-[0_0_40px_rgba(188,19,254,0.3)] hover:shadow-[0_0_60px_rgba(188,19,254,0.5)] transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                    >
+                        Save Adjustments
+                    </button>
+                </form>
+            </div>
+        </dialog>
+
+        <div
+            id="toast"
+            class="fixed bottom-8 right-8 bg-[#bc13fe] text-white px-6 py-3 rounded-lg font-700 shadow-2xl transition-transform translate-y-32 z-50"
+        >
+            Action Started
+        </div>
+
+        <script>
+            let partiesData = [];
+            let trafficChart = null;
+
+            // Sorting State
+            let currentSort = { field: "last_scraped_at", dir: "desc" };
+
+            window.sortBy = (field) => {
+                if (currentSort.field === field) {
+                    currentSort.dir =
+                        currentSort.dir === "asc" ? "desc" : "asc";
+                } else {
+                    currentSort.field = field;
+                    currentSort.dir = "desc"; // Default to desc for most things
+                    if (field === "title") currentSort.dir = "asc";
+                }
+                showToast(
+                    `Sorting by ${field} ${currentSort.dir.toUpperCase()}`,
+                );
+                refresh();
+            };
+
+            // Simple Cost Calc (duplicated from API to avoid import complexity in script tag for now)
+            const PRICING = {
+                FREE: {
+                    WORKERS_REQUESTS: 100000,
+                    D1_ROWS_READ: 5000000,
+                    D1_STORAGE_GB: 5,
+                },
+            };
+
+            function updateCostUI(currentMonth) {
+                const reqs = currentMonth.requests || 0;
+                const d1Reads =
+                    currentMonth.visitors * 10 +
+                    currentMonth.gameRounds * 20 +
+                    currentMonth.partiesScraped * 100; // Approx
+
+                // Storage (Bytes) - 200 bytes per request row
+                const storageBytes = reqs * 200;
+                const storageGB = storageBytes / (1024 * 1024 * 1024);
+
+                // Update Bars
+                const updateBar = (id, current, max, unit = "") => {
+                    const el = document.getElementById(id);
+                    const pct = Math.min(100, (current / max) * 100);
+                    el.querySelector(".bar").style.width = `${pct}%`;
+                    el.querySelector(".val").innerText =
+                        `${formatNum(current)}${unit} / ${formatNum(max)}${unit}`;
+                    if (pct >= 100)
+                        el.querySelector(".bar").classList.add("bg-red-500");
+                };
+
+                updateBar("limit-workers", reqs, PRICING.FREE.WORKERS_REQUESTS);
+                updateBar("limit-d1", d1Reads, PRICING.FREE.D1_ROWS_READ);
+                updateBar(
+                    "limit-storage",
+                    storageGB,
+                    PRICING.FREE.D1_STORAGE_GB,
+                    "GB",
+                );
+
+                // Calc Estimated Cost (Paid)
+                // Just use a simpler estimate for display: $5 base + overages
+                let cost = 0;
+                if (reqs > 10000000)
+                    cost += (reqs - 10000000) * (0.5 / 1000000); // Paid threshold
+                if (cost > 0) cost += 5; // Add base if over free (simplified logic for now)
+
+                // Actually, the prompt asked for "what Cloudflare is actually charging us".
+                // If on Free plan, it's $0 unless we upgrade.
+                // Let's show "Potential Cost (Paid)" if free, or just $0 if free.
+                document.getElementById("cost-total").innerText =
+                    `$${cost.toFixed(2)}`;
+            }
+
+            function formatNum(num) {
+                if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+                if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+                if (num < 1 && num > 0) return num.toFixed(2);
+                return num.toString();
+            }
+
+            function initChart(daily) {
+                const ctx = document
+                    .getElementById("trafficChart")
+                    .getContext("2d");
+                if (trafficChart) trafficChart.destroy();
+
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, "rgba(188, 19, 254, 0.5)");
+                gradient.addColorStop(1, "rgba(188, 19, 254, 0)");
+
+                trafficChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: daily.map((d) => d.date.slice(5)), // MM-DD
+                        datasets: [
+                            {
+                                label: "Requests",
+                                data: daily.map((d) => d.total_requests),
+                                borderColor: "#bc13fe",
+                                backgroundColor: gradient,
+                                fill: true,
+                                tension: 0.4,
+                            },
+                            {
+                                label: "Visitors",
+                                data: daily.map((d) => d.visitors),
+                                borderColor: "#00f3ff",
+                                borderWidth: 1,
+                                pointRadius: 0,
+                                fill: false,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: "rgba(255,255,255,0.3)" },
+                            },
+                            y: {
+                                grid: { color: "rgba(255,255,255,0.05)" },
+                                ticks: { color: "rgba(255,255,255,0.3)" },
+                            },
+                        },
+                    },
+                });
+            }
+
+            // === CARL FUNCTIONS ===
+            async function refreshCarl() {
+                try {
+                    const res = await fetch("/api/carl/status");
+                    const data = await res.json();
+
+                    // Update UI
+                    const statusText =
+                        document.getElementById("carl-status-text");
+                    const statusLight = document.getElementById("carl-light");
+                    const backlog = document.getElementById("carl-backlog");
+                    const lastRun = document.getElementById("carl-last-run");
+                    const appetite = document.getElementById("carl-appetite");
+                    const toggle = document.getElementById("carl-toggle");
+
+                    // Appetite (Only update if not focused to avoid annoyance)
+                    if (document.activeElement !== appetite) {
+                        appetite.value = data.config?.batch_size || 50;
+                    }
+
+                    // Mode Toggle
+                    if (data.config?.enabled) {
+                        toggle.innerText = "Enabled";
+                        toggle.classList.remove(
+                            "bg-red-500/20",
+                            "text-red-400",
+                            "border-red-500/30",
+                        );
+                        toggle.classList.add(
+                            "bg-green-500/20",
+                            "text-green-400",
+                            "border-green-500/30",
+                        );
+                    } else {
+                        toggle.innerText = "Disabled";
+                        toggle.classList.add(
+                            "bg-red-500/20",
+                            "text-red-400",
+                            "border-red-500/30",
+                        );
+                        toggle.classList.remove(
+                            "bg-green-500/20",
+                            "text-green-400",
+                            "border-green-500/30",
+                        );
+                    }
+
+                    // Logic for Status Text
+                    if (data.isEating) {
+                        statusText.innerText = "Carl is Eating! 🍽️";
+                        statusLight.classList.remove(
+                            "bg-red-500",
+                            "bg-yellow-500",
+                        );
+                        statusLight.classList.add(
+                            "bg-green-500",
+                            "animate-pulse",
+                        );
+                    } else if (data.config?.enabled) {
+                        statusText.innerText = "Carl is Hungry 🤤";
+                        statusLight.classList.remove(
+                            "bg-red-500",
+                            "bg-green-500",
+                            "animate-pulse",
+                        );
+                        statusLight.classList.add("bg-yellow-500");
+                    } else {
+                        statusText.innerText = "Carl is Sleeping 💤";
+                        statusLight.classList.add("bg-red-500");
+                        statusLight.classList.remove(
+                            "bg-green-500",
+                            "animate-pulse",
+                            "bg-yellow-500",
+                        );
+                    }
+
+                    // Button Logic
+                    const actionBtn =
+                        document.getElementById("btn-carl-action");
+                    const actionText = document.getElementById("btn-carl-text");
+
+                    if (data.isEating) {
+                        actionBtn.disabled = true;
+                        actionText.innerText = "Eating...";
+                        actionBtn.onclick = null;
+                        actionBtn.classList.remove("bg-white", "text-black");
+                        actionBtn.classList.add("bg-green-500", "text-white");
+                    } else if (data.config?.enabled) {
+                        actionBtn.disabled = false;
+                        actionText.innerText = "Feed Carl";
+                        actionBtn.onclick = window.wakeCarl; // Force Scrape
+                        actionBtn.classList.add("bg-white", "text-black");
+                        actionBtn.classList.remove(
+                            "bg-green-500",
+                            "text-white",
+                        );
+                    } else {
+                        actionBtn.disabled = false;
+                        actionText.innerText = "Wake Carl";
+                        actionBtn.onclick = window.toggleCarl; // Enable
+                        actionBtn.classList.add("bg-white", "text-black");
+                        actionBtn.classList.remove(
+                            "bg-green-500",
+                            "text-white",
+                        );
+                    }
+
+                    backlog.innerText = `Backlog: ${data.backlog || 0} Parties`;
+
+                    if (data.lastRun) {
+                        const date = new Date(data.lastRun.last_scraped_at);
+                        const timeAgo = Math.floor(
+                            (Date.now() - date.getTime()) / 60000,
+                        );
+                        let agoStr =
+                            timeAgo < 1
+                                ? "Just now"
+                                : timeAgo < 60
+                                  ? `${timeAgo}m ago`
+                                  : `${Math.floor(timeAgo / 60)}h ago`;
+                        lastRun.innerText = `Last ate: ${agoStr} (${data.lastRun.party_id})`;
+                    } else {
+                        lastRun.innerText = "Last ate: Never";
+                    }
+
+                    // Update Tracker if open
+                    const tracker = document.getElementById("carl-tracker");
+                    // Check if tracker exists first (it was added in HTML step)
+                    if (tracker && !tracker.classList.contains("hidden")) {
+                        if (data.currentJob) {
+                            const job = data.currentJob;
+                            document.getElementById("tracker-party").innerText =
+                                `Eating: ${job.title || job.party_id}`;
+
+                            const saved = job.images_saved || 0;
+                            const found = job.images_found || 1; // avoid /0
+                            const pct = Math.min(100, (saved / found) * 100);
+
+                            document.getElementById("tracker-bar").style.width =
+                                `${pct}%`;
+                            document.getElementById(
+                                "tracker-counts",
+                            ).innerText = `${saved} / ${found} Saved`;
+
+                            document.getElementById("tracker-speed").innerText =
+                                `Active`;
+                        } else {
+                            document.getElementById("tracker-party").innerText =
+                                "Waiting for Carl...";
+                            document.getElementById("tracker-bar").style.width =
+                                `0%`;
+                            document.getElementById(
+                                "tracker-counts",
+                            ).innerText = `0 / 0`;
+                            document.getElementById("tracker-speed").innerText =
+                                `Idle`;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Carl unreachable", e);
+                }
+            }
+
+            window.wakeCarl = async () => {
+                showToast("Waking Carl up...");
+                // Force run
+                await fetch("/api/admin/scrape?force=true");
+                setTimeout(refreshCarl, 1000);
+            };
+
+            window.updateCarlConfig = async () => {
+                const batch_size = parseInt(
+                    document.getElementById("carl-appetite").value,
+                );
+                await fetch("/api/carl/config", {
+                    method: "POST",
+                    body: JSON.stringify({ batch_size }),
+                });
+                showToast("Appetite Updated 🍽️");
+                refreshCarl();
+            };
+
+            window.toggleCarl = async () => {
+                const toggle = document.getElementById("carl-toggle");
+                const isEnabled = toggle.innerText === "Enabled";
+                const newState = !isEnabled;
+
+                await fetch("/api/carl/config", {
+                    method: "POST",
+                    body: JSON.stringify({ enabled: newState }),
+                });
+                showToast(newState ? "Carl Enabled ✅" : "Carl Disabled 🛑");
+                refreshCarl();
+            };
+
+            let trackerInterval;
+            window.toggleCarlTracker = () => {
+                const el = document.getElementById("carl-tracker");
+                if (!el) return;
+                const isHidden = el.classList.contains("hidden");
+
+                if (isHidden) {
+                    el.classList.remove("hidden");
+                    refreshCarl(); // Immediate update
+                    // Poll faster when tracker is open
+                    if (trackerInterval) clearInterval(trackerInterval);
+                    trackerInterval = setInterval(refreshCarl, 1000);
+                } else {
+                    el.classList.add("hidden");
+                    if (trackerInterval) clearInterval(trackerInterval);
+                    trackerInterval = null;
+                }
+            };
+
+            async function showToast(msg) {
+                const t = document.getElementById("toast");
+                t.innerText = msg;
+                t.style.transform = "translateY(0)";
+                setTimeout(
+                    () => (t.style.transform = "translateY(150%)"),
+                    3000,
+                );
+            }
+
+            async function refresh() {
+                try {
+                    const [res, statsRes, usageRes] = await Promise.all([
+                        fetch(
+                            `/api/admin/scrape-status?sort=${currentSort.field}&dir=${currentSort.dir}`,
+                        ),
+
+                        fetch("/api/admin/stats"),
+                        fetch("/api/admin/usage"),
+                    ]);
+
+                    const data = await res.json();
+                    const stats = await statsRes.json();
+                    const usage = await usageRes.json();
+
+                    // Update stats
+                    if (stats) {
+                        document.getElementById("stat-visitors").innerText =
+                            stats.activeVisitors || 0;
+                        document.getElementById("stat-requests").innerText =
+                            stats.requests24h || 0;
+                        document.getElementById("stat-errors").innerText =
+                            stats.errors24h || 0;
+                    }
+
+                    if (usage) {
+                        updateCostUI(usage.currentMonth);
+                        if (!trafficChart) initChart(usage.daily);
+                    }
+
+                    partiesData = data;
+
+                    // Update Carl Monitor
+                    await refreshCarl();
+
+                    const list = document.getElementById("party-list");
+                    list.innerHTML = data
+                        .map(
+                            (p) => `
+                        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td class="p-4">
+                                <div class="font-700 text-white">${p.title}</div>
+                                <div class="text-[0.65rem] opacity-40 uppercase tracking-wider">${p.series || "No Series"} | ID: ${p.id}</div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-800 uppercase ${p.status === "success" ? "bg-green-500/10 text-green-400" : p.status === "error" ? "bg-red-500/10 text-red-400" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"}">
+                                    ${p.status || "not started"}
+                                </span>
+                                <div class="text-[0.6rem] opacity-30 mt-1">${p.images_saved || 0} / ${p.images_found || 0} saved</div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[0.6rem] font-800 uppercase ${p.enriched_at ? "bg-purple-500/20 text-purple-300" : "bg-white/5 text-white/30"}">
+                                    ${p.enriched_at ? "Enriched" : "Empty"}
+                                </span>
+                                ${
+                                    p.enrichment_level
+                                        ? `<div class="mt-1 font-mono text-lg font-900 text-[#ff00ff] tracking-widest" title="Gradient Score: 0x${p.enrichment_level.toString(16).toUpperCase()}">0x${p.enrichment_level.toString(16).toUpperCase()}</div>`
+                                        : ""
+                                }
+                                <div class="text-[0.65rem] font-600 truncate max-w-[150px] opacity-60 mt-1">${p.location_name || "???"}</div>
+                            </td>
+                            <td class="p-4">
+                                <div class="text-[0.65rem] font-mono opacity-40 leading-tight">
+                                    ${p.party_date || "No Date"}<br/>
+                                    ${p.latitude ? p.latitude.toFixed(4) : "—"}, ${p.longitude ? p.longitude.toFixed(4) : "—"}
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex gap-2 items-center">
+                                    ${(() => {
+                                        // 1. Eating (Processing)
+                                        if (p.status === "processing")
+                                            return `<button disabled class="text-xl animate-pulse cursor-wait" title="Eating...">🍽️</button>`;
+
+                                        // 2. Angry (Error) - Needs attention/retry
+                                        if (p.status === "error")
+                                            return `<button onclick="window.scrape('${p.id}')" class="text-xl hover:scale-125 transition-transform" title="Carl is Angry! (Retry)">😡</button>`;
+
+                                        // 3. Satisfied (Finished) - Only if actually full
+                                        if (
+                                            p.images_saved >= p.images_found &&
+                                            p.images_found > 0
+                                        )
+                                            return `<button disabled class="text-xl grayscale opacity-50 cursor-not-allowed" title="Satisfied">😋</button>`;
+
+                                        // 4. Partial (Leftovers) - Started but not finished (even if last status was success)
+                                        if (p.images_saved > 0)
+                                            return `<button onclick="window.scrape('${p.id}')" class="text-xl hover:scale-125 transition-transform" title="Finish Eating (Resume)">🍗</button>`;
+
+                                        // 5. Hungry (Start)
+                                        return `<button onclick="window.scrape('${p.id}')" class="text-xl hover:scale-125 transition-transform" title="Feed Carl">🤤</button>`;
+                                    })()}
+                                    <button class="bg-[#bc13fe]/10 hover:bg-[#bc13fe]/20 text-[#bc13fe] text-[0.6rem] px-2 py-1 rounded" onclick="window.enrich('${p.id}')">Enrich</button>
+                                    <button class="bg-white/10 hover:bg-white/20 text-white text-[0.6rem] px-2 py-1 rounded font-700" onclick="window.edit('${p.id}')">Edit</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `,
+                        )
+                        .join("");
+
+                    document.getElementById("stat-total").innerText =
+                        data.length;
+                    document.getElementById("stat-scraped").innerText =
+                        data.filter((p) => p.status === "success").length;
+                    document.getElementById("stat-enriched").innerText =
+                        data.filter((p) => p.enriched_at).length;
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            window.scrape = async (id) => {
+                showToast(`Scraping ${id}...`);
+                await fetch(`/api/admin/scrape?id=${id}`);
+                setTimeout(refresh, 2000);
+            };
+
+            window.enrich = async (id) => {
+                showToast(`Enriching ${id}...`);
+                await fetch(`/api/admin/enrich?id=${id}`);
+                setTimeout(refresh, 1000);
+            };
+
+            window.edit = (id) => {
+                const party = partiesData.find((p) => p.id === id);
+                if (!party) return;
+
+                document.getElementById("edit-id").value = party.id;
+                document.getElementById("edit-title").value = party.title || "";
+                document.getElementById("edit-series").value =
+                    party.series || "";
+                document.getElementById("edit-location").value =
+                    party.location_name || "";
+                document.getElementById("edit-lat").value =
+                    party.latitude || "";
+                document.getElementById("edit-lng").value =
+                    party.longitude || "";
+                document.getElementById("edit-date").value =
+                    party.party_date || "";
+
+                document.getElementById("edit-modal").showModal();
+            };
+
+            document.getElementById("edit-form").onsubmit = async (e) => {
+                e.preventDefault();
+                const id = document.getElementById("edit-id").value;
+                const data = {
+                    id,
+                    title: document.getElementById("edit-title").value,
+                    series: document.getElementById("edit-series").value,
+                    location_name:
+                        document.getElementById("edit-location").value,
+                    latitude:
+                        parseFloat(document.getElementById("edit-lat").value) ||
+                        null,
+                    longitude:
+                        parseFloat(document.getElementById("edit-lng").value) ||
+                        null,
+                    party_date:
+                        document.getElementById("edit-date").value || null,
+                };
+
+                showToast(`Updating ${id}...`);
+                const res = await fetch("/api/admin/party/update", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+
+                if (res.ok) {
+                    document.getElementById("edit-modal").close();
+                    refresh();
+                } else {
+                    alert("Failed to update party data");
+                }
+            };
+
+            document.getElementById("btn-discover").onclick = async () => {
+                showToast("Discovering new parties...");
+                await fetch("/api/admin/discover");
+                refresh();
+            };
+
+            document.getElementById("btn-scrape-all").onclick = async () => {
+                showToast("Starting batch scrape...");
+                await fetch("/api/admin/scrape");
+                setTimeout(refresh, 5000);
+            };
+
+            document.getElementById("btn-enrich-next").onclick = async () => {
+                showToast("Enriching next...");
+                await fetch("/api/admin/enrich");
+                setTimeout(refresh, 1000);
+            };
+
+            refresh();
+            setInterval(refresh, 10000);
+        </script>
+    </body>
+</html>

@@ -4,17 +4,36 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/post-build.mjs",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run --config vitest.config.ts",
+    "test:client": "vitest run --config vitest.client.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
+    "test:watch:client": "vitest --config vitest.client.config.ts",
+    "test:all": "npm run test && npm run test:client",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
+    "@cloudflare/puppeteer": "^1.0.4",
     "@unocss/astro": "^66.5.12",
     "@webcomponents/template-shadowroot": "^0.2.1",
     "astro": "^5.16.7",
+    "gun": "^0.2020.1241",
     "hono": "^4.11.3",
+    "jsqr": "^1.4.0",
     "lit": "^3.3.2",
+    "posthog-js": "^1.318.1",
+    "qrcode": "^1.5.4",
     "unocss": "^66.5.12"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.12.1",
+    "@types/gun": "^0.9.6",
+    "@types/qrcode": "^1.5.6",
+    "happy-dom": "^20.1.0",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.58.0"
   }
 }

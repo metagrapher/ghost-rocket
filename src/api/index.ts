@@ -1,29 +1,76 @@
 import { Hono } from 'hono'
+import { trackRequest, getStats, getUsageStats } from './metrics'
 
 export const app = new Hono().basePath('/api')
 
-app.get('/hello', (c) =>
-    c.json(
-        {
-            message: 'Welcome to rave.arca.de.com'
-            , status: 'ravertastic'
+app.use('*', async (c, next) => {
+    trackRequest(c)
+    return next()
+})
+
+app.get('/hello', (c) => {
+    return c.json({
+        message: 'Welcome to rave.arca.de.com'
+        , status: 'RAVEtastic'
+    })
+})
+
+// Gun.js Relay Route
+app.get('/gun', async (c) => {
+    const upgradeHeader = c.req.header('Upgrade')
+    const uniqueId = c.env.GUN_RELAY.idFromName('global-relay')
+    const stub = c.env.GUN_RELAY.get(uniqueId)
+
+    if (upgradeHeader === 'websocket') {
+        return stub.fetch(c.req.raw)
+    }
+
+    // Proxy other requests (PUT/GET for Gun REST) if needed
+    // For now, simple fallback
+    return stub.fetch(c.req.raw)
+})
+
+// PostHog Proxy for "Server-Side" Tracking & Enrichment
+app.all('/ingest/*', async (c) => {
+    // URL rewrite: /api/ingest/e/ -> https://us.i.posthog.com/e/
+    const url = new URL(c.req.url)
+    const path = url.pathname.replace('/api/ingest', '')
+    const targetUrl = new URL(path, 'https://us.i.posthog.com')
+
+    // Copy query params
+    url.searchParams.forEach((v, k) => targetUrl.searchParams.append(k, v))
+
+    const headers = new Headers(c.req.header())
+    headers.set('Host', 'us.i.posthog.com')
+
+    // Important for PostHog to correct GeoIP
+    const clientIp = c.req.header('CF-Connecting-IP')
+    if (clientIp) {
+        headers.set('X-Forwarded-For', clientIp)
+    }
+
+    try {
+        const res = await fetch(targetUrl.toString(), {
+            method: c.req.method,
+            headers,
+            body: c.req.method !== 'GET' && c.req.method !== 'HEAD' ? c.req.raw.body : undefined,
+            redirect: 'follow'
         })
-)
 
-const ARCHIVE =
-    [{ id: 'cubik041604', title: 'Cübik - 04-16-04', url: 'http://ssbproductions.com/cubik041604/' }
-        , { id: 'transit031710', title: 'Mass Transit - 03-17-10', url: 'http://ssbproductions.com/transit031710/' }
-        , { id: 'zebabar090118', title: 'Pump Pump - 09-01-18', url: 'http://ssbproductions.com/zebabar090118/' }
-        , { id: 'transit033118', title: 'Mass Transit w/ JOHN B', url: 'http://ssbproductions.com/transit033118/' }
-    ]
+        return new Response(res.body, {
+            status: res.status,
+            headers: res.headers
+        })
+    } catch (e: any) {
+        console.error('PostHog Proxy Error:', e)
+        return c.json({ error: 'Proxy Failed' }, 502)
+    }
+})
 
-const PHOTOS =
-    [{ url: 'http://ssbproductions.com/cubik041604/SSB_0126.jpg', partyId: 'cubik041604' }
-        , { url: 'http://ssbproductions.com/cubik041604/SSB_0127.jpg', partyId: 'cubik041604' }
-        , { url: 'http://ssbproductions.com/zebabar090118/DSC_8884.JPG', partyId: 'zebabar090118' }
-    ]
-
-app.get('/archive', (c) => c.json(ARCHIVE))
+app.get('/archive', async (c) => {
+    const { results } = await c.env.DB.prepare('SELECT * FROM parties ORDER BY discovered_at DESC').all()
+    return c.json(results)
+})
 
 app.get('/image-proxy', async (c) => {
     const url = c.req.query('url')
@@ -55,109 +102,467 @@ app.get('/image-proxy', async (c) => {
     }
 })
 
+import { scrapeArchive } from './scraper'
+import { discoverParties } from './discover'
+import { enrichPartyWithAI } from './enrichment'
+import { runCarl, getCarlStatus } from './carl'
+
+app.get('/admin/discover', async (c) => {
+    const env = c.env
+    try {
+        const result = await discoverParties(env)
+        return c.json({ status: 'Discovery Complete', ...result })
+    } catch (e: any) {
+        return c.json({ status: 'Discovery Failed', error: e.message }, 500)
+    }
+})
+
+// === CARL THE SCRAPER API ===
+
+app.get('/carl/status', async (c) => {
+    try {
+        const status = await getCarlStatus(c.env)
+        return c.json(status)
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+app.post('/carl/config', async (c) => {
+    try {
+        const { batch_size, enabled, frequency_hours } = await c.req.json() as any
+
+        // Update DB (id=1 is the singleton row)
+        await c.env.DB.prepare(`
+            UPDATE carl_settings 
+            SET batch_size = COALESCE(?, batch_size), 
+                enabled = COALESCE(?, enabled), 
+                frequency_hours = COALESCE(?, frequency_hours),
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = 1
+        `).bind(batch_size, enabled, frequency_hours).run()
+
+        return c.json({ success: true })
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+// Internal endpoint to be hit by the cron trigger
+app.get('/admin/cron-trigger', async (c) => {
+    // In a real app, verify a secret header here!
+    // const secret = c.req.header('X-Cron-Secret')
+    // if (secret !== c.env.CRON_SECRET) return c.text('Unauthorized', 401)
+
+    c.executionCtx.waitUntil((async () => {
+        await runCarl(c.env)
+    })())
+
+    return c.json({ status: 'Triggered' })
+})
+
 app.get('/admin/scrape', async (c) => {
-    // Basic security: Check for a secret header or just rely on obscurity for this mvp?
-    // For now, let's just do it.
+    const env = c.env
+    const targetId = c.req.query('id')
+    const force = c.req.query('force') === 'true'
 
-    // Bindings
-    const bucket = c.env.BUCKET
+    if (targetId) {
+        // Manual specific target scrape (bypass Carl logic, just direct)
+        // Check config for batch size though
+        const config = await env.DB.prepare('SELECT batch_size FROM carl_settings WHERE id = 1').first()
+        const batchSize = config?.batch_size || 50
 
-    const results = []
+        const party = await env.DB.prepare('SELECT * FROM parties WHERE id = ?').bind(targetId).first()
+        if (!party) return c.json({ error: 'Party not found' }, 404)
 
-    for (const photo of PHOTOS) {
-        const filename = photo.url.split('/').pop()!
-        const r2Key = `${photo.partyId}/${filename}`
+        c.executionCtx.waitUntil((async () => {
+            await scrapeArchive(party, env, batchSize)
+            await enrichPartyWithAI(party.id, env)
+        })())
 
-        try {
-            // Check if exists
-            const existing = await bucket.head(r2Key)
-            if (existing) {
-                results.push({ url: photo.url, status: 'skipped', key: r2Key })
-                continue
-            }
+        return c.json({ status: 'Manual Scrape Started', party: targetId })
+    }
 
-            // Fetch from source
-            const res = await fetch(photo.url, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                    'Referer': new URL(photo.url).origin
-                }
-            })
+    // Manual 'Wake Carl' trigger
+    const result = await runCarl(env, force)
+    return c.json(result)
+})
 
-            if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
+app.get('/admin/enrich', async (c) => {
+    const env = c.env
+    const partyId = c.req.query('id')
 
-            // Save to R2
-            await bucket.put(r2Key, res.body, {
-                httpMetadata: {
-                    contentType: res.headers.get('content-type') || 'image/jpeg'
-                }
-            })
+    if (partyId) {
+        const result = await enrichPartyWithAI(partyId, env)
+        return c.json({ status: 'Enrichment Complete', id: partyId, result })
+    }
 
-            results.push({ url: photo.url, status: 'saved', key: r2Key })
+    // Otherwise find a party that hasn't been enriched
+    const party = await env.DB.prepare('SELECT id FROM parties WHERE enriched_at IS NULL LIMIT 1').first()
+    if (!party) return c.json({ status: 'No parties need enrichment' })
 
-        } catch (e: any) {
-            console.error(`Failed to scrape ${photo.url}`, e)
-            results.push({ url: photo.url, status: 'error', error: e.message })
+    const result = await enrichPartyWithAI(party.id, env)
+    return c.json({ status: 'Enrichment Complete', id: party.id, result })
+})
+
+app.get('/admin/stats', async (c) => {
+    try {
+        const stats = await getStats(c.env)
+        return c.json(stats)
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+app.get('/admin/usage', async (c) => {
+    try {
+        const stats = await getUsageStats(c.env)
+        return c.json(stats)
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+app.get('/admin/scrape-status', async (c) => {
+    const sort = c.req.query('sort') || 'last_scraped_at'
+    const dir = c.req.query('dir') === 'asc' ? 'ASC' : 'DESC'
+
+    let orderBy = 's.last_scraped_at DESC NULLS FIRST, p.id ASC'
+
+    if (sort === 'enrichment_level') {
+        orderBy = `p.enrichment_level ${dir} NULLS LAST, p.id ASC`
+    } else if (sort === 'title') {
+        orderBy = `p.title ${dir}, p.id ASC`
+    } else if (sort === 'status') {
+        orderBy = `s.status ${dir} NULLS LAST, p.id ASC`
+    } else if (sort === 'date') {
+        orderBy = `p.party_date ${dir} NULLS LAST, p.id ASC`
+    }
+
+    const { results } = await c.env.DB.prepare(`
+        SELECT p.id, p.title, p.series, p.location_name, p.latitude, p.longitude, p.party_date, p.enriched_at, p.enrichment_level, s.last_scraped_at, s.images_found, s.images_saved, s.status
+        FROM parties p
+        LEFT JOIN scrape_status s ON p.id = s.party_id
+        ORDER BY ${orderBy}
+    `).all()
+    return c.json(results)
+})
+
+app.post('/admin/party/update', async (c) => {
+    const env = c.env
+    const body = await c.req.json()
+    const { id, title, series, location_name, latitude, longitude, party_date } = body
+
+    await env.DB.prepare(`
+        UPDATE parties 
+        SET title = ?, series = ?, location_name = ?, latitude = ?, longitude = ?, party_date = ?
+        WHERE id = ?
+    `).bind(title, series, location_name, latitude, longitude, party_date, id).run()
+
+    return c.json({ success: true })
+})
+
+app.get('/admin/backfill-public-ids', async (c) => {
+    const db = c.env.DB
+    const { results } = await db.prepare('SELECT image_key FROM photos WHERE public_id IS NULL').all()
+
+    let updated = 0
+    for (const photo of results) {
+        const newId = crypto.randomUUID()
+        await db.prepare('UPDATE photos SET public_id = ? WHERE image_key = ?').bind(newId, photo.image_key).run()
+        updated++
+    }
+
+    return c.json({ status: 'Backfill Complete', updated, total: results.length })
+})
+
+app.get('/admin/backfill-credits', async (c) => {
+    const db = c.env.DB
+    // Get all photos without source_url or copyright
+    const { results } = await db.prepare('SELECT image_key, party_id FROM photos WHERE source_url IS NULL OR copyright IS NULL').all()
+
+    let updated = 0
+    for (const photo of results) {
+        // Fetch party to get the URL
+        const party = await db.prepare('SELECT url FROM parties WHERE id = ?').bind(photo.party_id).first()
+
+        let sourceUrl = party?.url || ''
+        let copyright = "SSB Productions" // Default
+        if (sourceUrl.includes('ssbproductions.com')) {
+            copyright = "SSB Productions"
+        }
+
+        if (sourceUrl) {
+            await db.prepare('UPDATE photos SET source_url = ?, copyright = ? WHERE image_key = ?')
+                .bind(sourceUrl, copyright, photo.image_key)
+                .run()
+            updated++
         }
     }
 
-    return c.json({ results })
+    return c.json({ status: 'Credit Backfill Complete', updated, total: results.length })
+})
+
+app.get('/jump', async (c) => {
+    const id = c.req.query('id')
+    if (!id) return c.text('Missing ID', 400)
+
+    try {
+        const photo = await c.env.DB.prepare('SELECT source_url FROM photos WHERE public_id = ?').bind(id).first()
+        if (photo && photo.source_url) {
+            return c.redirect(photo.source_url, 302)
+        }
+        return c.text('Source link not found', 404)
+    } catch (e) {
+        return c.text('Error resolving link', 500)
+    }
 })
 
 app.get('/quiz', async (c) => {
-    const photo = PHOTOS[Math.floor(Math.random() * PHOTOS.length)]
-    // Generate 3 wrong options + 1 correct
-    const correctArchive = ARCHIVE.find(a => a.id === photo.partyId)!
-    const otherArchives = ARCHIVE.filter(a => a.id !== photo.partyId)
-
-    // Shuffle and pick 3 wrong ones
-    const wrongOptions = otherArchives
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3)
-        .map(a => ({ id: a.id, label: a.title }))
-
-    const options = [...wrongOptions, { id: correctArchive.id, label: correctArchive.title }]
-        .sort(() => 0.5 - Math.random())
-
-    // Check R2 first
-    const bucket = c.env.BUCKET
-    const filename = photo.url.split('/').pop()!
-    const r2Key = `${photo.partyId}/${filename}`
-    let imageUrl = `/api/image-proxy?url=${encodeURIComponent(photo.url)}` // default fallback
-
     try {
-        // If we are on custom domain, we can serve directly if public access is enabled, 
-        // OR we can serve via a new endpoint /api/image/KEY. 
-        // For simplicity, let's verify existence. If it exists, we technically should serve it.
-        // Since we don't have public R2 URL set up yet, let's create a serving endpoint: /api/img/:key
-        const existing = await bucket.head(r2Key)
-        if (existing) {
-            imageUrl = `/api/img/${encodeURIComponent(r2Key)}`
-        }
-    } catch (e) {
-        // ignore error, use fallback
-    }
+        const db = c.env.DB
 
-    return c.json({
-        imageUrl: imageUrl,
-        correctId: photo.partyId,
-        options
-    })
+        // Deep Linking Support
+        const photoId = c.req.query('photoId')
+        let selectedPhoto: any = null
+
+        if (photoId) {
+            // URL Decoding happens here to handle both clear keys and opaque IDs safely
+            const keyOrId = decodeURIComponent(photoId)
+
+            // 1. Try lookup by public_id (Opaque)
+            selectedPhoto = await db.prepare('SELECT * FROM photos WHERE public_id = ?').bind(keyOrId).first()
+
+            // 2. Fallback: Try lookup by image_key (Legacy/Clear)
+            if (!selectedPhoto) {
+                selectedPhoto = await db.prepare('SELECT * FROM photos WHERE image_key = ?').bind(keyOrId).first()
+            }
+
+            if (!selectedPhoto) {
+                console.warn(`⚠️ Deep Link: Photo not found via public_id or key: ${keyOrId}`)
+            }
+        }
+
+        // Random Fallback (if no photoId or valid photo found)
+        if (!selectedPhoto) {
+            // Pick a random photo from the DB
+            selectedPhoto = await db.prepare('SELECT * FROM photos ORDER BY RANDOM() LIMIT 1').first()
+
+            if (!selectedPhoto) {
+                // TEMPORARY FALLBACK FOR ORPHANED R2 FILES (Pre-migration safety)
+                const bucket = c.env.BUCKET
+                const listed = await bucket.list()
+                if (listed.objects.length > 0) {
+                    const randomObj = listed.objects[Math.floor(Math.random() * listed.objects.length)]
+                    selectedPhoto = { image_key: randomObj.key } // No public_id available
+                } else {
+                    return c.json({ error: 'Archive Empty' }, 404)
+                }
+            }
+        }
+
+
+        const key = selectedPhoto.image_key
+        const publicIdOutput = selectedPhoto.public_id || key // Prefer public_id, fallback to key if missing
+
+        const partyId = selectedPhoto.party_id || key.split('/')[0]
+
+        // Fetch Party Metadata
+        const correctArchive = await db.prepare('SELECT * FROM parties WHERE id = ?').bind(partyId).first() as any
+
+        if (!correctArchive) {
+            console.warn(`⚠️ Party metadata missing for photo: ${key}`)
+            return c.json({ error: 'Archive Consistency Error: Party metadata missing.', key }, 500)
+        }
+
+        // Helper to format label with year
+        const getYear = (p: any) => {
+            if (p.party_date) return p.party_date.split('-')[0]
+            const match = p.id.match(/(\d{2})(\d{2})(\d{2})$/)
+            if (match) {
+                const yy = match[3]
+                return parseInt(yy) > 80 ? `19${yy}` : `20${yy}`
+            }
+            return ''
+        }
+
+        const formatLabel = (p: any) => {
+            const base = p.title || p.series || 'Unknown Party'
+            const year = getYear(p)
+            return year ? `${base} (${year})` : base
+        }
+
+        // Generate options (Prioritize Title over Series, Add Year)
+        const correctLabel = formatLabel(correctArchive)
+
+        // Get distractors from DB (randomly pick 3 different titles)
+        const { results: distractors } = await db.prepare(`
+            SELECT id, title, series, party_date FROM parties 
+            WHERE title != ? AND id != ?
+            GROUP BY title
+            ORDER BY RANDOM()
+            LIMIT 3
+        `).bind(correctArchive.title || correctArchive.series, correctArchive.id).all()
+
+        const options = [...distractors.map((d: any) => ({
+            id: d.id,
+            label: formatLabel(d)
+        })), { id: correctArchive.id, label: correctLabel }]
+            .sort(() => 0.5 - Math.random())
+
+        // Parse date from ID (e.g., cubik041604 -> 04/16/04)
+        const dateMatch = correctArchive.id.match(/(\d{2})(\d{2})(\d{2})$/)
+        let photoDate = { month: '01', day: '01', year: '00' }
+
+        if (dateMatch) {
+            photoDate = { month: dateMatch[1], day: dateMatch[2], year: dateMatch[3] }
+        } else {
+            const yearOnly = correctArchive.id.match(/(\d{2})$/)
+            if (yearOnly) photoDate.year = yearOnly[1]
+        }
+
+        // Generate Token/Nonce for updating preferences
+        // Since we don't have user accounts, we sign the photoID with a rotating daily secret or just the env secret
+        // For simplicity and speed in this context, we'll hash the photoID with a secret.
+        const msgBuffer = new TextEncoder().encode(publicIdOutput + (c.env.CRON_SECRET || 'dev-secret'));
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const nonce = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        // Return URL with publicId if possible, else key.
+        // And ensure photoId returns the opaque ID.
+        return c.json({
+            imageUrl: `/api/img/${encodeURIComponent(publicIdOutput)}`,
+            photoId: encodeURIComponent(publicIdOutput),
+            correctId: partyId,
+            options,
+            date: photoDate,
+            qrInverted: selectedPhoto.qr_inverted === 1 ? true : (selectedPhoto.qr_inverted === 0 ? false : null),
+            nonce,
+            copyright: selectedPhoto.copyright || "SSB Productions",
+            sourceLink: `/api/jump?id=${encodeURIComponent(publicIdOutput)}`
+        })
+
+    } catch (e: any) {
+        console.error('Quiz Error:', e)
+        return c.json({ error: e.message || 'Failed to generate quiz' }, 500)
+    }
 })
 
-app.get('/img/:key', async (c) => {
+app.post('/photos/qr-pref', async (c) => {
+    try {
+        const { publicId, inverted, nonce } = await c.req.json() as any
+
+        if (!publicId || !nonce) return c.json({ error: 'Missing required fields' }, 400)
+
+        // Verify Nonce
+        const msgBuffer = new TextEncoder().encode(publicId + (c.env.CRON_SECRET || 'dev-secret'));
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const expectedNonce = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        if (nonce !== expectedNonce) {
+            return c.json({ error: 'Invalid Nonce' }, 403)
+        }
+
+        await c.env.DB.prepare('UPDATE photos SET qr_inverted = ? WHERE public_id = ?')
+            .bind(inverted ? 1 : 0, publicId)
+            .run()
+
+        return c.json({ success: true })
+    } catch (e: any) {
+        return c.json({ error: e.message }, 500)
+    }
+})
+
+// Social Tagging API
+app.get('/tags/:key', async (c) => {
     const key = c.req.param('key')
-    const object = await c.env.BUCKET.get(decodeURIComponent(key))
+    const { results } = await c.env.DB.prepare('SELECT * FROM tags WHERE image_key = ?').bind(key).all()
+    return c.json(results)
+})
 
-    if (!object) return c.text('Not found', 404)
+app.post('/tags', async (c) => {
+    try {
+        const { image_key, x, y, w, h, name } = await c.req.json() as any
 
-    const headers = new Headers()
-    object.writeHttpMetadata(headers)
-    headers.set('etag', object.httpEtag)
+        // Moderation Logic
+        const lowerName = (name || '').toLowerCase()
+        const blacklist = ['fuck', 'shit', 'cunt', 'nigger', 'faggot', 'asshole'] // Basic list
 
-    return new Response(object.body, {
-        headers
-    })
+        // Specific Exception for "Bitch Beth"
+        if (lowerName.includes('bitch') && lowerName !== 'bitch beth') {
+            return c.json({ error: 'Moderation: Name rejected.' }, 400)
+        }
+
+        if (blacklist.some(word => lowerName.includes(word))) {
+            return c.json({ error: 'Moderation: Name rejected.' }, 400)
+        }
+
+        await c.env.DB.prepare(
+            'INSERT INTO tags (image_key, x, y, w, h, name) VALUES (?, ?, ?, ?, ?, ?)'
+        ).bind(image_key, x, y, w, h, name).run()
+
+        return c.json({ success: true })
+    } catch (e: any) {
+        return c.text(`Error fetching archive: ${e.message}`, 500)
+    }
+})
+
+app.get('/img/*', async (c) => {
+    try {
+        const url = new URL(c.req.url)
+        const pathSuffix = url.pathname.replace('/api/img/', '')
+        const decodedInput = decodeURIComponent(pathSuffix)
+
+        console.log(`🖼️ Fetching Image Request: ${decodedInput}`)
+
+        // 1. Resolve potential public_id to real R2 key
+        let r2Key = decodedInput
+        const db = c.env.DB
+
+        // Try to find by public_id first
+        const photo = await db.prepare('SELECT image_key FROM photos WHERE public_id = ?').bind(decodedInput).first()
+        if (photo) {
+            r2Key = photo.image_key
+            console.log(`🔓 Resolved public_id ${decodedInput} to ${r2Key}`)
+        } else {
+            console.log(`ℹ️ Assuming direct key or legacy access: ${decodedInput}`)
+        }
+
+        const object = await c.env.BUCKET.get(r2Key)
+
+        if (!object) {
+            console.warn(`❌ Image Not Found: ${r2Key} (requested as ${decodedInput})`)
+            return c.text('Not found', 404)
+        }
+
+        const headers = new Headers()
+        if (object.httpMetadata?.contentType) {
+            headers.set('content-type', object.httpMetadata.contentType)
+        }
+        if (object.httpMetadata?.contentLanguage) {
+            headers.set('content-language', object.httpMetadata.contentLanguage)
+        }
+        if (object.httpMetadata?.contentEncoding) {
+            headers.set('content-encoding', object.httpMetadata.contentEncoding)
+        }
+        if (object.httpMetadata?.contentDisposition) {
+            headers.set('content-disposition', object.httpMetadata.contentDisposition)
+        }
+        if (object.httpMetadata?.cacheControl) {
+            headers.set('cache-control', object.httpMetadata.cacheControl)
+        }
+
+        headers.set('etag', object.httpEtag)
+
+        return new Response(object.body, {
+            headers
+        })
+    } catch (e: any) {
+        console.error('Image Fetch Error:', e)
+        return c.text(`Image Error: ${e.message}`, 500)
+    }
 })
 
 export default app

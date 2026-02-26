@@ -6,6 +6,6 @@ export const ALL: APIRoute = (
         , locals
     }
 ) => {
-    const env = (locals as any).runtime?.env || {}
-    return app.fetch(request, env)
+    const runtime = (locals as any).runtime || {}
+    return app.fetch(request, runtime.env || {}, runtime.ctx)
 }
